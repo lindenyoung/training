@@ -93,6 +93,22 @@ const isPalindrome = (s) => {
 // 8 - BINARY SEARCH
 
 // 9 - FLOOD FILL
+const floodFillMatrix = (image, sr, sc, color) => {
+  if (image[sr][sc] !== color) changeColor(image, sr, sc, image[sr][sc], color);
+  return image;
+};
+
+const changeColor = (matrix, x, y, oldColor, newColor) => {
+  if (x < 0 || x >= matrix.length || y < 0 || y >= matrix[0].length) return; // invalid cell
+  if (matrix[x][y] !== oldColor) return; // not the required color (same as starting cell color)
+
+  matrix[x][y] = newColor;
+
+  changeColor(matrix, x + 1, y, oldColor, newColor); // down
+  changeColor(matrix, x - 1, y, oldColor, newColor); // up
+  changeColor(matrix, x, y + 1, oldColor, newColor); // right
+  changeColor(matrix, x, y - 1, oldColor, newColor); // left
+};
 
 // 10 - LOWEST COMMON ANCESTOR OF BST
 
