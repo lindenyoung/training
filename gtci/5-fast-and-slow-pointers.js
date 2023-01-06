@@ -84,6 +84,29 @@ function findStart(head, cycleLength) {
 
 // HAPPY NUMBER
 
+function findHappyNumber(num) {
+  let slow = num;
+  let fast = num;
+
+  while (true) {
+    slow = findSquareSum(slow); // move one step
+    fast = findSquareSum(findSquareSum(fast)); // move two steps
+    if (slow === fast) break; // found the cycle
+  }
+  return slow === 1; // see if cycle is stuck on num 1
+}
+
+// helper function to find square sum
+function findSquareSum(num) {
+  let sum = 0;
+  while (num > 0) {
+    const digit = num % 10;
+    sum += digit * digit;
+    num = Math.floor(num / 10);
+  }
+  return sum;
+}
+
 /* - - - - - - - - - - - - - - - - - - - - */
 
 // MIDDLE NODE OF LL
