@@ -115,5 +115,81 @@ const changeColor = (matrix, x, y, oldColor, newColor) => {
 // 11 - BALANCED BINARY TREE
 
 // 12 - LINKED LIST CYCLE
+const hasCycleLL = (head) => {
+  let slow = head;
+  let fast = head;
+
+  while (fast !== null && fast.next !== null) {
+    slow = slow.next;
+    fast = fast.next.next;
+    if (slow === fast) return true;
+  }
+
+  return false;
+};
 
 // 13 - IMPLEMENT QUEUE USING STACKS
+const TwoStacksQueue = function() {
+  const inStack = [];
+  const outStack = [];
+
+  TwoStacksQueue.prototype.push = (x) => {
+    inStack.push(x);
+    // console.log(inStack);
+  };
+
+  TwoStacksQueue.prototype.pop = () => {
+    // when outStack is empty, need to invert inStack
+    if (outStack.length === 0) {
+      while (inStack.length > 0) {
+        const newestInStackItem = inStack.pop();
+        outStack.push(newestInStackItem);
+      }
+      // edge case of empty inStack - outStack length still zero
+      if (outStack.length === 0) throw new Error("Can't dequeue from an empty queue");
+    }
+    // console.log(outStack);
+    return outStack.pop();
+  };
+
+  TwoStacksQueue.prototype.peek = () => {
+    if (outStack.length === 0) {
+      while (inStack.length > 0) {
+        const invertingItem = inStack.pop();
+        outStack.push(invertingItem);
+      }
+      if (outStack.length === 0) return "Queue is empty!";
+    }
+    // console.log(outStack);
+    // console.log(outStack[outStack.length - 1]);
+    return outStack[outStack.length - 1];
+  };
+
+  TwoStacksQueue.prototype.empty = () => {
+    if (outStack.length === 0) {
+      while (inStack.length > 0) {
+        const invertingItem = inStack.pop();
+        outStack.push(invertingItem);
+      }
+      if (outStack.length === 0) return true;
+    }
+    return false;
+  };
+}
+
+// const test = new TwoStacksQueue();
+// test.push(10);
+// test.push(20);
+// test.push(30);
+// test.push(40);
+// test.pop();
+// test.pop();
+// test.push(50);
+// test.push(60);
+// test.pop();
+// test.peek();
+// test.pop();
+// test.peek();
+// test.empty();
+// test.pop()
+// test.pop();
