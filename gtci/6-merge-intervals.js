@@ -68,30 +68,30 @@ const insertInterval = (intervals, newInterval) => {
   // b = [[2,3], [5,7]]
   // output = [2,3], [5,6], [7,7]
 
-  const intervalsIntersection = (a, b) => {
-    let result = [];
-    let i = 0;
-    let j = 0;
+const intervalsIntersection = (a, b) => {
+  let result = [];
+  let i = 0;
+  let j = 0;
 
-    while (i < a.length && j < b.length) {
-      const aOverlapsB = a[i].start >= b[j].start && a[i].start <= b[j].end;
-      console.log(aOverlapsB);
-      const bOverlapsA = b[j].start >= a[i].start && b[j].start <= a[i].end;
-      console.log(bOverlapsA);
+  while (i < a.length && j < b.length) {
+    const aOverlapsB = a[i].start >= b[j].start && a[i].start <= b[j].end;
+    console.log(aOverlapsB);
+    const bOverlapsA = b[j].start >= a[i].start && b[j].start <= a[i].end;
+    console.log(bOverlapsA);
 
-      if (aOverlapsB || bOverlapsA) {
-        result.push([Math.max(a[i].start, b[j].start), Math.min(a[i].end, b[j].end)]);
-      }
-
-      if (a[i].end < b[j].end) {
-        i++;
-      } else {
-        j++;
-      }
+    if (aOverlapsB || bOverlapsA) {
+      result.push([Math.max(a[i].start, b[j].start), Math.min(a[i].end, b[j].end)]);
     }
 
-    return result;
-  };
+    if (a[i].end < b[j].end) {
+      i++;
+    } else {
+      j++;
+    }
+  }
+
+  return result;
+};
 
   // const testA = [{'start': 1, 'end': 3}, {'start': 5, 'end': 6}, {'start': 7, 'end': 9}];
   // const testB = [{'start': 2, 'end': 3}, {'start': 5, 'end': 7}];
