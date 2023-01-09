@@ -1,5 +1,4 @@
 // 1 - TWO SUM
-
 // if nums array is not sorted
 const twoSumCacheDiffs = (nums, target) => {
   const diffs = {};

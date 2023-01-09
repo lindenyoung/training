@@ -62,3 +62,49 @@ const insertInterval = (intervals, newInterval) => {
 
 /* - - - - - - - - - - - - - - - - - - - - */
 
+  // INTERVALS INTERSECTION
+  // given 2 lists of intervals (disjoint and sorted), find the intersection of these two lists
+  // a = [[1,3], [5,6], [7,9]]
+  // b = [[2,3], [5,7]]
+  // output = [2,3], [5,6], [7,7]
+
+  const intervalsIntersection = (a, b) => {
+    let result = [];
+    let i = 0;
+    let j = 0;
+
+    while (i < a.length && j < b.length) {
+      const aOverlapsB = a[i].start >= b[j].start && a[i].start <= b[j].end;
+      console.log(aOverlapsB);
+      const bOverlapsA = b[j].start >= a[i].start && b[j].start <= a[i].end;
+      console.log(bOverlapsA);
+
+      if (aOverlapsB || bOverlapsA) {
+        result.push([Math.max(a[i].start, b[j].start), Math.min(a[i].end, b[j].end)]);
+      }
+
+      if (a[i].end < b[j].end) {
+        i++;
+      } else {
+        j++;
+      }
+    }
+
+    return result;
+  };
+
+  // const testA = [{'start': 1, 'end': 3}, {'start': 5, 'end': 6}, {'start': 7, 'end': 9}];
+  // const testB = [{'start': 2, 'end': 3}, {'start': 5, 'end': 7}];
+  // console.log(intervalsIntersection(testA, testB));
+
+  /* - - - - - - - - - - - - - - - - - - - - */
+
+  // CONFLICTING APPOINTMENTS
+  // given array of intervals (appts), return whether or not a person can attend all of them
+  const conflictingAppts = (intervals) => {
+    intervals.sort((a, b) => a.start - b.start);
+    for (let i = 1; i < intervals.length; i++) {
+      if (intervals[i].start < intervals[i - 1].end) return false;
+    }
+    return true;
+  };
