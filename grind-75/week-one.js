@@ -89,8 +89,29 @@ const isPalindrome = (s) => {
 // 6 - INVERT BINARY TREE
 
 // 7 - VALID ANAGRAM
+  // two possible approaches - sort and compare / use hash map as a frequency counter
+const isAnagram = (stringOne, stringTwo) => {
+  return stringOne.split('').sort().join('') === stringTwo.split('').sort().join('');
+};
 
 // 8 - BINARY SEARCH
+const binarySearch = (nums, target) => {
+  // create two pointers
+  let left = 0;
+  let right = nums.length - 1;
+  // while pointers haven't crossed
+  while (left <= right) {
+    // create midpoint index
+    const midpoint = Math.floor((left + right) / 2);
+    // test midpoint value against target
+    if (nums[midpoint] === target) return midpoint; // if equal, return index
+    // otherwise, reassign left or right as needed
+    if (nums[midpoint] < target) left++;
+    if (nums[midpoint] > target) right--;
+  }
+  // return -1
+  return -1;
+};
 
 // 9 - FLOOD FILL
 const floodFillMatrix = (image, sr, sc, color) => {
