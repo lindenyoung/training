@@ -1,0 +1,9 @@
+Date - Score
+  Problem - time left when finished / submitted
+
+1/10/23 - 786
+  1 - 59 min left 300/300
+  2 - 53 min left 300/300
+  3 - 40 min left 300/300
+  4 - 20 min left 212/300 (25/32 tests passed - execution time limit exceeded on #26)
+
