@@ -1,3 +1,5 @@
+https://support.codesignal.com/hc/en-us/articles/360039879414-What-s-a-Coding-Score-and-how-do-I-interpret-my-GCA-Coding-Score-
+
 Date - Score
   Problem - time left when finished / submitted
 

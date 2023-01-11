@@ -65,8 +65,40 @@ const ransomNote = (note, magazine) => {
 
 // 9 - MIDDLE OF LINKED LIST
 
+const middleOfLinkedList = (head) => {
+  let slow = head;
+  let fast = head;
+
+  while (fast !== null && fast.next !== null) {
+    slow = slow.next;
+    fast = fast.next.next;
+  }
+  return slow;
+};
+
 // 10 - MAX DEPTH OF BINARY TREE
 
 // 11 - CONTAINS DUPLICATE
+const containsDuplicateSort = (nums) => {
+  nums.sort((a, b) => a - b);
+
+  for (let i = 0; i < nums.length; i++) {
+    if (nums[i] === nums[i + 1]) return true;
+  }
+  return false;
+};
+
+const containsDuplicateSet = (nums) => {
+  const numsSet = new Set();
+
+  for (let i = 0; i < nums.length; i++) {
+    if numsSet.has(nums[i]) {
+      return true;
+    } else {
+      numsSet.add(nums[i]);
+    }
+  }
+  return false;
+};
 
 // 12 - MAX SUBARRAY
