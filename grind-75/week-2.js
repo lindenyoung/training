@@ -52,19 +52,47 @@ const ransomNote = (note, magazine) => {
 };
 
 // 3 - CLIMBING STAIRS
+const climbStairs = (n) => {
+  const cache = {
+    0: 1,
+    1: 1
+  };
+  if (n <= 1) return cache[n];
+  for (let i = 2; i <= n; i++) {
+    cache[i] = cache[i-1] + cache[i-2];
+  }
+  return cache[n];
+};
 
 // 4 - LONGEST PALINDROME
 
 // 5 - REVERSE LINKED LIST
 
 // 6 - MAJORITY ELEMENT
+const majorityElement = (nums) => {
+  // edge case - array length of one
+  if (nums.length === 1) return nums[0];
+
+  const majority = nums.length / 2;
+  const cache = {}; // how to make this solution constant space?
+
+  for (let i = 0; i < nums.length; i++) {
+    const currNum = nums[i];
+    if (!cache[currNum]) {
+      cache[currNum] = 1;
+    } else {
+      cache[currNum]++;
+      // check for majority logic
+      if (cache[currNum] > majority) return currNum;
+    }
+  }
+};
 
 // 7 - ADD BINARY
 
 // 8 - DIAMETER OF BINARY TREE
 
 // 9 - MIDDLE OF LINKED LIST
-
 const middleOfLinkedList = (head) => {
   let slow = head;
   let fast = head;
