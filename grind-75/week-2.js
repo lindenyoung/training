@@ -67,6 +67,19 @@ const climbStairs = (n) => {
 // 4 - LONGEST PALINDROME
 
 // 5 - REVERSE LINKED LIST
+const reverseLL = (head) => {
+  let curr = head;
+  let prev = null;
+  let next = null;
+
+  while (curr) {
+    next = curr.next; // store next node
+    curr.next = prev; // flip pointer
+    prev = curr;
+    curr = next;
+  }
+  return prev; // new head of LL
+};
 
 // 6 - MAJORITY ELEMENT
 const majorityElement = (nums) => {
@@ -89,6 +102,10 @@ const majorityElement = (nums) => {
 };
 
 // 7 - ADD BINARY
+const addBinary = (a, b) => {
+  const sum = BigInt(`0b${a}`) + BigInt(`0b${b}`);
+  return sum.toString(2);
+};
 
 // 8 - DIAMETER OF BINARY TREE
 
