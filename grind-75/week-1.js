@@ -86,6 +86,35 @@ const isPalindrome = (s) => {
 }
 
 // 6 - INVERT BINARY TREE
+  // BFS solution
+const invertBinaryTreeBFS = (root) => {
+  const queue = [root];
+
+  while (queue.length) {
+    const currNode = queue.shift();
+    if (currNode !== null) {
+      [currNode.left, currNode.right] = [currNode.right, currNode.left];
+      queue.push(currNode.left, currNode.right);
+    }
+  }
+
+  return root;
+};
+
+// DFS solution
+const invertBinaryTreeDFS = (root) => {
+  const stack = [root];
+
+  while (stack.length) {
+    const n = stack.pop();
+    if (n !== null) {
+      [n.left, n.right] = [n.right, n.left];
+      stack.push(n.left, n.right);
+    }
+  }
+
+  return root;
+};
 
 // 7 - VALID ANAGRAM
   // two possible approaches - sort and compare / use hash map as a frequency counter
@@ -132,7 +161,22 @@ const changeColor = (matrix, x, y, oldColor, newColor) => {
 
 // 10 - LOWEST COMMON ANCESTOR OF BST
 
-// 11 - BALANCED BINARY TREE
+// 11 - BALANCED BINARY TREE - a bit confused on how this is working
+  // beats 96.68% runtime, 87.23% memory on Leetcode
+const isTreeBalanced = (root) => {
+  if (root === null) return true; // edge case, empty tree is balanced
+  return findHeight(root) === -1 ? false : true; // -1 = not balanced, otherwise balanced
+};
+
+// helper function
+const findHeight = (root) => {
+  if (root === null) return 0; // base case
+  let leftHeight = findHeight(root.left); // left
+  let rightHeight = findHeight(root.right); // right
+  if (leftHeight === -1 || rightHeight === -1) return -1; // if unbalanced return -1
+  if (Math.abs(leftHeight - rightHeight) > 1) return -1; // if heights differ by > 1 return -1
+  return Math.max(leftHeight, rightHeight) + 1; //
+};
 
 // 12 - LINKED LIST CYCLE
 const hasCycleLL = (head) => {
