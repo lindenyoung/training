@@ -108,6 +108,25 @@ const addBinary = (a, b) => {
 };
 
 // 8 - DIAMETER OF BINARY TREE
+const diameterOfBinaryTree = (root) => {
+  let diameter = 0;
+
+  dfs(root);
+  return diameter;
+
+  // helper function
+  function dfs(node, level) {
+    if (!node) return 0;
+
+    const left = dfs(node.left);
+    const right = dfs(node.right);
+
+    // update diameter at every node
+    diameter = Math.max(diameter, left + right);
+    // update the max # of edges so far
+    return 1 + Math.max(left, right);
+  }
+};
 
 // 9 - MIDDLE OF LINKED LIST
 const middleOfLinkedList = (head) => {
@@ -122,6 +141,25 @@ const middleOfLinkedList = (head) => {
 };
 
 // 10 - MAX DEPTH OF BINARY TREE
+const maxDepth = (root) => {
+  if (root === null) return 0;
+
+  const queue = [root];
+  let maxDepth = 0;
+
+  while (queue.length) {
+    maxDepth++;
+    const levelSize = queue.length;
+    for (let i = 0; i < levelSize; i++) {
+      const curr = queue.shift();
+
+      if (curr.left !== null) queue.push(curr.left);
+      if (curr.right !== null) queue.push(curr.right);
+    }
+  }
+
+  return maxDepth;
+};
 
 // 11 - CONTAINS DUPLICATE
 const containsDuplicateSort = (nums) => {
