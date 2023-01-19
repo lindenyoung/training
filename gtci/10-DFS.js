@@ -94,3 +94,35 @@ const findPathWithSequenceDFS = (currNode, sequence, index) => {
 };
 
 /* - - - - - - - - - - - - - - - - - - - - */
+
+// COUNT PATHS FOR A SUM - kind of confused on this one
+// O(n2) time and O(n) space (recursion stack)
+// there is an O(n) time and O(n) space solution using prefix sum
+
+const countPaths = (root, sum) => {
+  return countPathsRecursive(root, sum, []);
+};
+
+const countPathsRecursive = (currNode, sum, currPath) => {
+  if (currNode === null) return 0;
+
+  // add curr node to path
+  currPath.push(currNode.val);
+
+  let pathCount = 0;
+  let pathSum = 0;
+
+  // find sums of all sub-paths in curr path list
+  for (i = currPath.length - 1; i >= 0; i--) {
+    pathSum += currPath[i];
+    if (pathSum === sum) pathCount++;
+  }
+
+  // traverse left and right child nodes
+  pathCount += countPathsRecursive(currNode.left, sum, currPath);
+  pathCount += countPathsRecursive(currNode.right, summ, currPath);
+
+  // remove curr node from path to backtrack
+  currPath.pop();
+  return pathCount;
+};
