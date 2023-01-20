@@ -65,6 +65,24 @@ const climbStairs = (n) => {
 };
 
 // 4 - LONGEST PALINDROME
+const longestPalindrome = (str) => {
+  const set = new Set();
+  let count = 0;
+
+  for (let i = 0; i < str.length; i++) {
+    const char = str[i];
+    if (set.has(char)) {
+      count += 2;
+      set.delete(char);
+    } else {
+      set.add(char);
+    }
+  }
+
+  return count + (set.size > 0 ? 1 : 0); // if there is one char left in set, add 1 to count (odd length palindrome, one char will only appear once)
+  // if (set.size > 0) count++;
+  // return count;
+};
 
 // 5 - REVERSE LINKED LIST
 const reverseLL = (head) => {
@@ -185,3 +203,32 @@ const containsDuplicateSet = (nums) => {
 };
 
 // 12 - MAX SUBARRAY
+// beats 90.70% on runtime and 84.35% on space
+const maxSubArray = (nums) => {
+  if (nums.length === 1) return nums[0];
+  if (nums.length < 1) return 0;
+
+  let maxSum = -Infinity;
+  let sum = 0;
+
+  for (let i = 0; i < nums.length; i++) {
+    sum = sum + nums[i]; // calculate new sum by adding curr num
+    maxSum = Math.max(maxSum, sum); // if new sum is bigger, reassign maxSum
+    if (sum < 0) sum = 0; // account for negative nums
+  }
+
+  return maxSum;
+};
+
+// beats 62.80% on runtime and 93.76% on space
+const maxSubArrayTwo = (nums) => {
+  let maxSum = nums[0];
+
+  for (let i = 1; i < nums.length; i++) {
+    nums[i] = Math.max(0, nums[i - 1]) + nums[i]; // prefix approach, nums[i - 1] = previous sum
+    if (nums[i] > maxSum) maxSum = nums[i];
+  }
+
+  return maxSum;
+};
+
