@@ -55,7 +55,18 @@ const validParens = (s) => {
   return openersStack.length === 0; // return true if stack is empty
 };
 
-// 3 - MERGE TWO SORTED LISTS
+// 3 - MERGE TWO SORTED LISTS (linked lists)
+const mergeTwoLists = (l1, l2) => {
+  if (!l1) return l2;
+  else if (!l2) return l1;
+  else if (l1.val <= l2.val) {
+    l1.next = mergeTwoLists(l1.next, l2);
+    return l1;
+  } else {
+    l2.next = mergeTwoLists(l1, l2.next);
+    return l2;
+  }
+};
 
 // 4 - BEST TIME TO BUY AND SELL STOCK
 const buyAndSellStock = (prices) => {
@@ -160,6 +171,21 @@ const changeColor = (matrix, x, y, oldColor, newColor) => {
 };
 
 // 10 - LOWEST COMMON ANCESTOR OF BST
+// iterative is same time but better space than recursive solution
+// O(n) time and O(1) space
+const lowestCommonAncestorBST = (root, p, q) => {
+  while (root) {
+    if (root.val < p.val && root.val < q.val) {
+      root = root.right; // move right if both vals are greater than root val (on right of curr tree)
+    } else if (root.val > p.val && root.val > q.val) {
+      root = root.left; // move left if both vals are less than root val (on left of curr tree)
+    } else {
+      break; // if root is inbetween both node vals, break and return root node
+    }
+  }
+
+  return root;
+}
 
 // 11 - BALANCED BINARY TREE - a bit confused on how this is working
   // beats 96.68% runtime, 87.23% memory on Leetcode
