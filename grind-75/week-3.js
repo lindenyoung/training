@@ -36,6 +36,49 @@ const insertInterval = (intervals, newInterval) => {
 // 4 - LONGEST SUBSTRING WITHOUT REPEATING CHARS
 
 // 5 - 3 SUM
+// basically iterating through nums array and doing two sum for each num
+const threeSum = (nums) => {
+  if (nums.length < 3) return [];
+
+  const result = [];
+  let sum = 0;
+
+  nums.sort((a, b) => a - b);
+
+  for (let i = 0; i < nums.length - 2; i++) {
+    if (i > 0 && nums[i] === nums[i - 1]) continue; // skip duplicates
+
+    let left = i + 1;
+    let right = nums.length - 1;
+
+    while (left < right) {
+      sum = nums[i] + nums[left] + nums[right];
+      if (sum === 0) {
+        result.push([nums[i], nums[left], nums[right]]);
+        left++;
+        right--;
+
+        // move left pointer to avoid duplicates
+        while (nums[left] === nums[left - 1] && left < right) {
+          left++;
+        }
+
+        // move right pointer to avoid duplicates
+        while (nums[right] === nums[right + 1] && left < right) {
+          right--;
+        }
+
+      // move pointer depending on sum
+      } else if (sum > 0) {
+        right--;
+      } else {
+        left++;
+      }
+    }
+  }
+
+  return result;
+};
 
 // 6 - BINARY TREE LEVEL ORDER TRAVERSAL
 const treeLevelOrderTraversal = (root) => {
@@ -61,5 +104,20 @@ const treeLevelOrderTraversal = (root) => {
 };
 
 // 7 - CLONE GRAPH
+const cloneGraph = (node) => {
+  if (node === null) return null;
+
+  const hashMap = new Map();
+
+  const clone = (root) => {
+    if (!hashMap.has(root.val)) {
+      hashMap.set(root.val, new Node(root.val));
+      hashMap.get(root.val).neighbors = root.neighbors.map(clone); // neighbors.map is array method map
+    }
+    return hashMap.get(root.val);
+  };
+
+  return clone(node);
+};
 
 // 8 - EVALUATE REVERSE POLISH NOTATION
