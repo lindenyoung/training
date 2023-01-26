@@ -108,3 +108,49 @@ const intervalsIntersection = (a, b) => {
     }
     return true;
   };
+
+  /* - - - - - - - - - - - - - - - - - - - - */
+
+  // StubHub Codility OA
+
+  const solution = (A, P, B, E) => {
+    if (!A.length) return false; // edge case - no cranes exist
+
+    // get intervals for each crane
+    const intervals = [];
+    for (let i = 0; i < P.length; i++) {
+      intervals.push([P[i] - A[i], P[i] + A[i]]); // crane position +/- arm length equals the window or interval for that crane
+    }
+
+    // sort intervals
+    intervals.sort((a, b) => a[0] - b[0]);
+
+    // merge intervals
+    const mergedIntervals = [intervals[0]];
+
+    for (let j = 1; j < intervals.length; j++) {
+      const currStart = intervals[j][0];
+      const currEnd = intervals[j][1];
+      const lastEndPosition = mergedIntervals[mergedIntervals.length - 1][1];
+
+      if (currStart <= lastEndPosition) {
+        mergedIntervals[mergedIntervals.length - 1][1] = Math.max(currEnd, lastEndPosition); // merge if needed
+      } else {
+        mergedIntervals.push([currStart, currEnd]); // otherwise just add curr interval to merged list
+      }
+    }
+
+    // check if package start and destination both exist within any merged interval
+    for (let k = 0; k < mergedIntervals.length; k++) {
+      const currStart = mergedIntervals[k][0];
+      const currEnd = mergedIntervals[k][1];
+      if (B >= currStart && B <= currEnd && E >= currStart && E <= currEnd) return true; // true condition - a window / interval of cranes includes both the start and ending package position
+    }
+
+    return false;
+  };
+
+  // console.log(solution([2, 1], [5, 1], 3, 6)); // -> true
+  // console.log(solution([2, 1], [5, 1], 2, 6)); // -> false
+  // console.log(solution([1, 4, 2], [10, 4, 7], 11, 1)); // -> // true
+  // console.log(solution([1, 3], [2, 6], 1, 5)); // -> true
