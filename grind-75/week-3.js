@@ -34,6 +34,25 @@ const insertInterval = (intervals, newInterval) => {
 // 3 - K CLOSEST POINTS TO ORIGIN
 
 // 4 - LONGEST SUBSTRING WITHOUT REPEATING CHARS
+const longestNonRepeatingSubstring = (s) => {
+  let windowStart = 0,
+      maxLength = 0,
+      charIndexMap = {};
+
+  for (let windowEnd = 0; windowEnd < s.length; windowEnd++) {
+    const rightChar = s[windowEnd];
+    if (rightChar in charIndexMap) {
+      windowStart = Math.max(windowStart, charIndexMap[rightChar] + 1);
+    }
+
+    charIndexMap[rightChar] = windowEnd;
+
+    const currLength = windowEnd - windowStart + 1;
+    maxLength = Math.max(maxLength, currLength);
+  }
+
+  return maxLength;
+};
 
 // 5 - 3 SUM
 // basically iterating through nums array and doing two sum for each num
@@ -121,3 +140,28 @@ const cloneGraph = (node) => {
 };
 
 // 8 - EVALUATE REVERSE POLISH NOTATION
+// 12 7 - = 12 - 7 = 5
+const evalReversePolishNotation = (tokens) => {
+  let a, b;
+  const evaluate = {
+    "+": () => a+b,
+    "-": () => a-b,
+    "*": () => a*b,
+    "/": () => ~~(a/b)
+  };
+
+  const stack = [];
+
+  for (let t of tokens) {
+    if (evaluate[t]) { // if curr string is an operand
+      b = stack.pop();
+      a = stack.pop();
+      stack.push(evaluate[t]()); // push evaluated result to stack
+    } else {
+      stack.push(~~t); // push (Math.floor) curr str (element)
+    }
+  }
+
+  return stack[0]; // stack will contain one element - the final result
+};
+
