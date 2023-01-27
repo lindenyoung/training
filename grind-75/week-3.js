@@ -32,6 +32,15 @@ const insertInterval = (intervals, newInterval) => {
 // 2 - 01 MATRIX
 
 // 3 - K CLOSEST POINTS TO ORIGIN
+// O(n log(n)) time and O(1) space
+const kClosestPoints = (points, k) => {
+  return points.sort((a, b) => getDistance(a) - getDistance(b)).slice(0, k);
+};
+
+// helper function
+const getDistance = ([a, b]) => {
+  return (a * a) + (b * b);
+};
 
 // 4 - LONGEST SUBSTRING WITHOUT REPEATING CHARS
 const longestNonRepeatingSubstring = (s) => {
