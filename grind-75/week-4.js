@@ -7,8 +7,37 @@
 // 4 - PRODUCT OF ARRAY EXCEPT SELF
 
 // 5 - MIN STACK
+const MinStack = function() {
+  this.stack = [];
+};
+
+MinStack.prototype.push = (x) => {
+  this.stack.push({
+    value: x,
+    min: this.stack.length === 0 ? x : Math.min(x, this.getMin()) // keeps track of min at each element to handle pop method
+  });
+};
+
+MinStack.prototype.pop = () => {
+  this.stack.pop();
+};
+
+MinStack.prototype.top = () => {
+  return this.stack[this.stack.length - 1].value;
+};
+
+MinStack.prototype.getMin = () => {
+  return this.stack[this.stack.length - 1].min;
+};
 
 // 6 - VALIDATE BST
+const isValidBST = (root, lowerBound = -Infinity, upperBound = Infinity) => {
+  if (root === null) return true;
+  // false conditions: left node val is <= parent node val or right node val is >= parent node val
+  if (root.val <= lowerBound.val || root.val >= upperBound.val) return false;
+  // move left and right
+  return isValidBST(root.left, lowerBound, root) && isValidBST(root.right, root, upperBound);
+};
 
 // 7 - NUM ISLANDS
 const numIslands = (grid) => {
