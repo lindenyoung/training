@@ -2,11 +2,50 @@
 
 // 2 - IMPLEMENT TRIE (PREFIX TREE)
 
-// 3 - COIN CHANGE
+// 3 - COIN CHANGE - dynamic programming
+// return the fewest number of coins you need to make up the given amount
+// coins = [1, 2, 5] / amount = 11 / output = 3 (5 + 5 + 1)
+const coinChange = (coins, amount) => {
+  const dp = Array(amount + 1).fill(Infinity);
+  dp[0] = 0;
+
+  for (let i = 1; i < dp.length; i++) {
+    for (let coin of coins) {
+      if (i - coin >= 0) dp[i] = Math.min(dp[i], dp[i - coin] + 1);
+    }
+  }
+
+  return dp[amount] === Infinity ? -1 : dp[amount];
+};
 
 // 4 - PRODUCT OF ARRAY EXCEPT SELF
+// must run in O(n) time and without using the division operator
+// [1, 2, 3, 4] -> [24, 12, 8, 6]
+// output: [24, 12, 4, 1] after backwards loop
+// output: [24, 12, 8, 6] then after forward loop
+const productExceptSelf = (nums) => {
+  // we want the product of all left elements * product of all right elements
+  // use both forward and backwards pass
+
+  const result = [];
+  let leftMult = 1; // prefix
+  let rightMult = 1; // suffix
+
+  for (let i = nums.length - 1; i >= 0; i--) {
+    result[i] = rightMult;
+    rightMult *= nums[i];
+  }
+
+  for (let j = 0; j < nums.length; j++) {
+    result[j] *= leftMult;
+    leftMult *= nums[j];
+  }
+
+  return result;
+};
 
 // 5 - MIN STACK
+// implement stack with push / pop / top / getMin methods
 const MinStack = function() {
   this.stack = [];
 };
