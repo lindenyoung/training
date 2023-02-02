@@ -1,6 +1,55 @@
 // 1 - SEARCH IN ROTATED SORTED ARRAY
+// solution must be O(log n) runtime
+// one half of array will be sorted no matter the pivot point, so can use binary search
+const searchRotatedArray = (nums, target) => {
+  let left = 0;
+  let right = nums.length - 1;
+
+  while (left <= right) {
+    let mid = Math.floor((left + right) / 2); // midpoint
+
+    if (nums[mid] === target) return mid;
+
+    // check if the left side is the sorted half
+    if (nums[left] <= nums[mid]) {
+      // if target is in left side, move right pointer down
+      if (nums[left] <= target && target <= nums[mid]) right = mid - 1;
+      // otherwise move left pointer up
+      else left = mid + 1;
+    // otherwise the right side is sorted
+    } else {
+      if (nums[mid] <= target && target <= nums[right]) left = mid + 1;
+      else right = mid - 1;
+    }
+  }
+
+  return -1;
+};
 
 // 2 - COMBINATION SUM
+const combinationSum = (candidates, target) => {
+  let index = 0;
+  let temp = [];
+  let result = [];
+
+  function backtracking(index, target, temp) {
+    if (target === 0) {
+      result.push([...temp]);
+      return;
+    }
+
+    if (target < 0) return;
+
+    for (let i = index; i < candidates.length; i++) {
+      temp.push(candidates[i]);
+      backtracking(i, target - candidates[i], temp);
+      temp.pop();
+    }
+  }
+
+  backtracking(index, target, temp);
+  return result;
+};
 
 // 3 - PERMUTATIONS
 
