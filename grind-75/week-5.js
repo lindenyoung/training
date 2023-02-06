@@ -75,10 +75,55 @@ const mergeIntervals = (intervals) => {
 };
 
 // 5 - LOWEST COMMON ANCESTOR OF BINARY TREE
+const lowestCommonAncestor = (root, p, q) => {
+  if (!root || root.val === p.val || root.val === q.val) return root;
+
+  const left = lowestCommonAncestor(root.left, p, q);
+  const right = lowestCommonAncestor(root.right, p, q);
+
+  return (left && right) ? root : left || right;
+  // if (!left) return right; // p and q are in the right subtree
+  // if (!right) return left; // p and q are in the left subtree
+  // return root; // p is in one side and q is in the other
+};
 
 // 6 - TIME BASED KEY VALUE STORE
 
 // 7 - ACCOUNTS MERGE
+// union find solution
+// accounts = [name, ...emails][]
+const accountsMerge = (accounts) => {
+  const parents = {};
+  const emailToName = {};
+
+  const find = (x) => {
+    if (parents[x] !== x) parents[x] = find(parents[x]);
+    return parents[x];
+  };
+
+  const union = (x, y) => {
+    parents[find(x)] = find(y);
+  };
+
+  for (const [name, ...emails] of accounts) {
+    for (const email of emails) {
+      if (!parents[email]) parents[email] = email;
+
+      emailToName[email] = name;
+      union(email, emails[0]);
+    }
+  }
+
+  const emails = {};
+
+  for (const email of Object.keys(parents)) {
+    const parent = find(email);
+    if (parent in emails) emails[parent].push(email);
+    else emails[parent] = [email];
+  }
+
+  return Object.entries(emails).map(([email, x]) => [emailToName[email], ...x.sort()]);
+};
 
 // 8 - SORT COLORS
 // sort nums array in place without native methods in red white blue order (0, 1, 2)
