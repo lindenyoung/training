@@ -15,7 +15,7 @@ const spiralOrder = (matrix) => {
     for (const m of matrix) {
       let val = m.pop();
       if (val) {
-        res.push(val);
+        result.push(val);
         m.reverse();
       }
     }
