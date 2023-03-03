@@ -153,9 +153,111 @@ const longestStreak = (head) => {
 };
 
 // remove node
+const removeNode = (head, targetVal) => {
+  // edge case of head being target
+  if (head.val === targetVal) {
+    const newHead = head.next;
+    head.next = null;
+    head = newHead;
+    return head;
+  }
+
+  let curr = head;
+  let prev = null;
+
+  while (curr) {
+    if (curr.val === targetVal) {
+      const nextNode = curr.next;
+      curr.next = null;
+      prev.next = nextNode;
+      return head;
+    }
+
+    prev = curr;
+    curr = curr.next;
+  }
+};
 
 // insert node
+const insertNode = (head, value, index) => {
+  // edge case of index 0 - new head node
+  if (index === 0) {
+    const newHead = new Node(value);
+    newHead.next = head;
+    return newHead;
+  }
+
+  let curr = head;
+  let count = 0;
+
+  while (curr) {
+    if (count === index - 1) {
+      const nextNode = curr.next;
+      curr.next = new Node(value);
+      curr.next.next = nextNode;
+      return head;
+    }
+
+    curr = curr.next;
+    count++;
+  }
+};
 
 // create LL
+const createLinkedList = (values) => {
+  const dummyHead = new Node(null);
+  let tail = dummyHead;
+
+  for (let val of values) {
+    tail.next = new Node(val);
+    tail = tail.next;
+  }
+
+
+  return dummyHead.next;
+};
 
 // add lists
+const addListsIterative = (head1, head2) => {
+  const dummyHead = new Node(null);
+  let tail = dummyHead;
+
+  let carry = 0;
+  let curr1 = head1;
+  let curr2 = head2;
+
+  while (curr1 || curr2 || carry !== 0) {
+    const val1 = curr1 === null ? 0 : curr1.val;
+    const val2 = curr2 === null ? 0 : curr2.val;
+    const sum = val1 + val2 + carry;
+    carry = sum > 9 ? 1 : 0;
+
+    const digit = sum % 10;
+    tail.next = new Node(digit);
+    tail = tail.next;
+
+    if (curr1) curr1 = curr1.next;
+    if (curr2) curr2 = curr2.next;
+  }
+
+  return dummyHead.next;
+};
+
+const addListsRecursive = (head1, head2, carry = 0) => {
+  if (head1 === null && head2 === null && carry === 0) return null;
+
+  const val1 = head === null ? 0 : head1.val;
+  const val2 = head === null ? 0 : head2.val;
+
+  const sum = val1 + val2 + carry;
+  const nextCarry = sum > 9 ? 1 : 0;
+  const digit = sum % 10;
+  const result = new Node(digit);
+
+  const next1 = head1 === null ? null : head1.next;
+  const next2 = head2 === null ? null : head2.next;
+
+  result.next = addListsRecursive(next1, next2, nextCarry);
+
+  return result;
+};
