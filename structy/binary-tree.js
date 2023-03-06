@@ -91,6 +91,29 @@ const treeIncludesDFS = (root, target) => {
 };
 
 // tree min value
+const treeMinValue = (root) => {
+  if (root === null) return Infinity;
+
+  let min = Infinity;
+  const stack = [root];
+
+  while (stack.length) {
+    const node = stack.pop();
+    if (node.val < min) min = node.val;
+
+    if (node.right !== null) stack.push(node.right);
+    if (node.left !== null) stack.push(node.left);
+  }
+
+  return min;
+};
+
+const treeMinValueRecursive = (root) => {
+  if (root === null) return Infinity;
+  const smallestLeftVal = treeMinValueRecursive(root.left);
+  const smallestRightVal = treeMinValueRecursive(root.right);
+  return Math.min(root.val, smallestLeftVal, smallestRightVal);
+};
 
 // max root to leaf path sum
 
