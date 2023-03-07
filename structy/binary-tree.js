@@ -116,14 +116,55 @@ const treeMinValueRecursive = (root) => {
 };
 
 // max root to leaf path sum
+const maxPathSum = (root) => {
+  if (root === null) return - Infinity; // nodes with only 1 of 2 possible children
+  if (root.left === null && root.right === null) return root.val;
+  return root.val + Math.max(maxPathSum(root.left), maxPathSum(root.right));
+};
 
 // tree path finder
+const pathFinder = (root, target) => {
+  if (root === null) return null;
+  if (root.val === target) return [root.val];
+
+  const leftPath = pathFinder(root.left, target);
+  if (leftPath) return [root.val, ...leftPath];
+
+  const rightPath = pathFinder(root.right, target);
+  if (rightPath) return [root.val, ...rightPath];
+
+  return null;
+};
 
 // tree value count
+const treeValueCount = (root, targetVal) => {
+  if (root === null) return 0;
+  const match = root.val === targetVal ? 1 : 0;
+  return match + treeValueCount(root.left, targetVal) + treeValueCount(root.right, targetVal);
+};
 
 // how high
+const howHigh = (root) => {
+  if (root === null) return -1;
+  const leftHeight = howHigh(root.left);
+  const rightHeight = howHigh(root.right);
+  return 1 + Math.max(leftHeight, rightHeight);
+};
 
-// bottom right value
+// bottom right value - right most value in the bottom most level of the tree
+  // use queue to find bottom most level, then return last node in queue
+const bottomRightValue = (root) => {
+  const queue = [root];
+  let curr;
+
+  while (queue.length) {
+    curr = queue.shift();
+    if (curr.left) queue.push(curr.left);
+    if (curr.right) queue.push(curr.right);
+  }
+
+  return curr.val;
+};
 
 // all tree paths
 
