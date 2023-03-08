@@ -117,7 +117,7 @@ const treeMinValueRecursive = (root) => {
 
 // max root to leaf path sum
 const maxPathSum = (root) => {
-  if (root === null) return - Infinity; // nodes with only 1 of 2 possible children
+  if (root === null) return -Infinity; // nodes with only 1 of 2 possible children
   if (root.left === null && root.right === null) return root.val;
   return root.val + Math.max(maxPathSum(root.left), maxPathSum(root.right));
 };
@@ -167,9 +167,110 @@ const bottomRightValue = (root) => {
 };
 
 // all tree paths
+const allTreePaths = (root) => {
+  if (root === null) return []; // edge case of null root
+
+  if (root.left === null && root.right === null) return [ [root.val] ]; // leaf node
+
+  const paths = [];
+
+  const leftSubPaths = allTreePaths(root.left);
+  for (let subPath of leftSubPaths) {
+    paths.push([root.val, ...subPath]);
+  }
+
+  const rightSubPaths = allTreePaths(root.right);
+  for (let subPath of rightSubPaths) {
+    paths.push([root.val, ...subPath]);
+  }
+
+  return paths;
+};
 
 // tree levels
+const treeLevels = (root) => {
+  if (root === null) return [];
+
+  const levels = [];
+  const queue = [ {node: root, levelNum: 0} ];
+
+  while (queue.length) {
+    const { node, levelNum } = queue.shift();
+
+    if (levels.length === levelNum) {
+      levels[levelNum] = [node.val];
+    } else {
+      levels[levelNum].push(node.val);
+    }
+
+    if (node.left !== null) queue.push({node: node.left, levelNum: levelNum + 1});
+    if (node.right !== null) queue.push({node: node.right, levelNum: levelNum + 1});
+  }
+
+  return levels;
+};
+
+const treeLevelsBFS = (root) => {
+  const result = [];
+  if (root === null) return result;
+
+  const queue = [root];
+
+  while (queue.length) { // tree traversal
+    const levelSize = queue.length;
+    const currLevel = [];
+    for (let i = 0; i < levelSize; i++) { // level traversal
+      const currNode = queue.shift();
+      currLevel.push(currNode.val);
+      if (currNode.left !== null) queue.push(currNode.left);
+      if (currNode.right !== null) queue.push(currNode.right);
+    }
+
+    result.push(currLevel);
+  }
+
+  return result;
+};
 
 // level averages
+const levelAveragesBFS = (root) => {
+  const result = [];
+  if (root === null) return result;
+
+  const queue = [root];
+
+  while (queue.length) { // tree traversal
+    const levelSize = queue.length;
+    let levelSum = 0;
+    for (let i = 0; i < levelSize; i++) { // level traversal
+      const curr = queue.shift();
+      levelSum += curr.val;
+
+      if (curr.left !== null) queue.push(curr.left);
+      if (curr.right !== null) queue.push(curr.right);
+    }
+
+    result.push(levelSum / levelSize);
+  }
+
+  return result;
+};
 
 // leaf list
+const leafListDFS = (root) => {
+  const result = [];
+  if (root === null) return result;
+
+  const stack = [root];
+
+  while (stack.length) {
+    const curr = stack.pop();
+
+    if (curr.left === null && curr.right === null) result.push(curr.val);
+
+    if (curr.right !== null) stack.push(curr.right);
+    if (curr.left !== null) stack.push(curr.left);
+  }
+
+  return result;
+};
