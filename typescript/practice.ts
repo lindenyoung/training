@@ -26,3 +26,15 @@ const findLowestThreeNums = (nums: number[]): number[] => {
 };
 
 // console.log(findLowestThreeNums([5, 3, 1, 10, 20, 2]));
+
+interface Item {
+  name: string;
+  id: number;
+  price: number;
+  onSale?: boolean;
+}
+
+const findCheapestThreeItems = (items: Item[]): Item[] => {
+  const cheapestItems = [...items].sort((a, b) => a.price - b.price);
+  return cheapestItems.slice(0, 3);
+};
