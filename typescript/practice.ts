@@ -38,3 +38,24 @@ const findCheapestThreeItems = (items: Item[]): Item[] => {
   const cheapestItems = [...items].sort((a, b) => a.price - b.price);
   return cheapestItems.slice(0, 3);
 };
+
+const findCheapestThree = (items: Item[]): Item[] => {
+  let lowestItems: Item[] = [{ name: '', id: 0, price: Infinity }, { name: '', id: 0, price: Infinity }, { name: '', id: 0, price: Infinity }];
+
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
+
+    if (item.price < lowestItems[0].price) {
+      lowestItems[2] = lowestItems[1];
+      lowestItems[1] = lowestItems[0];
+      lowestItems[0] = item;
+    } else if (item.price < lowestItems[1].price) {
+      lowestItems[2] = lowestItems[1];
+      lowestItems[1] = item;
+    } else if (item.price < lowestItems[2].price) {
+      lowestItems[2] = item;
+    }
+  }
+
+  return lowestItems;
+};
