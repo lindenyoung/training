@@ -14,7 +14,27 @@ const containsDuplicate = (nums) => {
 
 
 // Valid Anagram
+const isAnagram = (s, t) => {
+  // sort -> strings
+  // const sortedS = s.split('').sort().join('');
+  // const sortedT = t.split('').sort().join('');
+  // return sortedS === sortedT;
 
+  // map approach
+  if (s.length !== t.length) return false;
+  const sMap = {};
+  for (let char of s) {
+    sMap[char] ? sMap[char]++ : sMap[char] = 1;
+    // sMap[char] = (sMap[char] || 0) + 1;
+  }
+
+  for (let char of t) {
+    if (!s[char] || s[char] === 0) return false;
+    t[char]--;
+  }
+
+  return true;
+}
 
 // Two Sum
 
