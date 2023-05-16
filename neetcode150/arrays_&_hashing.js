@@ -37,7 +37,16 @@ const isAnagram = (s, t) => {
 }
 
 // Two Sum
+const twoSum = (nums, target) => {
+  const differencesMap = {};
 
+  for (let i = 0; i < nums.length; i++) {
+    const currNum = nums[i];
+    const difference = target - currNum;
+    if (differencesMap[currNum] !== undefined) return [differencesMap[currNum], i];
+    differencesMap[difference] = i;
+  }
+}
 
 // Group Anagrams
 
