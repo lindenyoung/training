@@ -48,7 +48,18 @@ const twoSum = (nums, target) => {
   }
 }
 
-// Group Anagrams
+// Group Anagrams, input = string[], output = string[][]
+const groupAnagrams = (strs) => {
+  const anagrams = {};
+
+  for (let str of strs) {
+    const sorted = str.split('').sort().join('');
+    if (!anagrams[sorted]) anagrams[sorted] = [];
+    anagrams[sorted].push(str);
+  }
+
+  return Object.values(anagrams);
+}
 
 
 // Top K Frequent Elements
