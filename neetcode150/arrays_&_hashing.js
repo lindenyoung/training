@@ -90,3 +90,28 @@ const topKFrequent = (nums, k) => {
   // could the last for loop be done using slice? filter arr to just contain the nums not frequencies then slice. I think this is slower than for loop
   // return sortedByFrequency.map((prop) => prop[0]).slice(0, k);
 }
+
+// Product of Array Except Self [1, 2, 3, 4] -> [24, 12, 8, 6]
+// must run in O(n) time and cannot use the division operator
+// O(n) | O(n)
+const productExceptSelf = (nums) => {
+  const result = [];
+  let prefix = 1;
+  let suffix = 1;
+
+  // backwards pass
+  for (let i = nums.length - 1; i >= 0; i--) {
+    result[i] = suffix;
+    suffix *= nums[i];
+  }
+  
+  // forwards pass
+  for (let i = 0; i < nums.length; i++) {
+    result[i] *= prefix;
+    prefix *= nums[i];
+  }
+
+  return result;
+}
+
+// Valid Sudoku
