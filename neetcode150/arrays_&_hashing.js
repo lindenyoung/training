@@ -99,13 +99,13 @@ const productExceptSelf = (nums) => {
   let prefix = 1;
   let suffix = 1;
 
-  // backwards pass
+  // backwards pass [1, 2, 3, 4] -> [24, 12, 4, 1]
   for (let i = nums.length - 1; i >= 0; i--) {
     result[i] = suffix;
     suffix *= nums[i];
   }
   
-  // forwards pass
+  // forwards pass [24, 12, 4, 1] -> [24, 12, 8, 6]
   for (let i = 0; i < nums.length; i++) {
     result[i] *= prefix;
     prefix *= nums[i];
@@ -115,3 +115,31 @@ const productExceptSelf = (nums) => {
 }
 
 // Valid Sudoku
+
+
+// Encode and Decode Strings
+
+
+// Longest Consecutive Sequence [100, 4, 200, 1, 3, 2] -> 4 ([1, 2, 3, 4])
+// must run in O(n) time
+// O(n) | O(n) | hash set - intelligent sequence, greedy - maxScore (default param)
+const longestConsecutive = (nums, maxScore = 0) => {
+  const numSet = new Set(nums); // get rid of any repetitions
+
+  for (const num of [...numSet]) { // for each num in set
+    const prevNum = num - 1;
+    if (numSet.has(prevNum)) continue; // if set includes prev num, we'll check for streak later on so continue
+
+    let [currNum, score] = [num, 1]; // setup for checking streak for currNum
+    const isStreak = () => numSet.has(currNum + 1);
+
+    while (isStreak()) { // while set has next consecutive num, increment score and currNum
+      currNum++;
+      score++;
+    }
+
+    maxScore = Math.max(maxScore, score); // reassign maxScore if needed
+  }
+
+  return maxScore;
+}
