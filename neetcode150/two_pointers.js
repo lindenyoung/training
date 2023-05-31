@@ -35,3 +35,21 @@ const twoSumSorted = (nums, target) => {
 
   return [-1, -1];
 }
+
+// Container With Most Water (maxArea) - height: number[]
+const maxArea = (height) => {
+  let [left, right, max] = [0, height.length - 1, 0];
+
+  while (left < right) {
+    const [leftHeight, rightHeight] = [height[left], height[right]];
+    const smallerHeight = Math.min(leftHeight, rightHeight);
+    const width = right - left;
+    const storedWater = width * smallerHeight;
+
+    max = Math.max(max, storedWater);
+
+    leftHeight <= rightHeight ? left++ : right--
+  }
+
+  return max;
+}
