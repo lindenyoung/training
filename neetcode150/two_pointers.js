@@ -68,7 +68,7 @@ const threeSum = (nums) => {
     const prev = nums[i - 1];
     if (curr > 0) break; // impossible to sum to zero if first num is positive
 
-    if (i > 0 && curr === prev) continue;
+    if (i > 0 && curr === prev) continue; // skip duplicates
 
     let left = i + 1;
     let right = nums.length - 1;
@@ -91,4 +91,33 @@ const threeSum = (nums) => {
   }
 
   return result;
+}
+
+/**
+ * Trapping Rain Water
+ * O(n) | O(1) using two pointers
+ * @param {number[]} height // elevation map
+ * @return {number}
+ */
+
+const trapWater = (height) => {
+  let [left, right] = [0, height.length - 1];
+  let [maxLeft, maxRight, totalArea] = [0, 0, 0];
+
+  while (left < right) {
+    const [leftHeight, rightHeight] = [height[left], height[right]];
+    const [leftWindow, rightWindow] = [maxLeft - leftHeight, maxRight - rightHeight];
+
+    if (leftHeight <= rightHeight) {
+      maxLeft < leftHeight ? maxLeft = leftHeight : totalArea += leftWindow;
+      left++;
+    }
+
+    if (rightHeight < leftHeight) {
+      maxRight < rightHeight ? maxRight = rightHeight : totalArea += rightWindow;
+      right--;
+    }
+  }
+
+  return totalArea;
 }
