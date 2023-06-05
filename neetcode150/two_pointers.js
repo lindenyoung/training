@@ -109,11 +109,14 @@ const trapWater = (height) => {
     const [leftWindow, rightWindow] = [maxLeft - leftHeight, maxRight - rightHeight];
 
     if (leftHeight <= rightHeight) {
+      // update maxLeft if curr leftHeight is heigher
+      // & only add to totalArea if curr building can hold water
       maxLeft < leftHeight ? maxLeft = leftHeight : totalArea += leftWindow;
       left++;
     }
 
     if (rightHeight < leftHeight) {
+      // update maxRight & only add to totalArea if curr building can hold water
       maxRight < rightHeight ? maxRight = rightHeight : totalArea += rightWindow;
       right--;
     }
