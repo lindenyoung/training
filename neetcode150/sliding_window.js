@@ -42,19 +42,52 @@ const lengthOfLongestSubstring = (s) => {
   if (s.length < 2) return s.length
 
   const charSet = new Set()
-  let [left, max] = [0, 0]
+  let left = 0,
+      right = 0,
+      maxLength = 0
 
-  for (let right = 0; right < s.length; right++) {
-    // if curr char is a repeat of curr set / window, delete left instance of char and increment left pointer
-    while (charSet.has(s[right])) {
+  while(right < s.length) {
+    // if curr char is a repeat of curr set / window, delete left instance of char and increment left window pointer
+    if (charSet.has(s[right])) {
       charSet.delete(s[left])
       left++
     }
-
-    // if curr char is not a repeat, add to set and reassign max
+    
+    // add curr char to set, reassign max, and increment right window pointer
     charSet.add(s[right])
-    max = Math.max(max, charSet.size)
+    maxLength = Math.max(maxLength, charSet.size)
+    right++
   }
 
-  return max
+  return maxLength
+}
+
+/**
+ * Longest repeating character replacement
+ * s = "AABABBA", k = 1 -> 4 ("BBBB")
+ * @param {*} s: string 
+ * @param {*} k: number
+ */
+const characterReplacement = (s, k) => {
+  if (s.length <= k) return s.length // edge case
+
+  const charMap = {}
+  let left = 0, right, maxCount = 0
+
+  for (right = 0; right < s.length; right++) {
+    // update map
+    charMap[s[right]] = (charMap[s[right]] || 0) + 1
+
+    // reassign maxCount
+    maxCount = Math.max(maxCount, charMap[s[right]])
+
+    const windowSize = right - left + 1 // curr window size
+    const tooManySwaps = (windowSize - maxCount) > k // windowSize - maxCount = # of swaps in curr window
+    if (tooManySwaps) {
+      charMap[s[left]]--
+      left++
+    }
+  }
+
+  return right - left; // returns correct window size, not necessarily the correct window indexes though
 }

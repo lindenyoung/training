@@ -37,3 +37,25 @@ const longestSubstring = (s) => {
 
   return max
 }
+
+// "abcabcbb" -> 3 'abc'
+const substring = (s) => {
+  if (s.length < 2) return s.length
+
+  const charSet = new Set()
+  let [left, right, maxLength] = [0, 0, 0]
+
+  while(right < s.length) {
+    if (charSet.has(s[right])) {
+      charSet.delete(s[left])
+      left++
+    }
+
+    charSet.add(s[right])
+    maxLength = Math.max(maxLength, charSet.size)
+    right++
+  }
+
+  return maxLength
+}
+
