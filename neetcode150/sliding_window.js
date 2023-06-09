@@ -40,6 +40,7 @@ const maxProfit2 = (prices) => {
  * @param {string} s 
  * @return {number}
  */
+
 const lengthOfLongestSubstring = (s) => {
   if (s.length < 2) return s.length
 
@@ -71,6 +72,7 @@ const lengthOfLongestSubstring = (s) => {
  * @param {number} k
  * @return {number}
  */
+
 const characterReplacement = (s, k) => {
   if (s.length <= k) return s.length // edge case
 
@@ -100,11 +102,12 @@ const characterReplacement = (s, k) => {
 /**
  * Permutation in string (does s2 contain a permutation of s1)
  * s1 = "ab", s2 = "eidbaooo" -> true ("ba" is permutation of s1)
- * * s1 = "ab", s2 = "eidboaoo" -> false("ba" is not permutation of s1)
+ * s1 = "ab", s2 = "eidboaoo" -> false("ba" is not permutation of s1)
  * @param {string} s1 
  * @param {string} s2 
  * @return {boolean}
  */
+
 const checkInclusion = (s1, s2) => {
   if (s1.length > s2.length || s1.length === 0 || s2.length === 0) return false // edge cases
 
@@ -128,6 +131,7 @@ const checkInclusion = (s1, s2) => {
     if (requiredLength === 0) return true // true condition
 
   
+    // if window is correct size, adjust window
     if (right - left === s1.length) {
       if (neededCharMap[s2[left]] >= 0) requiredLength++ // increment req length if left char was req char
       neededCharMap[s2[left]]++ // increment count since removed from curr window
@@ -136,4 +140,53 @@ const checkInclusion = (s1, s2) => {
   }
 
   return false
+}
+
+/**
+ * Minimum window substring
+ * s = "ADOBECODEBANC", t = "ABC" -> "BANC"
+ * s = "a", t = "aa" -> ""
+ * @param {string} s 
+ * @param {string} t 
+ * @return {string}
+ */
+
+const minWindow = (s, t) => {
+  // edge cases
+  if (!s.length || !t.length || t.length > s.length) return ''
+
+  // t frequency map
+  const neededCharMap = {}
+  for (let char of t) {
+    neededCharMap[char] = (neededCharMap[char] || 0) + 1
+  }
+
+  let left = 0,
+      right = 0,
+      neededLength = Object.keys(neededCharMap).length
+      substring = ''
+
+      // move right window through s
+      while (right < s.length) {
+        const rightChar = s[right]
+        neededCharMap[rightChar]--
+        if (neededCharMap[rightChar] === 0) neededLength--
+
+        // shorten window from the left to get curr min window
+        while (neededLength === 0) {
+          // currWindowSize = right - left + 1
+          if (!substring || substring.length > (right - left + 1)) {
+            substring = s.slice(left, right + 1)
+          }
+
+          const leftChar = s[left]
+          if (neededCharMap[leftChar] === 0) neededLength++
+          neededCharMap[leftChar]++
+          left++
+        }
+
+        right++
+      }
+
+    return substring
 }
