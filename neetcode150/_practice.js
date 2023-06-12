@@ -59,3 +59,29 @@ const substring = (s) => {
   return maxLength
 }
 
+const parens = (s) => {
+  const stack = []
+  const map = {
+    ')': '(',
+    '}': '{',
+    ']': '[',
+  }
+
+  for (const currChar of s) {
+    // push opening chars to stack
+    if (!(currChar in map)) {
+      stack.push(currChar)
+      continue
+    }
+
+    // check ending parens for match
+    if (stack.length && stack[stack.length - 1] === map[currChar]) {
+      stack.pop()
+      continue
+    }
+
+    return false
+  }
+
+  return stack.length === 0
+}
