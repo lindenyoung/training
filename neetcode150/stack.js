@@ -35,3 +35,35 @@ const validParenthesis = (s, stack = []) => {
   // emptpy stack = true condition
   return stack.length === 0
 }
+
+/**
+ * Evaluate reverse polish notation
+ * O(n) | O(n) using a stack
+ * tokens = ["2", "1", "+", "3", "*"] -> 9 ((2 + 1) * 3)
+ * @param {string[]} tokens 
+ * @param {number[]} stack // default param
+ * @returns {number}
+ */
+const evalRPN = (tokens, stack = []) => {
+  const operatorsMap = {
+    '+': (a, b) => a + b,
+    '-': (a, b) => a - b,
+    '*': (a, b) => a * b,
+    '/': (a, b) => ~~(a/b), // basically Math.floor or Math.trunc
+  }
+
+  for (const char of tokens) {
+    // if curr char is an operator, perform logic
+    if (char in operatorsMap) {
+      const [ b, a ] = [ stack.pop(), stack.pop() ] // grab right and left vals
+      const correctOperation = operatorsMap[char] // grab correct operation to perform
+      stack.push(correctOperation(a,b)) // push new value to stack
+      continue
+    }
+
+    // curr char is not an operator, so push to stack as a number
+    stack.push(Number(char))
+  }
+
+  return stack.pop()
+}

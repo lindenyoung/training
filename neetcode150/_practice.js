@@ -59,23 +59,25 @@ const substring = (s) => {
   return maxLength
 }
 
-const parens = (s) => {
-  const stack = []
-  const map = {
+const parensss = (s) => {
+  // want to use a stack, time and space comp will be linear
+
+  const stack = [] // could also make this a default param
+  const closeOpenMap = {
     ')': '(',
     '}': '{',
     ']': '[',
   }
 
-  for (const currChar of s) {
-    // push opening chars to stack
-    if (!(currChar in map)) {
-      stack.push(currChar)
+  for (const char of s) {
+    // if curr char is opening paren, push to stack
+    if (!(char in closeOpenMap)) {
+      stack.push(char)
       continue
     }
 
-    // check ending parens for match
-    if (stack.length && stack[stack.length - 1] === map[currChar]) {
+    // curr char is closing paren, so check for match
+    if (stack.length && stack[stack.length - 1] === closeOpenMap[char]) {
       stack.pop()
       continue
     }
