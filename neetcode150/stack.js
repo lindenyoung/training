@@ -67,3 +67,25 @@ const evalRPN = (tokens, stack = []) => {
 
   return stack.pop()
 }
+
+/**
+ * Daily temperatures
+ * temps = [73,74,75,71,69,72,76,73] -> [1,1,4,2,1,1,0,0]
+ * temps = [30, 40, 50, 60] -> [1, 1, 1, 0]
+ * @param {number[]} temps 
+ * @returns {number[]}
+ */
+const dailyTemperatures = (temps) => {
+  const stack = [],
+        result = Array(temps.length).fill(0)
+
+  for (let i = 0; i < temps.length; i++) {
+    // if stack isn't empty and temp at last lesser temp's index is less than curr temp
+    // update result array for the top stack temp index
+    while (stack.length && temps[stack[stack.length - 1]] < temps[i]) {
+      const poppedIndex = stack.pop()
+      // update result value for popped temp's index
+      result[poppedIndex] = i - poppedIndex
+    }
+  }
+}

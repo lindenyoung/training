@@ -87,3 +87,27 @@ const parensss = (s) => {
 
   return stack.length === 0
 }
+
+// tokens = ["2", "1", "+", "3", "*"] -> 9 ((2 + 1) * 3)
+const reversePolishNotation = (tokens) => {
+  const operatorsMap = {
+    '+': (a, b) => a + b,
+    '-': (a, b) => a - b,
+    '*': (a, b) => a * b,
+    '/': (a, b) => ~~(a/b), // basically Math.floor or Math.trunc
+  }
+
+  // iterate over tokens
+  for (const token of tokens) {
+    // if curr token is an operator, perform logic
+    if (token in operatorsMap) {
+      const [right, left] = [stack.pop(), stack.pop()]
+      const operation = operatorsMap[token]
+      stack.push(operation(left, right))
+    }
+    // otherwise, push curr token to stack as a number
+    stack.push(Number(token))
+  }
+
+  return stack.pop() // will only be one element in stack
+}
