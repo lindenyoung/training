@@ -87,5 +87,9 @@ const dailyTemperatures = (temps) => {
       // update result value for popped temp's index
       result[poppedIndex] = i - poppedIndex
     }
+
+    stack.push(i)
   }
+
+  return result
 }
