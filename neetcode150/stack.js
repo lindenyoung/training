@@ -5,7 +5,7 @@
  * O(n) time | O(n) space
  * @param {string} s 
  * @param {string[]} stack
- * @returns {boolean}
+ * @return {boolean}
  */
 
 const validParenthesis = (s, stack = []) => {
@@ -42,7 +42,7 @@ const validParenthesis = (s, stack = []) => {
  * tokens = ["2", "1", "+", "3", "*"] -> 9 ((2 + 1) * 3)
  * @param {string[]} tokens 
  * @param {number[]} stack // default param
- * @returns {number}
+ * @return {number}
  */
 const evalRPN = (tokens, stack = []) => {
   const operatorsMap = {
@@ -73,7 +73,7 @@ const evalRPN = (tokens, stack = []) => {
  * temps = [73,74,75,71,69,72,76,73] -> [1,1,4,2,1,1,0,0]
  * temps = [30, 40, 50, 60] -> [1, 1, 1, 0]
  * @param {number[]} temps 
- * @returns {number[]}
+ * @return {number[]}
  */
 const dailyTemperatures = (temps) => {
   const stack = [],
@@ -92,4 +92,22 @@ const dailyTemperatures = (temps) => {
   }
 
   return result
+}
+
+/**
+ * Min stack (design a stack that supports push, pop, top, and retriving the min element in constant time)
+ */
+class MinStack {
+  constructor() {
+    this.stack = []
+  }
+  push(val) {
+    this.stack.push({
+      value: val,
+      min: this.stack.length === 0 ? val : Math.min(val, this.getMin())
+    })
+  }
+  pop() { this.stack.pop() }
+  top() { return this.stack[this.stack.length - 1].value }
+  getMin() { return this.stack[this.stack.length - 1].min }
 }

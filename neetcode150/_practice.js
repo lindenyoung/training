@@ -111,3 +111,20 @@ const reversePolishNotation = (tokens) => {
 
   return stack.pop() // will only be one element in stack
 }
+
+const dailyTemps = (temps) => {
+  const stack = []
+  const result = Array(temps.length).fill(0)
+
+  for (let i = 0; i < temps.length; i++) {
+    // update result whenever curr temp is higher than a prev temp
+    while (stack.length && temps[i] > temps[stack[stack.length - 1]]) {
+      const topStackIndex = stack.pop()
+      result[topStackIndex] = i - topStackIndex
+    }
+    // push the curr index to stack
+    stack.push(i)
+  }
+  
+  return result
+}
