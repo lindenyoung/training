@@ -111,3 +111,29 @@ class MinStack {
   top() { return this.stack[this.stack.length - 1].value }
   getMin() { return this.stack[this.stack.length - 1].min }
 }
+
+/**
+ * 
+ * @param {number} target 
+ * @param {number[]} position 
+ * @param {number[]} speed 
+ * @return {number}
+ */
+const carFleet = (target, position, speed) => {
+  // combine position and speed arrays, then sort by position
+  const cars = []
+  position.forEach((el, i) => cars.push([position[i], speed[i]])) // [position, speed]
+  cars.sort((a, b) => b[0] - a[0])
+
+  const stack = []
+  cars.forEach((car, i) => {
+    stack.push((target - car[0]) / car[1]) // formula for time to reach destination
+    // if cars collide, remove the car with lower starting position (last pushed car)
+    if (stack.length >= 2 && stack[stack.length - 1] <= stack[stack.length - 2]) stack.pop()
+  })
+
+  return stack.length
+}
+
+// watch the video for car fleet
+// run the above solution through python tutor to better understand
