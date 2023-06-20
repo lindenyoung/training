@@ -113,16 +113,17 @@ class MinStack {
 }
 
 /**
- * 
+ * Car Fleet
+ * target = 12, position = [10, 8, 0, 5, 3], speed = [2, 4, 1, 1, 3] -> 3
  * @param {number} target 
  * @param {number[]} position 
  * @param {number[]} speed 
  * @return {number}
  */
-const carFleet = (target, position, speed) => {
-  // combine position and speed arrays, then sort by position
+const carFleet = (target, positions, speeds) => {
+  // combine position and speed arrays, then sort by position in descending order
   const cars = []
-  position.forEach((el, i) => cars.push([position[i], speed[i]])) // [position, speed]
+  positions.forEach((position, i) => cars.push([position, speeds[i]]))
   cars.sort((a, b) => b[0] - a[0])
 
   const stack = []
@@ -135,5 +136,29 @@ const carFleet = (target, position, speed) => {
   return stack.length
 }
 
-// watch the video for car fleet
-// run the above solution through python tutor to better understand
+/**
+ * Generate Parenthesis
+ * n = 3 -> ["((()))","(()())","(())()","()(())","()()()"]
+ * O(4^n / sqrt(n)) | O(n)
+ * @param {number} n 
+ * @return {string[]}
+ */
+const generateParenthesis = (n) => {
+  const result = []
+
+  const generate = (open, close, currString) => {
+    // add valid combinations to result
+    if (currString.length === 2 * n) {
+      result.push(currString)
+      return
+    }
+
+    // if # of opening parens is less than n, add paren and recursively call helper func
+    if (open < n) generate(open + 1, close, currString + '(')
+    // if # of closing parens is less than # of opening parens, add paren and recursively call helper func
+    if (close < open) generate(open, close + 1, currString + ')')
+  }
+
+  generate(0, 0, '')
+  return result
+}
