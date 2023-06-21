@@ -147,18 +147,17 @@ const generateParenthesis = (n) => {
   const result = []
 
   const generate = (open, close, currString) => {
-    // add valid combinations to result
+    // recursive base case - add valid combinations to result
     if (currString.length === 2 * n) {
       result.push(currString)
       return
     }
-
     // if # of opening parens is less than n, add paren and recursively call helper func
     if (open < n) generate(open + 1, close, currString + '(')
     // if # of closing parens is less than # of opening parens, add paren and recursively call helper func
     if (close < open) generate(open, close + 1, currString + ')')
   }
-
+  
   generate(0, 0, '')
   return result
 }
