@@ -35,11 +35,11 @@ const search = (nums, target) => {
  */
 const searchMatrix = (matrix, target) => {
   const [rows, cols] = [matrix.length, matrix[0].length]
-  let [left, right] = [0, rows * cols - 1] // tread the matrix as a 1D array
+  let [left, right] = [0, rows * cols - 1] // treat the matrix as a 1D array
 
   while (left <= right) {
     const mid = Math.floor((left + right) / 2) // (left + right) >> 1 is the bitwise shift version of this
-    const [row, col] = [Math.floor(mid / cols), mid % cols] // get 2D coordinates / indexes
+    const [row, col] = [Math.floor(mid / cols), mid % cols] // get 2D coordinates - mid row and column indexes
     const guess = matrix[row][col]
 
     if (guess === target) return true
@@ -48,4 +48,30 @@ const searchMatrix = (matrix, target) => {
   }
   
   return false
+}
+
+/**
+ * 875: Koko Eating Bananas
+ * piles = [3, 6, 7, 11], hrs = 8, returns 4 
+ * @param {number[]} piles 
+ * @param {number} hrs
+ * @return {number}
+ */
+const minEatingSpeed = (piles, hrs) => {
+  let left = 1,
+      right = Math.max(...piles) // max pile
+      // best = right
+
+  // binary search through speeds 1 - max speed
+  while (left < right) {
+    // get midpoint speed
+    const mid = Math.floor((left + right) / 2)
+    // reduce helper to calculate total hrs to eat piles given curr speed (mid point)
+    const timeSpent = piles.reduce((sum, pile) => sum + Math.ceil(pile / mid), 0)
+
+    if (timeSpent <= hrs) right = mid
+    else left = mid + 1
+  }
+
+  return right
 }
