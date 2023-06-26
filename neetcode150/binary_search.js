@@ -75,3 +75,24 @@ const minEatingSpeed = (piles, hrs) => {
 
   return right
 }
+
+/**
+ * 153: Find Minimum in Rotated Sorted Array
+ * must run in O(log n) time
+ * nums = [3, 4, 5, 1, 2], returns 1 since original array was [1, 2, 3, 4, 5]
+ * @param {number[]} nums 
+ * @return {number}
+ */
+const findMin = (nums) => {
+  let left = 0,
+      right = nums.length - 1
+
+  while (left < right) {
+    const mid = Math.floor((left + right) / 2) // ~~((left + right) / 2)
+
+    if (nums[mid] > nums[right]) left = mid + 1
+    else right = mid
+  }
+
+  return nums[left]
+}

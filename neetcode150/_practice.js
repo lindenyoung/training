@@ -147,3 +147,18 @@ const twoDMatrix = (matrix, target) => {
 
   return false
 }
+
+const bananas = (piles, hours) => {
+  let left = 0,
+      right = Math.max(...piles)
+
+  while (left < right) {
+    const midSpeed = Math.floor((left + right) / 2)
+    const timeSpentEating = piles.reduce((sum, pile) => sum + Math.ceil(pile / midSpeed), 0)
+
+    if (timeSpentEating <= hours) right = midSpeed
+    else left = midSpeed + 1
+  }
+
+  return right
+}
