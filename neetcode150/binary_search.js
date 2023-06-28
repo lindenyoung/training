@@ -96,3 +96,34 @@ const findMin = (nums) => {
 
   return nums[left]
 }
+
+/**
+ * 33: Search in Rotated Sorted Array
+ * nums = [4,5,6,7,0,1,2], target = 0, returns 4
+ * @param {number[]} nums 
+ * @param {number} target 
+ * @return {number}
+ */
+const searchRotatedArr = (nums, target) => {
+  let left = 0,
+      right = nums.length - 1 
+
+  while (left <= right) {
+    const mid = Math.floor((left + right) / 2)
+
+    if (nums[mid] === target) return mid
+
+    // find sorted half
+    if (nums[left] <= nums[mid]) {
+      // check if target is in sorted half (left) and adjust pointers
+      if (nums[left] <= target && target < nums[mid]) right = mid - 1
+      else left = mid + 1
+    } else {
+      // check if target is in sorted half (right) and adjust pointers
+      if (nums[mid] <= target && target <= nums[right]) left = mid + 1
+      else right = mid - 1
+    }
+  }
+
+  return -1
+}
