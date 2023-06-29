@@ -127,3 +127,35 @@ const searchRotatedArr = (nums, target) => {
 
   return -1
 }
+
+class TimeMap {
+  constructor() {
+    this.map = {}
+  }
+
+  set(key, value, timestamp) {
+    const bucket = this.map[key] || []
+    this.map[key] = bucket
+    bucket.push([timestamp, value])
+  }
+
+  get(key, timestamp, value = '') {
+    const bucket = this.map[key] || []
+    let left = 0,
+        right = bucket.length - 1
+
+    while (left <= right) {
+      const mid = Math.floor((left + right) / 2)
+      const [guessTimeStamp, guessValue] = bucket[mid]
+
+      if (guessTimeStamp <= timestamp) {
+        value = guessValue
+        left = mid + 1
+      }
+
+      if (timestamp < guessTimeStamp) right = mid - 1
+    }
+
+    return value
+  }
+}
