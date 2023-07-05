@@ -120,7 +120,7 @@ const searchRotatedArr = (nums, target) => {
       else left = mid + 1
     } else {
       // check if target is in sorted half (right) and adjust pointers
-      if (nums[mid] <= target && target <= nums[right]) left = mid + 1
+      if (nums[mid] < target && target <= nums[right]) left = mid + 1
       else right = mid - 1
     }
   }
@@ -135,8 +135,8 @@ class TimeMap {
 
   set(key, value, timestamp) {
     const bucket = this.map[key] || []
-    this.map[key] = bucket
     bucket.push([timestamp, value])
+    this.map[key] = bucket
   }
 
   get(key, timestamp, value = '') {
@@ -148,12 +148,15 @@ class TimeMap {
       const mid = Math.floor((left + right) / 2)
       const [guessTimeStamp, guessValue] = bucket[mid]
 
+      // if mid timestamp is valid (less than target timestamp)
       if (guessTimeStamp <= timestamp) {
+        // update value since mid timestamp is closest we've seen
         value = guessValue
         left = mid + 1
+      // else mid timestamp is greater than target timestamp and invalid
+      } else {
+        right = mid - 1
       }
-
-      if (timestamp < guessTimeStamp) right = mid - 1
     }
 
     return value
