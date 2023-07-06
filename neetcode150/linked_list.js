@@ -52,3 +52,47 @@ const mergeTwoLinkedLists = (list1, list2) => {
     return list2
   }
 }
+
+/**
+ * 143: Reorder List
+ * @param {ListNode} head 
+ * @return {void} should modify head in-place and not return anything
+ */
+const reorderList = (head) => {
+  // find middle node - slow will be mid node after traversal
+  let slow = head,
+      fast = head
+
+  while (fast && fast.next) {
+    slow = slow.next
+    fast = fast.next.next
+  }
+
+  // reverse second half of LL - prev will be the new head
+  let prev = null,
+      curr = slow // start reversal at mid node
+
+  while (curr) { // standard LL reversal algorithm
+    const next = curr.next
+    curr.next = prev
+    prev = curr
+    curr = next
+  }
+
+  // merge the two halves
+  let left = head,
+      right = prev, // prev is head of reversed right half
+      temp = null
+
+  while (right.next) {
+    // update and move from left
+    temp = left.next
+    left.next = right
+    left = temp
+
+    // update and move from right
+    temp = right.next
+    right.next = left
+    right = temp
+  }
+}
