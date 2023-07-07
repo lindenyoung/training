@@ -55,11 +55,14 @@ const mergeTwoLinkedLists = (list1, list2) => {
 
 /**
  * 143: Reorder List
+ * head = [1, 2, 3, 4], new head = [1, 4, 2, 3]
+ * would be more readable to break down 3 parts into helper funcs
+ * O(n) time and O(1) space
  * @param {ListNode} head 
  * @return {void} should modify head in-place and not return anything
  */
 const reorderList = (head) => {
-  // find middle node - slow will be mid node after traversal
+  // 1: find middle node - slow will be mid node after traversal
   let slow = head,
       fast = head
 
@@ -68,7 +71,7 @@ const reorderList = (head) => {
     fast = fast.next.next
   }
 
-  // reverse second half of LL - prev will be the new head
+  // 2: reverse second half of LL - prev will be the new head
   let prev = null,
       curr = slow // start reversal at mid node
 
@@ -79,12 +82,12 @@ const reorderList = (head) => {
     curr = next
   }
 
-  // merge the two halves
+  // 3: merge the two halves
   let left = head,
       right = prev, // prev is head of reversed right half
       temp = null
 
-  while (right.next) {
+  while (right.next) { // right half will either be shorter or same length as left
     // update and move from left
     temp = left.next
     left.next = right
@@ -95,4 +98,25 @@ const reorderList = (head) => {
     right.next = left
     right = temp
   }
+}
+
+/**
+ * 141: Linked List Cycle
+ * O(n) time, O(1) space
+ * @param {ListNode} head 
+ * @return {boolean} 
+ */
+const hasCycle = (head) => {
+  if (!head || !head.next) return false
+
+  // can either store a slow pointer var or just use the head instead
+  let fast = head
+
+  while (fast && fast.next) {
+    head = head.next
+    fast = fast.next.next
+    if (head === fast) return true
+  }
+
+  return false
 }
