@@ -120,3 +120,33 @@ const hasCycle = (head) => {
 
   return false
 }
+
+/**
+ * 19: Remove Nth Node From End of List
+ * head = [1, 2, 3, 4, 5], n = 2, return [1, 2, 3, 5]
+ * @param {ListNode} head 
+ * @param {number} n 
+ * @return {ListNode}
+ */
+const removeNthFromEnd = (head, n) => {
+  let slow = head,
+      fast = head
+
+  // move fast pointer so it is n length ahead of slow
+  for (let i = 0; i < n; i++) {
+    fast = fast.next
+  }
+
+  // edge case when n is the head node
+  if (!fast) return head.next
+
+  // will need slow's prev node so use fast.next instead of fast as while condition
+  while (fast.next) {
+    slow = slow.next
+    fast = fast.next
+  }
+
+  // switch slow's next pointer to skip nth node
+  slow.next = slow.next.next
+  return head
+}
