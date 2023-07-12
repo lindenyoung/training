@@ -124,6 +124,7 @@ const hasCycle = (head) => {
 /**
  * 19: Remove Nth Node From End of List
  * head = [1, 2, 3, 4, 5], n = 2, return [1, 2, 3, 5]
+ * head = [1, 2, 3, 4, 5], n = 5, return [2, 3, 4, 5]
  * @param {ListNode} head 
  * @param {number} n 
  * @return {ListNode}
@@ -149,4 +150,37 @@ const removeNthFromEnd = (head, n) => {
   // switch slow's next pointer to skip nth node
   slow.next = slow.next.next
   return head
+}
+
+/**
+ * 138: Copy List with Random Pointer
+ * Construct a deep copy of linked list with additional random pointers
+ * @param {Node} head 
+ * @return {Node}
+ * function Node(val, next, random) {
+ *  this.val = val
+ *  this.next = next
+ *  this.random = random
+ * }
+ */
+const copyRandomList = (head) => {
+  if (!head) return null
+
+  const clones = new Map()
+  let n = head
+
+  while (n) {
+    clones.set(n, new Node(n.val))
+    n = n.next
+  }
+
+  n = head
+  
+  while (n) {
+    clones.get(n).next = clones.get(n.next) || null
+    clones.get(n).random = clones.get(n.random) || null
+    n = n.next
+  }
+
+  return clones.get(head)
 }

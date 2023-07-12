@@ -176,3 +176,26 @@ const minInRotated = (nums) => {
 
   return nums[left]
 }
+
+const removeNthNodeFromEndOfLL = (head, n) => {
+  let slow = head,
+      fast = head
+
+  // move fast n ahead of slow
+  for (let i = 0; i < n; i++) {
+    fast = fast.next
+  }
+  
+  // check edge case of n being head node
+  if (!fast) return head.next
+  
+  // iterate - need nth node's prev node
+  while (fast.next) {
+    slow = slow.next
+    fast = fast.next
+  }
+
+  // skip nth node
+  slow.next = slow.next.next
+  return head
+}
