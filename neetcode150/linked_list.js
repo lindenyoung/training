@@ -199,3 +199,39 @@ const addTwoNumbers = (l1, l2, carry = 0) => {
   carry = parseInt(total / 10)
   return new ListNode(total % 10, addTwoNumbers(l1?.next, l2?.next, carry))
 }
+
+/**
+ * 287: Find the Duplicate Number
+ * only one repeated num in nums, return the repeated num
+ * must solve without modifying the input array and in constant space
+ * Floyd's cycle detection algorithm - impossible to know without solving previously
+ * O(N) time and O(1) space (if using LL and Floyd's)
+ * O(N * log(N)) time and O(1) space if use built in sort, then iterate and compare
+ * @param {number[]} nums
+ * @return {number} 
+ */
+const findDuplicate = (nums) => {
+  // Floyd's algorithm = reset fast after 1st intersection, then next intersection is duplicate
+  // https://www.youtube.com/watch?v=wjYnzkAhcNk&t=17s
+  if (!nums.length) return -1
+
+  // move fast to find first intersection
+  let start = 0,
+      slow = nums[start],
+      fast = nums[nums[start]]
+
+  while (slow !== fast) {
+    slow = nums[slow]
+    fast = nums[nums[fast]]
+  }
+
+  fast = start // reset fast
+
+  // move slow to find next intersection
+  while (slow !== fast) {
+    slow = nums[slow]
+    fast = nums[fast]
+  }
+
+  return slow
+}
