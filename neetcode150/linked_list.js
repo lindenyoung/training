@@ -36,6 +36,7 @@ const reverseLinkedList = (head) => {
  * @param {ListNode} list2 
  * @return {ListNode}
  */
+// recursive solution
 const mergeTwoLinkedLists = (list1, list2) => {
   // if either list is empty, return the other list
   if (list1 === null) return list2
@@ -51,6 +52,27 @@ const mergeTwoLinkedLists = (list1, list2) => {
     list2.next = mergeTwoLinkedLists(list1, list2.next)
     return list2
   }
+}
+
+// iterative solution
+const mergeTwoListsIterative = (list1, list2) => {
+  let sentinel = tail = new ListNode(0)
+
+  while (list1 && list2) {
+    if (list1.val <= list2.val) {
+      tail.next = list1
+      list1 = list1.next
+    } else {
+      tail.next = list2
+      list2 = list2.next
+    }
+
+    tail = tail.next
+  }
+
+  tail.next = list1 || list2 // remainder of non-empty list
+
+  return sentinel.next
 }
 
 /**
@@ -234,4 +256,21 @@ const findDuplicate = (nums) => {
   }
 
   return slow
+}
+
+/**
+ * 23: Merge k Sorted Lists
+ * lists = [[1, 4, 5], [1, 3, 4], [2, 6]]
+ * return = [1, 1, 2, 3, 4, 4, 5, 6]
+ * @param {ListNode[]} lists 
+ * @return {ListNode}
+ */
+const mergeKLists = (lists) => {
+  let prev = null
+
+  for (const list of lists) {
+    prev = mergeTwoLinkedLists(prev, list)
+  }
+
+  return prev
 }
