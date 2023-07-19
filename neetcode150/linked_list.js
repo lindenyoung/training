@@ -274,3 +274,47 @@ const mergeKLists = (lists) => {
 
   return prev
 }
+
+/**
+ * 25: Reverse Nodes in k-Group
+ * @param {ListNode} head 
+ * @param {number} k 
+ * @return {ListNode}
+ */
+const reverseKGroup = (head, k) => {
+  // helper func
+  const getKth = (curr, k) => {
+    while (curr && k) {
+      curr = curr.next
+      k--
+    }
+    return curr
+  }
+
+  const sentinel = tail = new ListNode(0, head)
+
+  while (true) {
+    // FIND FIRST KTH NODE
+    let kth = getKth(tail, k)
+    if (!kth) break // exit condition: if curr group size is < k
+    let nextGroup = kth.next // start of next group
+
+    // REVERSE CURR GROUP
+    let prev = kth.next,
+        curr = tail.next
+
+    while (curr !== nextGroup) {
+      const temp = curr.next
+      curr.next = prev
+      prev = curr
+      curr = temp
+    }
+
+    // REASSIGN POINTERS
+    const temp = tail.next // store first node in curr group
+    tail.next = kth
+    tail = temp
+  }
+
+  return sentinel.next
+}
