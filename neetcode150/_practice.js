@@ -199,3 +199,50 @@ const removeNthNodeFromEndOfLL = (head, n) => {
   slow.next = slow.next.next
   return head
 }
+
+// 7/19/23 review sesh
+// Topic = Arrays & Hashing
+const anagramTest = (s, t) => {
+  if (s.length !== t.length) return false // edge case
+
+  const sMap = {} // initialize s freq map
+
+  // fill s freq map
+  for (const char of s) {
+    sMap[char] = (sMap[char] || 0) + 1
+  }
+
+  for (const char of t) {
+    // check against s freq map
+    // false conditions:
+      // if char doesn't exist in map
+      // if map freq for char is 0
+    if (!sMap[char] || sMap[char] < 1) return false
+    sMap[char]--
+  }
+
+  return true
+}
+
+const topKFreqElements = (nums, k) => {
+  // initialize freqMap and result arr
+  const freqMap = {},
+        result = []
+  
+  // fill freqMap
+  for (const num of nums) {
+    freqMap[num] = (freqMap[num] || 0) + 1
+  }
+
+  // sort freqMap by highest freq { '1': 3, '2': 2', '3': 1 }
+  const sortedNums = Object.keys(freqMap)
+    .map((num) => [Number(num), freqMap[num]])
+    .sort((a, b) => b[1] - a[1])
+
+  // push highest k freq nums to result
+  for (let i = 0; i < k; i++) {
+    result.push(sortedNums[i][0])
+  }
+  
+  return result
+}

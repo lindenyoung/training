@@ -277,6 +277,8 @@ const mergeKLists = (lists) => {
 
 /**
  * 25: Reverse Nodes in k-Group
+ * head = [1, 2, 3, 4, 5], k = 2
+ * return = [2, 1, 4, 3, 5]
  * @param {ListNode} head 
  * @param {number} k 
  * @return {ListNode}
