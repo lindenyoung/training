@@ -235,14 +235,14 @@ const topKFreqElements = (nums, k) => {
   }
 
   // sort freqMap by highest freq { '1': 3, '2': 2', '3': 1 }
-  const sortedNums = Object.keys(freqMap)
-    .map((num) => [Number(num), freqMap[num]])
+  const sortedNums = Object.entries(freqMap)
+    .map(([num, freq]) => [Number(num), freq])
     .sort((a, b) => b[1] - a[1])
 
   // push highest k freq nums to result
   for (let i = 0; i < k; i++) {
     result.push(sortedNums[i][0])
   }
-  
+
   return result
 }
