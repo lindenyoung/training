@@ -77,3 +77,15 @@ const balancedBinaryTree = (root) => {
     return 1 + Math.max(left, right)
   }
 }
+
+/**
+ * 100: Same Tree
+ * @param {TreeNode} p 
+ * @param {TreeNode} q 
+ */
+const isSameTree = (p, q) => {
+  if (!p && !q) return true // true base case
+  if (!p || !q || p.val !== q.val) return false // false base cases
+
+  return isSameTree(p.left, q.left) && isSameTree(p.right, q.right)
+}
