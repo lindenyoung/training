@@ -89,3 +89,15 @@ const isSameTree = (p, q) => {
 
   return isSameTree(p.left, q.left) && isSameTree(p.right, q.right)
 }
+
+/**
+ * 572: Subtree of Another Tree
+ * @param {TreeNode} root 
+ * @param {TreeNode} subRoot 
+ * @return {boolean}
+ */
+const isSubTree = (root, subRoot) => {
+  if (!root) return false
+  if (isSameTree(root, subRoot)) return true
+  return isSubTree(root.left, subRoot) || isSubTree(root.right, subRoot)
+}
