@@ -101,3 +101,34 @@ const isSubTree = (root, subRoot) => {
   if (isSameTree(root, subRoot)) return true
   return isSubTree(root.left, subRoot) || isSubTree(root.right, subRoot)
 }
+
+/**
+ * 235: Lowest Common Ancestor of a Binary Search Tree
+ * O(n) time and space
+ * @param {TreeNode} root 
+ * @param {TreeNode} p 
+ * @param {TreeNode} q 
+ * @return {TreeNode}
+ */
+const lowestCommonAncestorRec = (root, p, q) => {
+  if (root.val < p.val && root.val < q.val) return lowestCommonAncestorRec(root.right, p, q)
+  if (root.val > p.val && root.val > q.val) return lowestCommonAncestorRec(root.left, p, q)
+
+  return root
+}
+
+// O(1) space using iterative solution
+const lowestCommonAncestorIter = (root, p, q) => {
+  while (root !== null) {
+    if (root.val < p.val && root.val < q.val) {
+      root = root.right
+      continue
+    }
+    if (root.val > p.val && root.val > q.val) {
+      root = root.left
+      continue
+    }
+    break
+  }
+  return root
+}
