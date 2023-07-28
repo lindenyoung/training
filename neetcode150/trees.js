@@ -104,16 +104,19 @@ const isSubTree = (root, subRoot) => {
 
 /**
  * 235: Lowest Common Ancestor of a Binary Search Tree
- * O(n) time and space
+ * O(n) time and O(n) space
  * @param {TreeNode} root 
  * @param {TreeNode} p 
  * @param {TreeNode} q 
  * @return {TreeNode}
  */
 const lowestCommonAncestorRec = (root, p, q) => {
+  // if both node vals > root, move right
   if (root.val < p.val && root.val < q.val) return lowestCommonAncestorRec(root.right, p, q)
+  // if both node vals < root, move left
   if (root.val > p.val && root.val > q.val) return lowestCommonAncestorRec(root.left, p, q)
 
+  // otherwise, root = the lowest common ancestor since one node is to left and one node is to right of root
   return root
 }
 
@@ -131,4 +134,33 @@ const lowestCommonAncestorIter = (root, p, q) => {
     break
   }
   return root
+}
+
+/**
+ * 102: Binary Tree Level Order Traversal
+ * O(n) time and O(n) space
+ * @param {TreeNode} root 
+ * @return {number[][]}
+ */
+const levelOrderTraversal = (root) => {
+  if (root === null) return []
+  const lvls = []
+  const queue = [root]
+
+  while (queue.length) {
+    const lvl = []
+    const lvlSize = queue.length
+
+    for (let i = 0; i < lvlSize; i++) {
+      const node = queue.shift() // constant time for actual queue ds
+      lvl.push(node.val)
+
+      if (node.left) queue.push(node.left)
+      if (node.right) queue.push(node.right)
+    }
+
+    lvls.push(lvl)
+  }
+
+  return lvls
 }
