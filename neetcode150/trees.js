@@ -179,7 +179,7 @@ const rightSideView = (root) => {
   while (queue.length) {
     let prev = null
 
-    // same logic as problem 102 above, just without extra variable
+    // same logic as problem 102 above, just without extra const
     for (let i = queue.length - 1; i >= 0; i--) {
       const node = queue.shift()
       prev = node
@@ -191,4 +191,25 @@ const rightSideView = (root) => {
   }
 
   return rightSide
+}
+
+/**
+ * 1448: Count Good Nodes in Binary Tree
+ * a node X in the tree is named good if in the path from root to X there are no nodes with a value greater than X.
+ * @param {TreeNode} root 
+ * @return {number}
+ */
+const goodNodes = (root) => {
+  let total = 0
+
+  dfs(root, root.val)
+  return total
+
+  function dfs(node, max) {
+    if (!node) return
+    if (max <= node.val) total++
+    max = Math.max(max, node.val)
+    dfs(node.left, max)
+    dfs(node.right, max)
+  }
 }
