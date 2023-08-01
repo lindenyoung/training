@@ -164,3 +164,31 @@ const levelOrderTraversal = (root) => {
 
   return lvls
 }
+
+/**
+ * 199: Binary Tree Right Side View
+ * @param {TreeNode} root 
+ * @return {number[]}
+ */
+const rightSideView = (root) => {
+  if (root === null) return []
+
+  const rightSide = []
+  const queue = [root]
+
+  while (queue.length) {
+    let prev = null
+
+    // same logic as problem 102 above, just without extra variable
+    for (let i = queue.length - 1; i >= 0; i--) {
+      const node = queue.shift()
+      prev = node
+      if (node.left) queue.push(node.left)
+      if (node.right) queue.push(node.right)
+    }
+
+    rightSide.push(prev.val)
+  }
+
+  return rightSide
+}
