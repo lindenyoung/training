@@ -213,3 +213,20 @@ const goodNodes = (root) => {
     dfs(node.right, max)
   }
 }
+
+/**
+ * 98: Validate Binary Search Tree
+ * @param {TreeNode} root 
+ * @return {boolean}
+ */
+const validateBST = (root, min = -Infinity, max = Infinity) => {
+  // base case
+  if (root === null) return true
+  // invalid cases
+  if (root.val <= min || root.val >= max) return false
+
+  const left = validateBST(root.left, min, root.val)
+  const right = validateBST(root.right, root.val, max)
+
+  return left && right
+}
