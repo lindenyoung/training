@@ -230,3 +230,24 @@ const validateBST = (root, min = -Infinity, max = Infinity) => {
 
   return left && right
 }
+
+/**
+ * 230: Kth Smallest Element in a BST
+ * @param {TreeNode} root 
+ * @param {number} k 
+ * @return {number}
+ */
+const kthSmallest = (root, k) => {
+  const vals = []
+  
+  dfs(root)
+  return vals[k-1]
+
+  function dfs(node) {
+    if (vals.length !== k) { // short circuit the traversal
+      if (node.left) dfs(node.left)
+      vals.push(node.val) // done moving left, now start populating vals arr
+      if (node.right) dfs(node.right)
+    }
+  }
+}

@@ -246,3 +246,20 @@ const topKFreqElements = (nums, k) => {
 
   return result
 }
+
+const countGoodNodes = (root) => {
+  // keep track of # of "good" nodes (no nodes above have a higher num value)
+  let total
+
+  traverse(root, root.val) // starting max is the root val
+  return total
+
+  // dfs traverse the tree, updating total and max along the way
+  function traverse(node, max) {
+    if (!node) return // null node case
+    if (node.val >= max) total++ // valid good node case (max is not bigger than curr node val)
+    max = Math.max(max, node.val)
+    traverse(node.left, max)
+    traverse(node.right, max)
+  }
+}
