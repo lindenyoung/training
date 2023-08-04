@@ -207,7 +207,7 @@ const goodNodes = (root) => {
 
   function dfs(node, max) {
     if (!node) return
-    if (max <= node.val) total++
+    if (node.val >= max) total++
     max = Math.max(max, node.val)
     dfs(node.left, max)
     dfs(node.right, max)
@@ -233,6 +233,7 @@ const validateBST = (root, min = -Infinity, max = Infinity) => {
 
 /**
  * 230: Kth Smallest Element in a BST
+ * this solution uses in order traversal
  * @param {TreeNode} root 
  * @param {number} k 
  * @return {number}
@@ -250,4 +251,29 @@ const kthSmallest = (root, k) => {
       if (node.right) dfs(node.right)
     }
   }
+}
+
+/**
+ * 105: Construct Binary Tree from Preorder and Inorder Traversal
+ * @param {number[]} preorder 
+ * @param {number[]} inorder 
+ * @return {TreeNode}
+ */
+const buildTree = (preorder, inorder) => {
+  // pointers for curr index of input arrays
+  let p = 0,
+      i = 0
+
+  // stop arg helps determine when to stop recursion for a specific branch
+  function build(stop) {
+    if (inorder[i] === stop) return null // this branch is complete when we encounter the stop val in the inorder arr
+    
+    const node = new TreeNode(preorder[p++])
+    node.left = build(node.val)
+    i++
+    node.right = build(stop)
+    return node
+  }
+
+  return build()
 }
