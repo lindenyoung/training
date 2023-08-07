@@ -239,17 +239,19 @@ const validateBST = (root, min = -Infinity, max = Infinity) => {
  * @return {number}
  */
 const kthSmallest = (root, k) => {
-  const vals = []
-  
+  const nums = []
+
   dfs(root)
-  return vals[k-1]
+  return nums[k - 1]
 
   function dfs(node) {
-    if (vals.length !== k) { // short circuit the traversal
-      if (node.left) dfs(node.left)
-      vals.push(node.val) // done moving left, now start populating vals arr
-      if (node.right) dfs(node.right)
-    }
+    // early return pattern to short circuit the traversal
+    if (nums.length === k) return
+
+    // in order traversal
+    if (node.left) dfs(node.left)
+    nums.push(node.val) // done moving left, now start populating result arr
+    if (node.right) dfs(node.right)
   }
 }
 

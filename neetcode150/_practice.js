@@ -263,3 +263,17 @@ const countGoodNodes = (root) => {
     traverse(node.right, max)
   }
 }
+
+const kthSmallestNumInBST = (root, k) => {
+  const nums = []
+
+  dfs(root)
+  return nums[k - 1]
+
+  function dfs(node) {
+    if (nums.length === k) return // early return pattern
+    if (node.left) dfs(node.left)
+    nums.push(node.val)
+    if (node.right) dfs(node.right)
+  }
+}
