@@ -26,3 +26,35 @@ const subsets = (nums) => {
     }
   }
 }
+
+/**
+ * 39: Combination Sum
+ * @param {number[]} candidates
+ * @param {number} target
+ * @return {number[]}
+ */
+const combinationSum = (candidates, target) => {
+  const result = [],
+        tempComb = []
+
+  backtrack(0, target, tempComb)
+  return result
+  
+  function backtrack(index, target, tempComb) {
+    // early return case
+    if (target < 0) return
+    
+    // found unique combination case
+    if (target === 0) {
+      result.push(tempComb.slice()) // [...temp]
+      return
+    }
+
+    // standard backtracking logic (push, invoke / traverse, pop)
+    for (let i = index; i < candidates.length; i++) {
+      tempComb.push(candidates[i])
+      backtrack(i, target - candidates[i], tempComb)
+      tempComb.pop()
+    }
+  }
+}
