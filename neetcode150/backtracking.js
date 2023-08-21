@@ -58,3 +58,32 @@ const combinationSum = (candidates, target) => {
     }
   }
 }
+
+/**
+ * 45: Permutations
+ * Given an array nums of distinct integers, return all the possible permutations. You can return the answer in any order.
+ * All the integers of nums will be unique
+ * See 78 for difference between permutations and subsets
+ * @param {number[]} nums 
+ * @return {number}
+ */
+const permute = (nums) => {
+  const result = []
+  
+  backtrack(nums, [])
+  return result
+  
+  function backtrack(nums, temp) {
+    if (nums.length === 0) {
+      result.push(temp)
+      return
+    }
+
+    for (let i = 0; i < nums.length; i++) {
+      // nums = new array of all nums besides curr num
+      // temp = new array adding curr num to temp
+      // no need to push / pop since we are using slice and [...]
+      backtrack([...nums.slice(0, i), ...nums.slice(i + 1)], [...temp, nums[i]])
+    }
+  }
+}
