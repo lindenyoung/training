@@ -5,24 +5,21 @@
  * @return {number[][]}
  */
 const subsets = (nums) => {
-  const subsets = [],
-        set = []
+  nums.sort((a, b) => a - b) // this improves runtime somehow
+  const result = []
   
-  dfs(0)
-  return subsets
+  dfs(0, [])
+  return result
 
-  function dfs(startIndex) {
+  function dfs(startIndex, set) {
     // add copy of curr set to result
-    subsets.push(set.slice())
-
-    // early return case
-    if (startIndex >= nums.length) return
+    result.push(set.slice())
 
     // standard backtracking logic
     for (let i = startIndex; i < nums.length; i++) {
-      set.push(nums[i]) // add
-      dfs(i + 1) // traverse
-      set.pop() // undo
+      set.push(nums[i]) // add curr element
+      dfs(i + 1, set) // recursive call with next index
+      set.pop() // remove last element to backtrack
     }
   }
 }
@@ -84,6 +81,36 @@ const permute = (nums) => {
       // temp = new array adding curr num to temp
       // no need to push / pop since we are using slice and [...]
       backtrack([...nums.slice(0, i), ...nums.slice(i + 1)], [...temp, nums[i]])
+    }
+  }
+}
+
+/**
+ * 90: Subsets II
+ * integer array nums may contain duplicates, return all possible subsets
+ * input = [1, 2, 2]
+ * output =  [[],[1],[1,2],[1,2,2],[2],[2,2]]
+ * @param {number[]} nums 
+ * @return {number[]}
+ */
+const subsetsWithDup = (nums) => {
+  const result = []
+  nums.sort((a, b) => a - b)
+  
+  backtrack(nums, [])
+  return result
+
+  function backtrack(arr, curr) {
+    result.push([...curr]) // shallow copy, same as curr.slice()
+
+    for (let i = 0; i < arr.length; i++) {
+      // check for non-duplicate
+      if (i === 0 || arr[i] !== arr[i - 1]) {
+        // standard backtracking logic
+        curr.push(arr[i])
+        backtrack(arr.slice(i + 1), curr)
+        curr.pop()
+      }
     }
   }
 }
