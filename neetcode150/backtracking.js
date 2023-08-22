@@ -100,16 +100,16 @@ const subsetsWithDup = (nums) => {
   backtrack(nums, [])
   return result
 
-  function backtrack(arr, curr) {
-    result.push([...curr]) // shallow copy, same as curr.slice()
+  function backtrack(remainingNums, currSet) {
+    result.push([...currSet]) // shallow copy, same as currSet.slice()
 
-    for (let i = 0; i < arr.length; i++) {
+    for (let i = 0; i < remainingNums.length; i++) {
       // check for non-duplicate
-      if (i === 0 || arr[i] !== arr[i - 1]) {
+      if (i === 0 || remainingNums[i] !== remainingNums[i - 1]) {
         // standard backtracking logic
-        curr.push(arr[i])
-        backtrack(arr.slice(i + 1), curr)
-        curr.pop()
+        currSet.push(remainingNums[i])
+        backtrack(remainingNums.slice(i + 1), currSet)
+        currSet.pop()
       }
     }
   }
