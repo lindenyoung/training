@@ -114,3 +114,30 @@ const subsetsWithDup = (nums) => {
     }
   }
 }
+
+const combinationSum2 = (candidates, target) => {
+  const result = []
+  candidates.sort((a, b) => a - b)
+
+  backtrack(0, 0, [])
+  return result
+
+  function backtrack(index, sum, temp) {
+    // if curr combination is a match, push to result 
+    if (sum === target) {
+      result.push([...temp])
+      return
+    }
+
+    for (let i = index; i < candidates.length; i++) {
+      if (i !== index && candidates[i] === candidates[i - 1]) continue // if duplicate num, continue to next element
+      if (sum > target) return // if we've passed the target, return to break out of this recursive call
+      
+      // standard backtracking logic
+      // same as this one-liner: backtrack(i + 1, sum + candidates[i], [...temp, candidates[i]])
+      temp.push(candidates[i])
+      backtrack(i + 1, sum + candidates[i], temp)
+      temp.pop()
+    }
+  }
+}
