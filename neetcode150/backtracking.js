@@ -141,3 +141,47 @@ const combinationSum2 = (candidates, target) => {
     }
   }
 }
+
+/**
+ * 79: Word Search
+ * @param {string[][]} board 
+ * @param {string} word 
+ * @returns {boolean}
+ */
+const wordSearch = (board, word) => {
+  const directions = [[-1, 0], [1, 0], [0, -1], [0, 1]]
+  
+  // iterate over board spaces and return true if we find the word
+  for (let row = 0; row < board.length; row++) {
+    for (let col = 0; col < board[0].length; col++) {
+      if (dfs(row, col, 0)) return true
+    }
+  }
+  
+  // return false if we're done iterating
+  return false
+
+  // -- end of main logic --
+
+  // helper func to recursively traverse the board
+  function dfs(row, col, index) {
+    if (index === word.length) return true
+    if (isOutOfBounds(row, col) || board[row][col] !== word[index]) return false
+
+    // backtracking
+    const temp = board[row][col]
+    board[row][col] = '*' // reassign curr space
+    // traverse recursively
+    for (const [x, y] of directions) {
+      if (dfs(row + x, col + y, index + 1)) return true
+    }
+    // reset curr space
+    board[row][col] = temp
+    return false
+  }
+
+  // helper func to check if space is out of bounds
+  function isOutOfBounds(row, col) {
+    return row < 0 || row > board.length - 1 || col < 0 || col > board[0].length - 1
+  }
+}
