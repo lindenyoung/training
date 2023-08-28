@@ -150,7 +150,7 @@ const combinationSum2 = (candidates, target) => {
  */
 const wordSearch = (board, word) => {
   const directions = [[-1, 0], [1, 0], [0, -1], [0, 1]]
-  
+
   // iterate over board spaces and return true if we find the word
   for (let row = 0; row < board.length; row++) {
     for (let col = 0; col < board[0].length; col++) {
@@ -183,5 +183,56 @@ const wordSearch = (board, word) => {
   // helper func to check if space is out of bounds
   function isOutOfBounds(row, col) {
     return row < 0 || row > board.length - 1 || col < 0 || col > board[0].length - 1
+  }
+}
+
+/**
+ * 131: Palindrome Partitioning
+ * input: 'aab'
+ * output: [['a', 'a', 'b'], ['aa', 'b']]
+ * @param {string} s 
+ * @returns {string[][]}
+ */
+const partition = (s) => {
+  const result = []
+  const memo = new Map()
+  
+  dfs(0, [])
+  return result
+
+  function dfs(start, currPartition) {
+    if (start === s.length) {
+      result.push([...currPartition])
+      return
+    }
+
+    for (let i = start; i <= s.length; i++) {
+      const prefix = s.substring(start, i + 1)
+
+      if (isPalindrome(prefix)) {
+        currPartition.push(prefix)
+        dfs(i + 1, currPartition)
+        currPartition.pop()
+      }
+    }
+  }
+
+  function isPalindrome(substring) {
+    if (memo.has(substring)) return memo.get(substring)
+
+    let left = 0,
+        right = substring.length - 1
+    
+    while (left < right) {
+      if (substring[left] !== substring[right]) {
+        memo.set(substring, false)
+        return false
+      }
+      left++
+      right--
+    }
+
+    memo.set(substring, true)
+    return true
   }
 }
