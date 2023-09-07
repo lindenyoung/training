@@ -67,6 +67,8 @@ const maxAreaOfIsland = (grid) => {
 
 /**
  * 994: Rotting Oranges
+ * T = O(M * N)
+ * S = O(M * N)
  * @param {number[][]} grid 
  * @return {number}
  */
@@ -102,7 +104,6 @@ const orangesRotting = (grid) => {
         const [newRow, newCol] = [row + x, col + y]
 
         if (newRow < 0 || newRow >= grid.length || newCol < 0 || newCol >= grid[0].length) continue
-
         if (grid[newRow][newCol] === 1) {
           queue.push([newRow, newCol, minutes + 1])
         }
@@ -110,5 +111,51 @@ const orangesRotting = (grid) => {
     }
 
     return fresh === 0 ? time : -1
+  }
+}
+
+/**
+ * 207: Course Schedule
+ * @param {number} numCourses 
+ * @param {number[][]} prereqs 
+ * @return {boolean}
+ */
+const courseSchedule = (numCourses, prereqs) => {
+  const graph = new Map(),
+        visiting = new Set(),
+        visited = new Set()
+
+  for (const [a, b] of prereqs) {
+    if (graph.has(a)) {
+      const edges = graph.get(a)
+      edges.push(b)
+      graph.set(a, edges)
+    } else {
+      graph.set(a, [b])
+    }
+  }
+
+  for (const [x, y] of graph) {
+    if (traverse(x)) return false
+  }
+
+  return true
+
+  // dfs helper
+  function traverse(course) {
+    visiting.add(course)
+    const edges = graph.get(course)
+
+    if (edges) {
+      for (const e of edges) {
+        if (visited.has(e)) continue
+        if (visiting.has(e)) return true
+        if (traverse(e)) return true
+      }
+    }
+
+    visiting.delete(course)
+    visited.add(course)
+    return false
   }
 }
