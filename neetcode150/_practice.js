@@ -277,3 +277,15 @@ const kthSmallestNumInBST = (root, k) => {
     if (node.right) dfs(node.right)
   }
 }
+
+// problem #1 from Codesignal that Vu Dong shared
+// [4, 2, 1, 5, 7, 3, 9, 8] -> [2, 4, 1, 5, 3, 7, 8, 9]
+const sortPairs = (nums) => {
+  for (let i = 0; i < nums.length; i+=2) {
+    if (nums[i + 1] && nums[i + 1] < nums[i]) {
+      [nums[i], nums[i + 1]] = [nums[i + 1], nums[i]]
+    }
+  }
+  
+  return nums
+}
