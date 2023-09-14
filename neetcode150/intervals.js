@@ -29,3 +29,23 @@ const insertInterval = (intervals, newInterval) => {
 
   return [...left, [start, end], ...right]
 }
+
+/**
+ * 252: Meeting Rooms
+ * Input: intervals = [[7,10],[2,4]]
+ * Output: true
+ * @param {number[][]} intervals 
+ * @returns {boolean}
+ */
+const canAttendMeetings = (intervals) => {
+  const sortedMtgs = intervals.sort((a, b) => a[0] - b[0])
+
+  for (let i = 0; i < sortedMtgs.length - 1; i++) {
+    const endCurr = sortedMtgs[i][1]
+    const startNext = sortedMtgs[i + 1][0]
+
+    if (startNext < endCurr) return false
+  }
+
+  return true
+}
