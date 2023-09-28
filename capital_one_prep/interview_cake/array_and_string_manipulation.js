@@ -52,6 +52,7 @@ const reverse = (chars) => {
  * output.join(''): 'steal pound cake'
  * @param {string[]} message
  * @returns {string[]}
+ * O(n) time and O(1) space
  */
 const reverseWords = (message) => {
   // first reverse all chars in the message - this gets the correct word order but with each word backwards
@@ -61,9 +62,10 @@ const reverseWords = (message) => {
   let currWordStart = 0
   
   for (let i = 0; i <= message.length; i++) {
+    // we use <= message.length and i === message.length here to know when we are on the last word, otherwise it would not get reversed
     if (message[i] === ' ' || i === message.length) {
-      reverseChars(message, currWordStart, i - 1)
-      currWordStart = i + 1
+      reverseChars(message, currWordStart, i - 1) // i - 1 to not include the ' '
+      currWordStart = i + 1 // increment to start of next word
     }
   }
 
@@ -76,6 +78,13 @@ const reverseWords = (message) => {
   }
 }
 
+/**
+ * Merge sorted arrays
+ * @param {number[]} arr1 
+ * @param {number[]} arr2 
+ * @returns {number[]}
+ * O(n) time and space complexity
+ */
 const mergeSortedArrays = (arr1, arr2) => {
   const result = []
   let i = 0, j = 0
@@ -90,7 +99,7 @@ const mergeSortedArrays = (arr1, arr2) => {
     }
   }
 
-  // handle case where one array finishes before the other
+  // handle case where one array finishes before the other (only one of these while loops will be entered)
   while (i < arr1.length) {
     result.push(arr1[i])
     i++
@@ -105,4 +114,29 @@ const mergeSortedArrays = (arr1, arr2) => {
 
   // the above two while loops and return statement can be rewritten as this, but with slightly worse time complexity
   // return [...result, ...arr1.slice(i), ...arr2.slice(j)]
+}
+
+/**
+ * Cafe order checker
+ * Check whether or not restaurant's service is first-come first-served
+ * @param {number[]} takeOut 
+ * @param {number[]} dineIn 
+ * @param {number[]} served
+ * @returns {boolean}
+ * O(n) time and O(1) space
+ */
+const cafeOrderChecker = (takeOut, dineIn, served) => {
+  let takeOutIndex = 0,
+      dineInIndex = 0
+
+  for (let i = 0; i < served.length; i++) {
+    if (takeOutIndex < takeOut.length && served[i] === takeOut[takeOutIndex]) takeOutIndex++
+    else if (dineInIndex < dineIn.length && served[i] === dineIn[dineInIndex]) dineInIndex++
+    else return false
+  }
+
+  // check for any extra orders not in served orders
+  if (takeOutIndex !== takeOut.length || dineInIndex !== dineIn.length) return false
+
+  return true
 }
