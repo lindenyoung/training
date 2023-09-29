@@ -13,7 +13,7 @@ const canTwoMoviesFillFlight = (flightLength, movieLengths) => {
     const difference = flightLength - movie
 
     // if map has this movie length, return true as it's a match to a prev movie
-    if (movieMap[movie]) return true
+    if (movieMap[movie]) return true // alternate syntax: if (movie in movieMap) return true
     // add the difference that we are looking for to match this movie length
     else movieMap[difference] = movie
   }
