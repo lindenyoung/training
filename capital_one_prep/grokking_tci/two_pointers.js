@@ -66,7 +66,7 @@ const removeKeyInstances = (nums, key) => {
  * O(n) time and space
  */
 const squareAndSort = (nums) => {
-  const result = Array(nums.length).fill(0)
+  const result = new Array(nums.length).fill(0)
 
   let next = nums.length - 1,
       left = 0,
@@ -91,4 +91,82 @@ const squareAndSort = (nums) => {
   }
 
   return result
+}
+
+/**
+ * Search triplets (3 sum), Leetcode 15
+ * @param {number[]} nums 
+ * @returns {number[]}
+ * O(n^2) time and O(n) space
+ */
+const threeSum = (nums) => {
+  const result = []
+  if (nums.length < 3) return result
+
+  nums.sort((a, b) => a - b)
+
+  for (let i = 0; i < nums.length - 2; i++) {
+    // early exit condition, first num is > 0 so impossible to sum 3 nums to 0
+    if (nums[i] > 0) break
+
+    // skip duplicates
+    if (i > 0 && nums[i] === nums[i - 1]) continue
+
+    // 2 sum search logic
+    let left = i + 1,
+        right = nums.length - 1
+
+    while (left < right) {
+      const sum = nums[i] + nums[left] + nums[right]
+
+      if (sum === 0) {
+        // push valid triplet and move two pointers
+        result.push([nums[i], nums[left], nums[right]])
+
+        // skip duplicates for left and right pointers
+        while (nums[left] === nums[left + 1]) left++
+        while (nums[right] === nums[right - 1]) right--
+        
+        // increment pointers
+        left++
+        right--
+      } else if (sum < 0) left++
+        else right--
+    }
+  }
+
+  return result
+}
+
+/**
+ * Triplet sum close to target, Leetcode 16
+ * Input: nums = [-1, 2, 1, -4], target = 1 
+ * Output: 2 (returning the sum of the triplet, -1 + 2 + 1)
+ * @param {number[]} nums 
+ * @param {number} target 
+ * @returns {number}
+ */
+const tripletSumCloseToTarget = (nums, target) => {
+  nums.sort((a, b) => a - b)
+  
+  let closest = Infinity
+
+  for (let i = 0; i < nums.length - 2; i++) {
+    let left = i + 1,
+        right = nums.length - 1
+    
+    while (left < right) {
+      const currSum = nums[i] + nums[left] + nums[right]
+      const currDiff = target - currSum
+      // found an exact match, return the sum / target
+      if (currDiff === 0) return target
+
+      if (Math.abs(currDiff) < Math.abs(target - closest)) closest = currSum
+
+      if (currSum < target) left++ // need a bigger sum
+      else right-- // need a smaller sum
+    }
+  }
+
+  return closest
 }
