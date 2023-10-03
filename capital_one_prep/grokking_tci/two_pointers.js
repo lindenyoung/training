@@ -33,7 +33,7 @@ const moveUniqueNums = (nums) => {
   let next = 1
 
   for (let i = 0; i < nums.length; i++) {
-    if (nums[next - 1] !== nums[i]) {
+    if (nums[i] !== nums[next - 1]) {
       nums[next] = nums[i]
       next++
     }
@@ -94,7 +94,7 @@ const squareAndSort = (nums) => {
 }
 
 /**
- * Search triplets (3 sum), Leetcode 15
+ * Search triplets (3 sum) - Leetcode 15
  * @param {number[]} nums 
  * @returns {number[]}
  * O(n^2) time and O(n) space
@@ -139,12 +139,13 @@ const threeSum = (nums) => {
 }
 
 /**
- * Triplet sum close to target, Leetcode 16
+ * Triplet sum close to target - Leetcode 16
  * Input: nums = [-1, 2, 1, -4], target = 1 
  * Output: 2 (returning the sum of the triplet, -1 + 2 + 1)
  * @param {number[]} nums 
  * @param {number} target 
  * @returns {number}
+ * O(n^2) time and O(n) space
  */
 const tripletSumCloseToTarget = (nums, target) => {
   nums.sort((a, b) => a - b)
@@ -169,4 +170,75 @@ const tripletSumCloseToTarget = (nums, target) => {
   }
 
   return closest
+}
+
+/**
+ * Triplets with smaller sum (i, j, k are all diff indices) - Leetcode 259
+ * Input: nums = [-1, 0, 2, 3], target = 3 
+ * Output: 2
+ * Explanation: There are two triplets whose sum is less than the target: [-1, 0, 3], [-1, 0, 2]
+ * @param {number[]} nums 
+ * @param {number} target 
+ * @returns {number} return the count of valid triplets
+ * O(n^2) time and O(n) space
+ */
+const tripletsWithSmallerSum = (nums, target) => {
+  nums.sort((a, b) => a - b)
+
+  let result = 0 // count of valid triplets
+
+  for (let i = 0; i < nums.length - 2; i++) {
+    let left = i + 1,
+        right = nums.length - 1
+    
+    while (left < right) {
+      const sum = nums[i] + nums[left] + nums[right]
+      
+      // valid triplet condition
+      if (sum < target) {
+        // since array is sorted, all nums left of right pointer will also make a valid triplet
+        result += right - left
+        left++
+      }
+      else right-- // need a smaller sum so decrement right pointer
+    }
+  }
+
+  return result
+}
+
+/**
+ * Subarray product less than k - Leetcode 713
+ * Input: nums = [2, 5, 3, 10], target = 30 
+ * Output: 6
+ * Explanation: There are six contiguous subarrays whose product is less than the target
+ * [2], [5], [2, 5], [3], [5, 3], [10]
+ * @param {number[]} nums 
+ * @param {number} target 
+ * @returns {number[]}
+ */
+const subarraysWithSmallerProduct = (nums, target) => {
+  // edge cases
+  if (!nums || !nums.length || target <= 1) return 0
+
+  let left = 0,
+      product = 1,
+      count = 0 // change to subarrays if different output wanted
+
+  for (let right = 0; right < nums.length; right++) {
+    product *= nums[right]
+
+    // increment left pointer if product is not smaller than target
+    while (product >= target && left <= right) {
+      product /= nums[left++]
+    }
+
+    // if output is count of valid subarrays:
+    count += right - left + 1
+
+    // if output is list of valid subarrays:
+    // subarrays.push(nums.slice(left, right + 1));
+  }
+
+  return count
 }
