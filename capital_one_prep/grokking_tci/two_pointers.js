@@ -216,6 +216,7 @@ const tripletsWithSmallerSum = (nums, target) => {
  * @param {number[]} nums 
  * @param {number} target 
  * @returns {number[]}
+ * O(n^2) time and O(1) space
  */
 const subarraysWithSmallerProduct = (nums, target) => {
   // edge cases
@@ -241,4 +242,74 @@ const subarraysWithSmallerProduct = (nums, target) => {
   }
 
   return count
+}
+
+/**
+ * Sort colors - Leetcode 75
+ * 0 = red, 1 = white, 2 = blue
+ * Input: [1, 0, 2, 1, 0]
+ * Output: [0, 0, 1, 1, 2]
+ * @param {number[]} nums
+ * O(n) time and O(1) space
+ */
+const dutchNationalFlag = (nums) => {
+  let left = 0, // inner edge of 0's
+      right = nums.length - 1, // inner edge of 1's
+      i = 0 // current el, tracking our iteration
+
+  while (i <= right) {
+    if (nums[i] === 0) {
+      [nums[left], nums[i]] = [nums[i], nums[left]]
+      i++
+      left++
+    } else if (nums[i] === 2) {
+      [nums[i], nums[right]] = [nums[right], nums[i]]
+      right-- // only decrement right pointer, since after swap, the ith el is now unknown
+    } else {
+      i++
+    }
+  }
+}
+
+/**
+ * 4 sum - Leetcode 18
+ * Return array of all the unique quadruplets that sum to target
+ * @param {number[]} nums 
+ * @param {number} target 
+ * @returns {number[]}
+ * O(n^3) time and O(n) space
+ */
+const quadrupletSumtoTarget = (nums, target) => {
+  nums.sort((a, b) => a - b)
+  const result = []
+
+  for (let i = 0; i < nums.length - 3; i++) {
+    for (let j = i + 1; j < nums.length - 2; j++) {
+      // search for pairs logic
+      let left = j + 1,
+          right = nums.length - 1
+
+      while (left < right) {
+        const sum = nums[i] + nums[j] + nums[left] + nums[right]
+
+        if (sum === target) {
+          result.push([nums[i], nums[j], nums[left], nums[right]])
+  
+          while (nums[left] === nums[left + 1]) left++
+          while (nums[right] === nums[right + 1]) right--
+          
+          left++
+          right--
+        } else if (sum < target) {
+          left++
+        } else {
+          right--
+        }
+      }
+      while (nums[j] === nums[j + 1]) j++ // skip duplicates
+    }
+    while (nums[i] === nums[i + 1]) i++ // skip duplicates
+  }
+
+  return result
 }
