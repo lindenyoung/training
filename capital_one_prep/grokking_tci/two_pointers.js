@@ -296,7 +296,7 @@ const quadrupletSumtoTarget = (nums, target) => {
           result.push([nums[i], nums[j], nums[left], nums[right]])
   
           while (nums[left] === nums[left + 1]) left++
-          while (nums[right] === nums[right + 1]) right--
+          while (nums[right] === nums[right - 1]) right--
           
           left++
           right--
@@ -312,4 +312,112 @@ const quadrupletSumtoTarget = (nums, target) => {
   }
 
   return result
+}
+
+/**
+ * Compare strings containing backspaces (#)
+ * Input: str1="xy#z", str2="xzz#"
+ * Output: true
+ * Explanation: After applying backspaces the strings become "xz" and "xz" respectively.
+ * @param {string} str1 
+ * @param {string} str2 
+ * @returns {boolean}
+ * O(m + n) time and O(1) space
+ */
+const backspaceCompare1 = (str1, str2) => {
+  let index1 = str1.length - 1,
+      index2 = str2.length - 1
+
+  while (index1 >= 0 || index2 >= 0) {
+    const i1 = getNextValidChar(str1, index1),
+          i2 = getNextValidChar(str2, index2)
+
+    // reached end of both strings
+    if (i1 < 0 && i2 < 0) return true
+
+    // reached end of one string
+    if (i1 <0 || i2 < 0) return false
+
+    // chars don't match
+    if (str1[i1] !== str2[i2]) return false
+
+    index1 = i1 - 1
+    index2 = i2 - 1
+  }
+
+  return true
+
+  function getNextValidChar(str, i) {
+    let backspaces = 0
+
+    while (i >= 0) {
+      if (str[i] === '#') backspaces++ // curr char is a backspace
+      else if (backspaces > 0) backspaces-- // curr char is not a backspace
+      else break
+      
+      i-- // decrement pointer
+    }
+
+    return i
+  }
+}
+
+// another, not as efficient way to solve this problem
+const backspaceCompare2 = (s, t) => {
+  return edit(s) === edit(t)
+
+  function edit(str) {
+    let result = '',
+        count = 0
+
+    for (let i = str.length - 1; i >= 0; i--) {
+      if (str[i] === '#') count++
+      else if (count > 0) count--
+      else result = str[i] + result
+    }
+
+    return result
+  }
+}
+
+
+/**
+ * Minimum window sort
+ * Input: [1, 2, 5, 3, 7, 10, 9, 12]
+ * Output: 5
+ * Explanation: We need to sort only the subarray [5, 3, 7, 10, 9] to make the whole array sorted
+ * @param {number[]} nums 
+ * O(n) time and O(1) space
+ */
+const minWindowSort = (nums) => {
+  let left = 0,
+      right = nums.length - 1
+
+  // find 1st num out of sorted order from left
+  while (left < nums.length - 1 && nums[left] <= nums[left + 1]) left++
+
+  // edge case, already sorted
+  if (left === nums.length - 1) return 0
+
+  // find 1st num out of sorted order from right
+  while (right > 0 && nums[right] >= nums[right - 1]) right--
+
+  // find max and min of this new subarray
+  let subMax = -Infinity,
+      subMin = Infinity
+
+  for (let i = left; i < right + 1; i++) {
+    subMax = Math.max(subMax, nums[i])
+    subMin = Math.min(subMin, nums[i])
+  }
+
+  // extend subarray to include nums bigger than subarray min (they are also out of order)
+  // move left pointer left to capture these
+  while (left > 0 && nums[left - 1] > subMin) left--
+
+  // extend subarray to include nums smaller than subarray max (they are also out of order)
+  // move right pointer right to capture these
+  while (right < nums.length - 1 && nums[right + 1] < subMax) right++
+
+  return right - left + 1
 }
