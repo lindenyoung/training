@@ -393,13 +393,13 @@ const minWindowSort = (nums) => {
   let left = 0,
       right = nums.length - 1
 
-  // find 1st num out of sorted order from left
+  // find 1st num out of sorted order from left (5)
   while (left < nums.length - 1 && nums[left] <= nums[left + 1]) left++
 
   // edge case, already sorted
   if (left === nums.length - 1) return 0
 
-  // find 1st num out of sorted order from right
+  // find 1st num out of sorted order from right (9)
   while (right > 0 && nums[right] >= nums[right - 1]) right--
 
   // find max and min of this new subarray
