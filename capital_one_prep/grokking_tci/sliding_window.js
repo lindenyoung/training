@@ -28,6 +28,9 @@ const averagesOfSubarrays = (nums, k) => {
 
 /**
  * Max subarray
+ * Input: nums = [2, 1, 5, 1, 3, 2], k = 3 
+ * Output: 9
+ * Explanation: Subarray with maximum sum is [5, 1, 3].
  * @param {number[]} nums 
  * @param {number} k 
  * @returns {number}
@@ -53,10 +56,14 @@ const maxSubarray = (nums, k) => {
 }
 
 /**
- * Smallest subarray with a >= sum than s
+ * Smallest subarray with a sum >= than s
+ * Input: nums = [2, 1, 5, 2, 3, 2], s = 7
+ * Output: 2
+ * Explanation: The smallest subarray's length with a sum greater than or equal to '7' is [5, 2].
  * @param {number[]} nums 
  * @param {number} s 
  * @returns {number}
+ * O(n) time and O(1) space
  */
 const findSmallestSubarray = (nums, s) => {
   let minLength = Infinity,
@@ -75,4 +82,71 @@ const findSmallestSubarray = (nums, s) => {
   }
 
   return minLength !== Infinity ? minLength : 0
+}
+
+/**
+ * Longest substring with k distinct characters - leetcode 340
+ * Input: str = "araaci", k = 2  
+ * Output: 4  
+ * Explanation: The longest substring with no more than '2' distinct characters is "araa".
+ * @param {string} str 
+ * @param {number} k
+ * O(n) time and O(k) space (storing maximum of k + 1 chars in the hash map)
+ */
+const longestSubstring = (str, k) => {
+  const charMap = {}
+
+  let maxLength = 0,
+      start = 0
+
+  for (let end = 0; end < str.length; end++) {
+    const rightChar = str[end]
+    charMap[rightChar] = (charMap[rightChar] || 0) + 1
+
+    // shrink window until we have k distinct chars
+    while (Object.keys(charMap).length > k) {
+      const leftChar = str[start]
+      if (--charMap[leftChar] === 0) delete charMap[leftChar]
+      start++
+    }
+
+    maxLength = Math.max(maxLength, end - start + 1)
+  }
+
+  return maxLength
+}
+
+/**
+ * Fruits into baskets - leetcode 904
+  * Each basket can have only one type of fruit. There is no limit to how many fruit a basket can hold.
+  * You can start with any tree, but you can’t skip a tree once you have started.
+  * You will pick exactly one fruit from every tree until you cannot, i.e., you will stop when you have to pick from a third fruit type.
+ * Input: fruits = ['A', 'B', 'C', 'A', 'C'] 
+ * Output: 3  
+ * Explanation: We can put 2 'C' in one basket and one 'A' in the other from the subarray ['C', 'A', 'C']
+ * @param {string[]} fruits 
+ * @returns {number}
+ * O(?) time and O(?) space
+ */
+const fruitsIntoBaskets = (fruits) => {
+  const fruitMap = {} // store fruit frequencies
+
+  let maxLength = 0,
+      start = 0
+
+  for (let end = 0; end < fruits.length; end++) {
+    const rightFruit = fruits[end]
+    fruitMap[rightFruit] = (fruitMap[rightFruit] || 0) + 1 // increment curr fruit count
+
+    // shrink window until we only have 2 fruits
+    while (Object.keys(fruitMap).length > 2) {
+      const leftFruit = fruits[start]
+      if (--fruitMap[leftFruit] === 0) delete fruitMap[leftFruit]
+      start++
+    }
+
+    maxLength = Math.max(maxLength, end - start + 1)
+  }
+
+  return maxLength
 }
