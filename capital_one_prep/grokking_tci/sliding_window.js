@@ -95,7 +95,6 @@ const findSmallestSubarray = (nums, s) => {
  */
 const longestSubstring = (str, k) => {
   const charMap = {}
-
   let maxLength = 0,
       start = 0
 
@@ -126,11 +125,10 @@ const longestSubstring = (str, k) => {
  * Explanation: We can put 2 'C' in one basket and one 'A' in the other from the subarray ['C', 'A', 'C']
  * @param {string[]} fruits 
  * @returns {number}
- * O(?) time and O(?) space
+ * O(n) time and O(1) space
  */
 const fruitsIntoBaskets = (fruits) => {
   const fruitMap = {} // store fruit frequencies
-
   let maxLength = 0,
       start = 0
 
@@ -149,4 +147,36 @@ const fruitsIntoBaskets = (fruits) => {
   }
 
   return maxLength
+}
+
+/**
+ * Longest substring after char replacement - leetcode 424
+ * Input: str = "AABABBA", k = 1
+ * Output: 4
+ * Explanation: Replace the one 'A' in the middle with 'B' and form "AABBBBA".
+ * @param {string} str 
+ * @param {number} k 
+ * @returns {number}
+ * O(n) time and O(1) space (hash map will at most have 26 properties)
+ */
+const characterReplacement = (str, k) => {
+  const charMap = {}
+  let maxCount = 0, // max # of swaps (the count of the max repeating letter in any window)
+      start = 0,
+      end
+
+  for (end = 0; end < str.length; end++) {
+    const rightChar = str[end]
+    charMap[rightChar] = (charMap[rightChar] || 0) + 1
+    maxCount = Math.max(maxCount, charMap[rightChar])
+
+    // shrink window if window length - # of swaps is > k
+    if (end - start + 1 - maxCount > k) {
+      const leftChar = str[start]
+      charMap[leftChar]--
+      start++
+    }
+  }
+
+  return end - start // why not + 1 here?
 }
