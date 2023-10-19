@@ -180,3 +180,29 @@ const characterReplacement = (str, k) => {
 
   return end - start // why not + 1 here?
 }
+
+/**
+ * Longest subarray with ones after replacement
+ * @param {number[]} nums 
+ * @param {number} k 
+ * @returns {number}
+ */
+const longest1sReplacement = (nums, k) => {
+  let maxLength = 0,
+      start = 0,
+      maxOnesCount = 0
+
+  for (let end = 0; end < nums.length; end++) {
+    if (nums[end] === 1) maxOnesCount++
+
+    // shrink window condition
+    if (end - start + 1 - maxOnesCount > k) {
+      if (nums[start] === 1) maxOnesCount--
+      start++
+    }
+
+    maxLength = Math.max(maxLength, end - start + 1)
+  }
+
+  return maxLength
+}
