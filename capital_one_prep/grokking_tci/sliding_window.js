@@ -196,7 +196,7 @@ const longest1sReplacement = (nums, k) => {
     if (nums[end] === 1) maxOnesCount++
 
     // shrink window condition
-    if (end - start + 1 - maxOnesCount > k) {
+    if (end - start + 1 - maxOnesCount > k) { // this equals the # of 0's replaced in curr window
       if (nums[start] === 1) maxOnesCount--
       start++
     }
@@ -205,4 +205,62 @@ const longest1sReplacement = (nums, k) => {
   }
 
   return maxLength
+}
+
+/**
+ * Permutation in string - leetcode 567
+ * Return true if str contains any permutation of pattern
+ * Input: str = "oidbcaf", pattern = "abc"   
+ * Output: true   
+ * Explanation: The string contains "bca" which is a permutation of the given pattern.
+ * @param {string} str 
+ * @param {string} pattern 
+ * @returns {boolean}
+ * O(n+m) time and O(m) space
+ */
+const permutationInString = (str, pattern) => {
+  const charMap = {}
+  let matched = 0,
+      start = 0
+
+  // create map of pattern char frequencies
+  for (let i = 0; i < pattern.length; i++) {
+    charMap[pattern[i]] = (charMap[pattern[i]] || 0) + 1
+  }
+
+  for (let end = 0; end < str.length; end++) {
+    const rightChar = str[end]
+    
+    // decrement freq of matched char
+    if (rightChar in charMap) {
+      charMap[rightChar]--
+      if (charMap[rightChar] === 0) matched++
+    }
+
+    // true condition - # of matched chars is equal to # of unique chars in pattern
+    if (matched === Object.keys(charMap).length) return true
+
+    // shrink window if too large
+    if (end >= pattern.length - 1) { // >= bc end is an index value
+      const leftChar = str[start]
+      start++
+
+      if (leftChar in charMap) {
+        if (charMap[leftChar] === 0) matched--
+        charMap[leftChar]++
+      }
+    }
+  }
+
+  return false
+}
+
+/**
+ * Find all anagrams in a string - leetcode 438
+ * @param {string} str 
+ * @param {string} pattern 
+ * @returns {number[]}
+ */
+const stringAnagrams = (str, pattern) => {
+
 }
