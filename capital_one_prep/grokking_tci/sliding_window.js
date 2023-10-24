@@ -183,6 +183,9 @@ const characterReplacement = (str, k) => {
 
 /**
  * Longest subarray with ones after replacement
+ * Input: nums = [0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1], k = 2  
+ * Output: 6  
+ * Explanation: Replace the '0' at index 5 and 8 to have the longest contiguous subarray of 1s having length 6.
  * @param {number[]} nums 
  * @param {number} k 
  * @returns {number}
@@ -257,10 +260,57 @@ const permutationInString = (str, pattern) => {
 
 /**
  * Find all anagrams in a string - leetcode 438
+ * Input: str = "abbcabc", pattern = "abc"  
+ * Output: [2, 3, 4]  (start indices of anagrams of pattern in given string)
+ * Explanation: The three anagrams of the pattern in the given string are "bca", "cab", and "abc".
  * @param {string} str 
  * @param {string} pattern 
  * @returns {number[]}
+ * O(n+m) time and O(m) space
  */
 const stringAnagrams = (str, pattern) => {
+  const patternMap = {},
+        result = []
+  
+  let matched = 0,
+      start = 0
+
+  // populate pattern char map
+  for (const char of pattern) {
+    patternMap[char] = (patternMap[char] || 0) + 1
+  }
+
+  for (let end = 0; end < str.length; end++) {
+    const rightChar = str[end]
+
+    // matched char condition: decrement freq of curr char and increment matched if fully matched
+    if (rightChar in patternMap && --patternMap[rightChar] === 0) matched++
+
+    // valid anagram condition: push start index to result array
+    if (matched === Object.keys(patternMap).length) result.push(start)
+
+    // shrink window condition
+    if (end >= pattern.length - 1) {
+      const leftChar = str[start]
+      start++ // shrink window
+
+      // handle left char which is now leaving the window
+      if (leftChar in patternMap && patternMap[leftChar]++ === 0) matched--
+    }
+  }
+
+  return result
+}
+
+/**
+ * Smallest window containing substring - leetcode 76
+ * Input: String="aabdec", Pattern="abc"  
+ * Output: "abdec"  
+ * Explanation: The smallest substring having all characters of the pattern is "abdec"
+ * @param {string} str 
+ * @param {string} pattern 
+ * @returns {string}
+ */
+const smallestWindowWithSubstring = (str, pattern) => {
 
 }
