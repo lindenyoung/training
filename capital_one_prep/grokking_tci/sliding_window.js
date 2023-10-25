@@ -283,7 +283,7 @@ const stringAnagrams = (str, pattern) => {
   for (let end = 0; end < str.length; end++) {
     const rightChar = str[end]
 
-    // matched char condition: decrement freq of curr char and increment matched if fully matched
+    // matched char condition: decrement freq of curr char and increment matched only if fully matched
     if (rightChar in patternMap && --patternMap[rightChar] === 0) matched++
 
     // valid anagram condition: push start index to result array
@@ -310,7 +310,55 @@ const stringAnagrams = (str, pattern) => {
  * @param {string} str 
  * @param {string} pattern 
  * @returns {string}
+ * O(n+m) time and O(m) space
  */
 const smallestWindowWithSubstring = (str, pattern) => {
+  const patternMap = {}
+
+  let matched = 0,
+      start = 0,
+      substrStart = 0,
+      minLength = str.length + 1 // similar to initializing a min value to infinity
+
+  // populate patternMap with char frequencies
+  for (const char of pattern) {
+    patternMap[char] = (patternMap[char] || 0) + 1
+  }
+
+  for (let end = 0; end < str.length; end++) {
+    const rightChar = str[end]
+    
+    // increment matched count for every matching of a char
+    if (rightChar in patternMap && --patternMap[rightChar] >= 0) matched++
+
+    // shrink window condition - reassign minLength when we hit our matched condition
+    while (matched === pattern.length) {
+      if (minLength > end - start + 1) {
+        minLength = end - start + 1
+        substrStart = start
+      }
+
+      const leftChar = str[start]
+      start++ // increment left window pointer
+
+      // only decrement matched when a useful occurrence of a matched char is going out of window
+      if (leftChar in patternMap && patternMap[leftChar]++ === 0) matched--
+    }
+  }
+
+  const substrEnd = substrStart + minLength
+  return minLength > str.length ? '' : str.substring(substrStart, substrEnd)
+}
+
+/**
+ * Substring with concatenation of all words - leetcode 30
+ * Input: String="catfoxcat", Words=["cat", "fox"]  
+ * Output: [0, 3]  
+ * Explanation: The two substrings containing both the words are "catfox" & "foxcat".
+ * @param {string} str 
+ * @param {string[]} words 
+ * @returns {number[]}
+ */
+const findWordConcatenation = (str, words) => {
 
 }
