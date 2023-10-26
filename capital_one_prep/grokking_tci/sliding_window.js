@@ -358,7 +358,45 @@ const smallestWindowWithSubstring = (str, pattern) => {
  * @param {string} str 
  * @param {string[]} words 
  * @returns {number[]}
+ * O(n * m * len) time and O(m + n) space
+ * n = str.length, m = words.length, len = words[0].length
  */
 const findWordConcatenation = (str, words) => {
+  // edge cases
+  if (words.length === 0 || words[0].length === 0) return []
 
+  const wordMap = {},
+        result = [],
+        wordsCount = words.length,
+        wordLength = words[0].length,
+        windowLength = wordsCount * wordLength
+
+  for (const word of words) {
+    wordMap[word] = (wordMap[word] || 0) + 1
+  }
+
+  for (let i = 0; i < str.length - windowLength + 1; i++) {
+    const wordsSeen = {}
+
+    for (let j = 0; j < wordsCount; j++) {
+      const nextWordIndex = i + (j * wordLength)
+
+      // get next word from string
+      const word = str.substring(nextWordIndex, nextWordIndex + wordLength)
+
+      // break if we don't need curr word
+      if (!(word in wordMap)) break
+
+      // add curr word to wordsSeen map
+      wordsSeen[word] = (wordsSeen[word] || 0) + 1
+
+      // early exit condition - if word has higher freq than needed
+      if (wordsSeen[word] > (wordMap[word] || 0)) break
+
+      // success condition - found all words
+      if (j + 1 === wordsCount) result.push(i)
+    }
+  }
+
+  return result
 }
