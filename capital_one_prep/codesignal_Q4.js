@@ -35,8 +35,15 @@ const longestConsecutive = (nums) => {
 
 /**
  * Pairs of songs with total durations divisible by 60 - leetcode 1010
+ * Input: time = [30,20,150,100,40]
+ * Output: 3
+ * Explanation: Three pairs have a total duration divisible by 60:
+ * (time[0] = 30, time[2] = 150): total duration 180
+ * (time[1] = 20, time[3] = 100): total duration 120
+ * (time[1] = 20, time[4] = 40): total duration 60
  * @param {number[]} time 
  * @returns {number}
+ * O(n) time and O(n) space
  */
 const numPairsDivisibleBy60 = (times) => {
   const map = {}
@@ -51,3 +58,73 @@ const numPairsDivisibleBy60 = (times) => {
   
   return result
 }
+
+
+/**
+ * 4 sum II - leetcode 454
+ * @param {number[]} nums1 
+ * @param {number[]} nums2 
+ * @param {number[]} nums3 
+ * @param {number[]} nums4 
+ * @returns {number}
+ */
+const fourSumCount = (nums1, nums2, nums3, nums4) => {}
+
+/**
+ * Longest palindrome by concatenating two letter words - leetcode 2131
+ * Input: words = ["lc","cl","gg"]
+ * Output: 6
+ * Explanation: One longest palindrome is "lc" + "gg" + "cl" = "lcggcl", of length 6.
+ * Note that "clgglc" is another longest palindrome that can be created.
+ * @param {string[]} words 
+ * @returns {number}
+ */
+const longestPalindrome = (words) => {
+  const map = {}
+  let count = 0
+
+  for (const word of words) {
+    const reversed = word[1] + word[0] // don't need a reverse function since they are 2 char strings
+
+    if (map[reversed]) {
+      map[reversed]--
+      count += 4 // found matching pair, both strings together = 4 chars
+    } else map[word] = (map[word] || 0) + 1
+  }
+
+  // check for words that are palindromes themselves - 'aa', 'bb', since they don't need a reversed pair to match
+  const hasMorePalindromes = Object.keys(map).filter(key => map[key] && (key[1] + key[0]) === key) // map[key] is checking for non zero property value (frequency)
+  if (hasMorePalindromes.length) count += 2 // can always add one of these single word palindromes to total count
+  return count
+}
+
+/**
+ * Array of doubled pairs - leetcode 954
+ * @param {number[]} arr 
+ * @returns {boolean}
+ */
+const canReorderDoubled = (arr) => {}
+
+/**
+ * 3 sum with multiplicity
+ * @param {number[]} arr
+ * @param {number} target 
+ * @returns {number}
+ */
+const threeSumMulti = (arr, target) => {}
+
+/**
+ * Count number of nice subarrays - leetcode 1248
+ * @param {number[]} nums 
+ * @param {number} k 
+ * @returns {number}
+ */
+const numberOfSubarrays = (nums, k) => {}
+
+/**
+ * K-diff pairs in an array - leetcode 532
+ * @param {number[]} nums 
+ * @param {number} k 
+ * @returns {number}
+ */
+const findPairs = (nums, k) => {}
