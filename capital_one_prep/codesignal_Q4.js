@@ -136,8 +136,6 @@ const canReorderDoubled = (arr) => {
   return true
 }
 
-[-4, -2, 2, 4]
-
 /**
  * 3 sum with multiplicity
  * @param {number[]} arr
