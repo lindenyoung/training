@@ -78,13 +78,14 @@ const fourSumCount = (nums1, nums2, nums3, nums4) => {}
  * Note that "clgglc" is another longest palindrome that can be created.
  * @param {string[]} words 
  * @returns {number}
+ * O(n) time and O(n) space
  */
 const longestPalindrome = (words) => {
   const map = {}
   let count = 0
 
   for (const word of words) {
-    const reversed = word[1] + word[0] // don't need a reverse function since they are 2 char strings
+    const reversed = word[1] + word[0] // don't need a reverse function since they are just 2 char strings
 
     if (map[reversed]) {
       map[reversed]--
@@ -92,7 +93,7 @@ const longestPalindrome = (words) => {
     } else map[word] = (map[word] || 0) + 1
   }
 
-  // check for words that are palindromes themselves - 'aa', 'bb', since they don't need a reversed pair to match
+  // check for words that are palindromes themselves - 'aa', 'gg', since they don't need a reversed pair to match
   const hasMorePalindromes = Object.keys(map).filter(key => map[key] && (key[1] + key[0]) === key) // map[key] is checking for non zero property value (frequency)
   if (hasMorePalindromes.length) count += 2 // can always add one of these single word palindromes to total count
   return count
@@ -100,10 +101,42 @@ const longestPalindrome = (words) => {
 
 /**
  * Array of doubled pairs - leetcode 954
+ * Better description of problem - Could we find a pair for each number in the array, so one element of the pair is twice bigger than other?
+ * Input: arr = [4,-2,2,-4]
+ * Output: true
+ * Explanation: We can take two groups, [-2,-4] and [2,4] to form [-2,-4,2,4] or [2,4,-2,-4].
  * @param {number[]} arr 
  * @returns {boolean}
+ * O(n logn) time and O(n) space
  */
-const canReorderDoubled = (arr) => {}
+const canReorderDoubled = (arr) => {
+  arr.sort((a, b) => a - b)
+  const map = {}
+
+  // populate frequency map
+  for (const num of arr) {
+    map[num] = (map[num] || 0) + 1
+  }
+
+  for (const num of arr) {
+    // need this bc we delete both num and pair props from map after finding pair
+    if (!map[num]) continue
+
+    // handle positive / negative nums differently
+    const pair = num >= 0 ? num * 2 : num / 2
+
+    // false case, if we find a num without a pair
+    if (!map[pair]) return false
+
+    for (const k of [num, pair]) {
+      if (--map[k] === 0) delete map[k]
+    }
+  }
+
+  return true
+}
+
+[-4, -2, 2, 4]
 
 /**
  * 3 sum with multiplicity
