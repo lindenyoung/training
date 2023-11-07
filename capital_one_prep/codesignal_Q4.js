@@ -239,8 +239,33 @@ const numberOfSubarrays = (nums, k) => {
 
 /**
  * K-diff pairs in an array - leetcode 532
+ * Input: nums = [3,1,4,1,5], k = 2
+ * Output: 2
+ * Explanation: There are two 2-diff pairs in the array, (1, 3) and (3, 5). Although we have two 1s in the input, we should only return the number of unique pairs.
  * @param {number[]} nums 
  * @param {number} k 
  * @returns {number}
  */
-const findPairs = (nums, k) => {}
+const findPairs = (nums, k) => {
+  const map = {}
+  let result = 0
+
+  // populate frequency map
+  for (const num of nums) {
+    map[num] = (map[num] || 0) + 1
+  }
+
+  for (const key of Object.keys(map)) {
+    if (k !== 0) {
+      // |a - b| = k
+      // a = k + b
+      const b = +k + +key // typecast string to number using + which is basically parseInt(i)
+      if (map[b]) result++
+    // edge case of k = 0
+    } else {
+      if (map[key] >= 2) result++
+    }
+  }
+
+  return result
+}
