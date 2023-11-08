@@ -259,7 +259,7 @@ const findPairs = (nums, k) => {
     if (k !== 0) {
       // |a - b| = k
       // a = k + b
-      const b = +k + +key // typecast string to number using + which is basically parseInt(i)
+      const b = k + +key // typecast string to number using + which is basically parseInt(i)
       if (map[b]) result++
     // edge case of k = 0
     } else {
