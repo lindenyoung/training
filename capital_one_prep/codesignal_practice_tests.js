@@ -65,4 +65,98 @@ function countContiguousSawtoothSubarrays(arr) {
   return count
 }
 
-/* ------------------ 11.10.23 ------------------ */
+/* ------------------ 11.13.23 ------------------ */
+
+// Manipulate input string based on prefixes and palindromes
+// https://leetcode.com/discuss/interview-question/801274/robinhood-coding-question-2
+// s = "aaacodedoc" | output = "" (aaa is first prefix palindrome, then codedoc)
+// s = "abbab" | output = "b"
+// O(n log n) time bc of sort() and O(n) space
+
+const prefixesAndPalindromes = (s) => {
+  // helper to verify palindrome
+  const isPalindrome = (prefix) => {
+    let left = 0,
+        right = prefix.length - 1
+
+    while (left < right) {
+      if (prefix[left] !== prefix[right]) return false
+      left++
+      right--
+    }
+
+    return true
+  }
+
+  // edge cases
+  if (!s.length) return ''
+  if (s.length === 1) return s
+
+  const substrings = [],
+        palindromes = []
+
+  let i = 0,
+      j = 1
+
+  // populate array of all potential substrings
+  while (j <= s.length) {
+    substrings.push(s.slice(i, j))
+    j++
+  }
+
+  // sort by length - ascending
+  substrings.sort((a, b) => a.length - b.length)
+
+  // populate array of palindromes with length greater than two
+  for (const substr of substrings) {
+    if (isPalindrome(substr) && substr.length >= 2) palindromes.push(substr)
+  }
+
+  // edge case - no palindromes
+  if (!palindromes.length) return s
+
+  // remove longest prefix palindrome and recursively call function if necessary
+  const curr = s.replace(palindromes[palindromes.length - 1], '').trim()
+  if (curr !== '') return prefixesAndPalindromes(curr)
+  return ''
+}
+
+
+// Find how many contiguous subarrays of a of length m contian a pair of integers that sum to k
+// For a = [2, 4, 7, 5, 3, 5, 8, 5, 1, 7], m = 4, and k = 10, the output should be solution(a, m, k) = 5
+// For a = [15, 8, 8, 2, 6, 4, 1, 7], m = 2, and k = 8, the output should be solution(a, m, k) = 2
+// O(m * n) time and O(n) space
+// I was only able to get this to pass 17/20 test cases due to time limit exceeded
+
+function contigSubarraysTwoSum(a, m, k) {
+  // initialize vars
+  let result = 0
+  
+  // iterate through input array with m size window
+  for (let left = 0; left < a.length - m + 1; left++) {
+    // grab our right window pointer
+    const right = left + m - 1
+    
+    // check if curr window has two sum = k (use helper func)
+    const currWindow = a.slice(left, right + 1)
+  
+    // if so, increment result var
+    if (twoSum(currWindow)) result++
+  }
+  // return result var
+  return result
+  
+  // helper function implementation - optimize for time complexity
+  function twoSum(arr) {
+    const map = new Map()
+    
+    for (const num of arr) {
+      const compliment = k - num
+      if (map.has(compliment)) return true
+      
+      map.set(num, true)
+    }
+    
+    return false
+  }
+}
