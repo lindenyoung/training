@@ -75,12 +75,12 @@ function countContiguousSawtoothSubarrays(arr) {
 
 const prefixesAndPalindromes = (s) => {
   // helper to verify palindrome
-  const isPalindrome = (prefix) => {
+  const isPalindrome = (str) => {
     let left = 0,
-        right = prefix.length - 1
+        right = str.length - 1
 
     while (left < right) {
-      if (prefix[left] !== prefix[right]) return false
+      if (str[left] !== str[right]) return false
       left++
       right--
     }
@@ -159,4 +159,79 @@ function contigSubarraysTwoSum(a, m, k) {
     
     return false
   }
+}
+
+/* ------------------ 11.13.23 ------------------ */
+
+
+/* #1
+SUPER WEIRD PROBLEM, DON'T LIKE IT - this solution passed 18/20 test cases
+Swap digits to make strictly increasing array of nums
+input = [1, 3, 900, 10], output = true.
+By choosing numbers[2] = 900 and swapping its first and third digits, the resulting number 009 is considered to be just 9. So the updated array will look like [1, 3, 9, 10], which is strictly increasing.
+*/
+
+const swapAndStrictlyIncreasing = (numbers, singleFlipAllowed = true) => {
+  // helper func
+  function flip(i) {
+    return parseInt(i.toString().split('').reverse().join(''));
+  }
+
+  let n
+  for (n = 0; n < numbers.length - 1; n++) {
+    if (numbers[n] >= numbers[n + 1]) {
+        break;
+    }
+  }
+
+  if (n === numbers.length - 1) return true;
+
+  return singleFlipAllowed && (
+    (
+        (n === 0 || numbers[n - 1] < flip(numbers[n]))
+        && (n === numbers.length - 1 || flip(numbers[n]) < numbers[n + 1])
+        && swapAndStrictlyIncreasing(numbers.slice(n + 1), false)
+    )
+    || (
+        (numbers[n] < flip(numbers[n + 1]))
+        && (n + 1 === numbers.length - 1 || flip(numbers[n + 1]) < numbers[n + 2])
+        && swapAndStrictlyIncreasing(numbers.slice(n + 2), false)
+    )
+  )
+}
+
+/* #2
+Count number of digit anagram pairs
+a = [25, 35, 872, 228, 53, 278, 872], output = 4.
+There are 4 pairs of digit anagrams:
+a[1] = 35 and a[4] = 53 (i = 1 and j = 4),
+a[2] = 872 and a[5] = 278 (i = 2 and j = 5),
+a[2] = 872 and a[6] = 872 (i = 2 and j = 6),
+a[5] = 278 and a[6] = 872 (i = 5 and j = 6).
+*/
+
+const countDigitAnagrams = (a) => {
+  let result = 0
+  const map = {}
+
+  for (let num of a) {
+    const currDigits = []
+
+    // grab digits of curr num
+    while (num > 0) {
+      currDigits.push(num % 10) // push remainder to digits arr (will be right most digit)
+      num = Math.floor(num / 10) // update num
+    }
+
+    currDigits.sort((a, b) => a - b)
+    const digitsStr = JSON.stringify(currDigits) // convert sorted arr to a string (property key)
+
+    if (map.hasOwnProperty(digitsStr)) {
+      result += map[digitsStr]
+      map[digitsStr]++
+    }
+    else map[digitsStr] = 1
+  }
+
+  return result
 }
