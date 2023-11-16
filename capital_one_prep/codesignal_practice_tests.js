@@ -122,7 +122,7 @@ const prefixesAndPalindromes = (s) => {
 }
 
 
-// Find how many contiguous subarrays of a of length m contian a pair of integers that sum to k
+// Find how many contiguous subarrays of a of length m contain a pair of integers that sum to k
 // For a = [2, 4, 7, 5, 3, 5, 8, 5, 1, 7], m = 4, and k = 10, the output should be solution(a, m, k) = 5
 // For a = [15, 8, 8, 2, 6, 4, 1, 7], m = 2, and k = 8, the output should be solution(a, m, k) = 2
 // O(m * n) time and O(n) space
@@ -137,10 +137,8 @@ function contigSubarraysTwoSum(a, m, k) {
     // grab our right window pointer
     const right = left + m - 1
     
-    // check if curr window has two sum = k (use helper func)
+    // if curr window has two sum = k, increment result var
     const currWindow = a.slice(left, right + 1)
-  
-    // if so, increment result var
     if (twoSum(currWindow)) result++
   }
   // return result var
@@ -153,7 +151,6 @@ function contigSubarraysTwoSum(a, m, k) {
     for (const num of arr) {
       const compliment = k - num
       if (map.has(compliment)) return true
-      
       map.set(num, true)
     }
     
@@ -161,7 +158,7 @@ function contigSubarraysTwoSum(a, m, k) {
   }
 }
 
-/* ------------------ 11.13.23 ------------------ */
+/* ------------------ 11.15.23 ------------------ */
 
 
 /* #1
