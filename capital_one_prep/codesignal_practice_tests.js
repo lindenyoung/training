@@ -232,3 +232,82 @@ const countDigitAnagrams = (a) => {
 
   return result
 }
+
+/* ------------------ 11.17.23 ------------------ */
+
+/* #1
+ Given two strings s and t, both consisting of lowercase English letters and digits, your task is to calculate how many ways exactly one digit could be removed from one of the strings so that s is lexicographically smaller than t after the removal. Note that we are removing only a single instance of a single digit, rather than all instances (eg: removing 1 from the string a11b1c could result in a1b1c or a11bc, but not abc).
+ Also note that digits are considered lexicographically smaller than letters.
+ Input: s = "ab12c", t = "1zz456"
+ Output: 1
+ The only valid case where s < t after removing a digit is "ab12c" < "zz456". Therefore, the answer is 1.
+ O(n + m) time which is just O(n) and O(1) space
+ */
+
+ const removeOneDigit = (s, t) => {
+  let result = 0
+
+  // iterate over first string
+  for (let i = 0; i < s.length; i++) {
+    if (s[i].match(/\d/)) { // is current char a digit
+      const temp = s.slice(0, i) + s.slice(i + 1) // grab the new updated string with removed digit
+      if (temp < t) result++ // valid s < t condition, increment count
+    }
+  }
+
+  // iterate over second string
+  for (let i = 0; i < t.length; i++) {
+    if (t[i].match(/\d/)) {
+      const temp = t.slice(0, i) + t.slice(i + 1)
+      if (s < temp) result++
+    }
+  }
+
+  return result
+ }
+
+/* #2
+Intuitive solution - we don't actually need to accurately update the hashMap, we only care about the get method return values
+So, we can keep cumulative vars for what we've added to keys and values and then use those in our get method
+
+Example:
+For queryType = ["insert", "insert", "addToValue", "addToKey", "get"] and query = [[1, 2], [2, 3], [2], [1], [3]], the output should be solution(queryType, query) = 5.
+The hashmap looks like this after each query:
+1 query: {1: 2}
+2 query: {1: 2, 2: 3}
+3 query: {1: 4, 2: 5}
+4 query: {2: 4, 3: 5}
+5 query: answer is 5
+
+O(n) time and space
+*/
+const createHashMap = (queryType, query) => {
+  let result = 0,
+      hashMap = {},
+      ck = 0,
+      cv = 0
+
+  for (let i = 0; i < queryType.length; i++) {
+    const cmd = queryType[i];
+    const quer = query[i];
+
+    if (cmd === 'insert') {
+      const key = quer[0];
+      const val = quer[1];
+      hashMap[key - ck] = val - cv;
+    } else if (cmd === 'addToValue') {
+      const k = quer[0];
+      cv += k;
+    } else if (cmd === 'addToKey') {
+      const k = quer[0];
+      ck += k;
+    } else { // GET method
+      let k = quer[0];
+      k -= ck;
+      const val = hashMap[k] + cv;
+      result += val;
+    }
+  }
+
+  return result;
+}
