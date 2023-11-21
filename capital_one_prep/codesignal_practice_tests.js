@@ -250,7 +250,7 @@ const countDigitAnagrams = (a) => {
   // iterate over first string
   for (let i = 0; i < s.length; i++) {
     if (s[i].match(/\d/)) { // is current char a digit
-      const temp = s.slice(0, i) + s.slice(i + 1) // grab the new updated string with removed digit
+      const temp = s.slice(0, i) + s.slice(i + 1) // grab the updated string (after removing curr digit)
       if (temp < t) result++ // valid s < t condition, increment count
     }
   }
@@ -281,11 +281,12 @@ The hashmap looks like this after each query:
 
 O(n) time and space
 */
+
 const createHashMap = (queryType, query) => {
   let result = 0,
       hashMap = {},
-      ck = 0,
-      cv = 0
+      ck = 0, // cumulative key diff
+      cv = 0 // cumulative value diff
 
   for (let i = 0; i < queryType.length; i++) {
     const cmd = queryType[i];
@@ -310,4 +311,67 @@ const createHashMap = (queryType, query) => {
   }
 
   return result;
+}
+
+/* ------------------ 11.20.23 ------------------ */
+
+/* #1
+Given an array of integers a, your task is to calculate the digits that occur the most number of times in the array. Return the array of these digits in ascending order.
+For a = [25, 2, 3, 57, 38, 41], the output should be solution(a) = [2, 3, 5].
+Input: [4, 5, 4, 2, 2, 25], Output: [2]
+O(n) time and O(n) space
+*/
+
+const mostFrequentDigits = (a) => {
+  // initialize vars
+  const result = [],
+        map = {} // frequency map
+
+  let currMax = 0 // keep track of curr highest frequency
+
+  // iterate over the input arr
+  for (let num of a) {
+    // grab digits of curr num
+    while (num > 0) {
+      const dig = num % 10 // grab digit (ones place)
+      map[dig] = (map[dig] || 0) + 1 // update freq map
+      currMax = Math.max(currMax, map[dig]) // update currMax if necessary
+      num = Math.floor(num / 10) // update num (remove ones place)
+    }
+  }
+
+  // logic to find most freq digit(s) - stored as currMax
+  for (const key in map) {
+    if (map[key] === currMax) result.push(+key) // + makes it a num, keys are strings
+  }
+
+  // return result
+  return result
+}
+
+/* #2
+You are given an array of integers a and an integer k. Your task is to calculate the number of ways to pick two different indices i < j, such that a[i] + a[j] is divisible by k.
+For a = [1, 2, 3, 4, 5] and k = 3, the output should be solution(a, k) = 4.
+
+There are 4 pairs of numbers that sum to a multiple of k = 3:
+
+a[0] + a[1] = 1 + 2 = 3
+a[0] + a[4] = 1 + 5 = 6
+a[1] + a[3] = 2 + 4 = 6
+a[3] + a[4] = 4 + 5 = 9
+
+O(n^2) time and O(1) space
+Only passes 8/11 test cases, time limit exceeded
+ */
+
+const twoSumDivisibleByK = (a, k) => {
+  let result = 0
+
+  for (let i = 0; i < a.length; i++) {
+    for (let j = i + 1; j < a.length; j++) {
+      if ((a[i] + a[j]) % k === 0) result++
+    }
+  }
+
+  return result
 }
