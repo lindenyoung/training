@@ -8,22 +8,22 @@ function rearrangeAndIsAscending(a) {
   let left = 0,
       right = a.length - 1,
       b = []
-  
+
   // iterate over input array
   for (let i = 0; i < a.length; i++) {
     // grab curr val based on i
     const even = i % 2 === 0
     const val = even ? a[left] : a[right]
-    
+
     // invalid case - val is less than last val added to b array
     if (val <= b[b.length - 1]) return false
-    
+
     // push val to b array and increment / decrement left or right pointers
     b.push(val)
     if (even) left++
     else right--
   }
-  
+
   // valid case
   return true
 }
@@ -36,12 +36,12 @@ function rearrangeAndIsAscending(a) {
 function countContiguousSawtoothSubarrays(arr) {
   // handle edge cases
   if (!arr || arr.length < 2) return 0
-  
+
   // initialize vars
   let count = 0,
       streak = 0,
       prevIncreasing = null
-  
+
   // iterate over input arr
   for (let i = 1; i < arr.length; i++) {
     // curr val same as prev val
@@ -50,18 +50,18 @@ function countContiguousSawtoothSubarrays(arr) {
       prevIncreasing = null
       continue
     }
-    
+
     const currIncreasing = arr[i] > arr[i - 1]
-    
+
     // valid sawtooth
     if (currIncreasing !== prevIncreasing) {
       streak++
       prevIncreasing = currIncreasing
     } else streak = 1
-    
+
     count += streak
   }
-  
+
   return count
 }
 
@@ -131,29 +131,29 @@ const prefixesAndPalindromes = (s) => {
 function contigSubarraysTwoSum(a, m, k) {
   // initialize vars
   let result = 0
-  
+
   // iterate through input array with m size window
   for (let left = 0; left < a.length - m + 1; left++) {
     // grab our right window pointer
     const right = left + m - 1
-    
+
     // if curr window has two sum = k, increment result var
     const currWindow = a.slice(left, right + 1)
     if (twoSum(currWindow)) result++
   }
   // return result var
   return result
-  
+
   // helper function implementation - optimize for time complexity
   function twoSum(arr) {
     const map = new Map()
-    
+
     for (const num of arr) {
       const compliment = k - num
       if (map.has(compliment)) return true
       map.set(num, true)
     }
-    
+
     return false
   }
 }
@@ -371,6 +371,89 @@ const twoSumDivisibleByK = (a, k) => {
     for (let j = i + 1; j < a.length; j++) {
       if ((a[i] + a[j]) % k === 0) result++
     }
+  }
+
+  return result
+}
+
+/* ------------------ 11.23.23 ------------------ */
+
+/* #1
+You are given two strings - pattern and source. The first string pattern contains only the symbols 0 and 1, and the second string source contains only lowercase English letters.
+Let's say that pattern matches a substring source[l..r] of source if the following three conditions are met:
+  they have equal length,
+  for each 0 in pattern the corresponding letter in the substring is a vowel,
+  for each 1 in pattern the corresponding letter is a consonant.
+Your task is to calculate the number of substrings of source that match pattern.
+Note: In this task we define the vowels as 'a', 'e', 'i', 'o', 'u', and 'y'. All other letters are consonants.
+
+Input: pattern = '010', source = 'amazing'
+Output: 2
+
+O(n * m) time and O(1) space, n = source.length, m = pattern.length
+*/
+
+const stringsThatMatchVowelPattern = (pattern, source) => {
+  const vowels = ['a', 'e', 'i', 'o', 'u', 'y'] // could optimize by making this a map / object instead of array
+  let result = 0
+
+  for (let i = 0; i < source.length - pattern.length + 1; i++) { // iterate over source input str (since checking pattern length substrings, we don't interate all the way to source.length)
+    const isValid = 1
+    // window of pattern length size
+    for (let j = 0; j < pattern.length; j++) {
+      // vowel break case
+      if (pattern[j] === '0' && !vowels.includes(source[i + j])) { // source[i + j] since we need to check curr subset
+        isValid = 0
+        break
+      // consonant break case
+      } else if (pattern[j] === '1' && vowels.includes(source[i + j])) {
+        isValid = 0
+        break
+      }
+    }
+
+    result += isValid
+  }
+
+  return result
+}
+
+/* #2
+Given an array of positive integers a, your task is to calculate the sum of every possible a[i] ∘ a[j], where a[i] ∘ a[j] is the concatenation of the string representations of a[i] and a[j] respectively.
+
+Input: a = [10, 2]
+Output: 1344
+
+a[0] ∘ a[0] = 10 ∘ 10 = 1010,
+a[0] ∘ a[1] = 10 ∘ 2 = 102,
+a[1] ∘ a[0] = 2 ∘ 10 = 210,
+a[1] ∘ a[1] = 2 ∘ 2 = 22.
+
+
+*/
+const sumOfConcatenations = (a) => { // this brute force solution passes 14/16 test cases for 417/500 score
+  let result = 0
+
+  for (let i = 0; i < a.length; i++) {
+    for (let j = 0; j < a.length; j++) {
+      result += +('' + a[i] + a[j])
+    }
+  }
+
+  return result
+}
+
+// optimized solution, linear O(n) time, passes 16/16 test cases
+const sumOfConcatenations2 = (a) => {
+  const lowSum = a.reduce((acc, num) => acc + num, 0) // sum of all input arr elements
+  let result = 0
+
+  result += lowSum * a.length
+
+  for (let j = 0; j < a.length; j++) {
+      let size = a[j].toString().length
+      let offset = Math.pow(10, size)
+      result += lowSum * offset
   }
 
   return result
