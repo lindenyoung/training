@@ -388,7 +388,7 @@ Your task is to calculate the number of substrings of source that match pattern.
 Note: In this task we define the vowels as 'a', 'e', 'i', 'o', 'u', and 'y'. All other letters are consonants.
 
 Input: pattern = '010', source = 'amazing'
-Output: 2
+Output: 2 ('ama', 'azi')
 
 O(n * m) time and O(1) space, n = source.length, m = pattern.length
 */
@@ -428,8 +428,6 @@ a[0] ∘ a[0] = 10 ∘ 10 = 1010,
 a[0] ∘ a[1] = 10 ∘ 2 = 102,
 a[1] ∘ a[0] = 2 ∘ 10 = 210,
 a[1] ∘ a[1] = 2 ∘ 2 = 22.
-
-
 */
 const sumOfConcatenations = (a) => { // this brute force solution passes 14/16 test cases for 417/500 score
   let result = 0
@@ -457,4 +455,104 @@ const sumOfConcatenations2 = (a) => {
   }
 
   return result
+}
+
+/* ------------------ 11.23.23 ------------------ */
+
+/* #1
+You are given a string s. Your task is to count the number of ways of splitting s into three non-empty parts a, b and c (s = a + b + c) in such a way that a + b, b + c and c + a are all different strings.
+https://leetcode.com/discuss/interview-question/922241/quora-oa-2020-ways-to-split-string
+Input: s = "xzxzx"
+Output: 5
+*/
+const waysToSplitString = (s) => {
+  let result = 0
+
+  // start at 1 since abc can't be empty strings
+  for (let i = 1; i < s.length - 1; i++) {
+    for (let j = i + 1; j < s.length; j++) {
+      const a = s.substring(0, i)
+      const b = s.substring(i, j)
+      const c = s.substring(j, s.length)
+
+      if (
+        !(a + b === b + c) &&
+        !(b + c === c + a) &&
+        !(a + b === c + a)
+      ) result++
+    }
+  }
+
+  return result
+}
+
+
+/* #2
+Cut ribbons - leetcode 1891
+You are given an array of integers a, where each element a[i] represents the length of a ribbon.
+Your goal is to obtain k ribbons of the same length, by cutting the ribbons into as many pieces as you want.
+Your task is to calculate the maximum integer length L for which it is possible to obtain at least k ribbons of length L by cutting the given ones.
+
+Input: a = [5, 2, 7, 4, 9] and k = 5
+Output: 4
+*/
+
+// passes 16/16 test cases
+const cutRibons = (a, k) => {
+  // helper function
+  function getLength(target) { // this really gets the count of ribbons of a given length, it doesn't really get the length
+    let res = 0;
+
+    for (let el of a) {
+        res += Math.floor(el / target);
+    }
+
+    return res;
+  }
+
+  // main logic
+  let max = Math.max(...a)
+
+  let left = 1,
+      right = max
+
+  while (left <= right) {
+    const mid = left + Math.floor((right - left) / 2)
+    const length = getLength(mid)
+
+    // binary search
+    if (length >= k) left = mid + 1
+    else right = mid - 1
+  }
+
+  return right
+}
+
+// also passes 16/16 tests
+const cutRibbons2 = (a, k) => {
+  // helper func
+  function isValidCut(length) {
+    let res = 0
+
+    for (const el of a) {
+      res += Math.floor(el / length)
+    }
+
+    return res >= k ? true : false
+  }
+
+  // main logic
+  const maxValue = Math.max(...a)
+  if (maxValue === 0) return 0
+
+  let left = 0,
+      right = maxValue
+
+  while (left < right) {
+    const mid = Math.floor((left + right + 1) / 2)
+    if (isValidCut(mid)) left = mid
+    else right = mid - 1
+  }
+
+  return left
 }
