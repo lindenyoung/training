@@ -16,7 +16,7 @@ function rearrangeAndIsAscending(a) {
     const val = even ? a[left] : a[right]
 
     // invalid case - val is less than last val added to b array
-    if (val <= b[b.length - 1]) return false
+    if (val <= b[b.length - 1]) return false // on first loop, val <= undefined which returns false
 
     // push val to b array and increment / decrement left or right pointers
     b.push(val)
@@ -457,7 +457,7 @@ const sumOfConcatenations2 = (a) => {
   return result
 }
 
-/* ------------------ 11.23.23 ------------------ */
+/* ------------------ 11.24.23 ------------------ */
 
 /* #1
 You are given a string s. Your task is to count the number of ways of splitting s into three non-empty parts a, b and c (s = a + b + c) in such a way that a + b, b + c and c + a are all different strings.

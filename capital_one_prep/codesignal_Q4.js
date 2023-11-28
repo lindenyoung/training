@@ -4,12 +4,12 @@
  * Input: nums = [100,4,200,1,3,2]
  * Output: 4
  * Explanation: The longest consecutive elements sequence is [1, 2, 3, 4]. Therefore its length is 4.
- * @param {number[]} nums 
+ * @param {number[]} nums
  * @returns {number}
  * O(n) time and O(n) space
  */
 const longestConsecutive = (nums) => {
-  if (!nums || nums.length === 0) return 0
+  if (!nums || !nums.length) return 0
 
   const set = new Set(nums) // remove duplicates
   let result = 0
@@ -41,7 +41,7 @@ const longestConsecutive = (nums) => {
  * (time[0] = 30, time[2] = 150): total duration 180
  * (time[1] = 20, time[3] = 100): total duration 120
  * (time[1] = 20, time[4] = 40): total duration 60
- * @param {number[]} time 
+ * @param {number[]} time
  * @returns {number}
  * O(n) time and O(n) space
  */
@@ -55,17 +55,17 @@ const numPairsDivisibleBy60 = (times) => {
     result += map[left] || 0
     map[remainder] = (map[remainder] || 0) + 1
   }
-  
+
   return result
 }
 
 
 /**
  * 4 sum II - leetcode 454
- * @param {number[]} nums1 
- * @param {number[]} nums2 
- * @param {number[]} nums3 
- * @param {number[]} nums4 
+ * @param {number[]} nums1
+ * @param {number[]} nums2
+ * @param {number[]} nums3
+ * @param {number[]} nums4
  * @returns {number}
  */
 const fourSumCount = (nums1, nums2, nums3, nums4) => {}
@@ -76,7 +76,7 @@ const fourSumCount = (nums1, nums2, nums3, nums4) => {}
  * Output: 6
  * Explanation: One longest palindrome is "lc" + "gg" + "cl" = "lcggcl", of length 6.
  * Note that "clgglc" is another longest palindrome that can be created.
- * @param {string[]} words 
+ * @param {string[]} words
  * @returns {number}
  * O(n) time and O(n) space
  */
@@ -105,7 +105,7 @@ const longestPalindrome = (words) => {
  * Input: arr = [4,-2,2,-4]
  * Output: true
  * Explanation: We can take two groups, [-2,-4] and [2,4] to form [-2,-4,2,4] or [2,4,-2,-4].
- * @param {number[]} arr 
+ * @param {number[]} arr
  * @returns {boolean}
  * O(n logn) time and O(n) space
  */
@@ -147,7 +147,7 @@ const canReorderDoubled = (arr) => {
 * 0 <= arr[i] <= 100
 * 0 <= target <= 300
  * @param {number[]} arr
- * @param {number} target 
+ * @param {number} target
  * @returns {number}
  * O(n^2) time and O(n) space
  */
@@ -158,18 +158,18 @@ const threeSumMulti = (arr, target) => {
       ans = 0
 
   for (let i in arr) nmap[arr[i]]++
-  
+
   for (let k = Math.min(target, 100); k >= third; k--) {
     let rem = target - k,
         half = rem / 2
-    
+
     for (let j = Math.min(rem, k); j >= half; j--) {
         let i = rem - j,
             x = nmap[i],
             y = nmap[j],
             z = nmap[k],
             res
-        
+
         if (i === k) res = x * (x-1) * (x-2) / 6
         else if (i === j) res = x * (x-1) / 2 * z
         else if (j === k) res = x * y * (y-1) / 2
@@ -205,13 +205,13 @@ const threeSumMulti2 = (arr, target) => {
  * Input: nums = [1,1,2,1,1], k = 3
  * Output: 2
  * Explanation: The only sub-arrays with 3 odd numbers are [1,1,2,1] and [1,2,1,1].
- * @param {number[]} nums 
- * @param {number} k 
+ * @param {number[]} nums
+ * @param {number} k
  * @returns {number}
  */
 const numberOfSubarrays = (nums, k) => {
   const isOdd = (n) => n % 2 !== 0
-  
+
   let odds = 0,
       currCount = 0, // curr count of nice subarrays
       left = 0,
@@ -242,8 +242,8 @@ const numberOfSubarrays = (nums, k) => {
  * Input: nums = [3,1,4,1,5], k = 2
  * Output: 2
  * Explanation: There are two 2-diff pairs in the array, (1, 3) and (3, 5). Although we have two 1s in the input, we should only return the number of unique pairs.
- * @param {number[]} nums 
- * @param {number} k 
+ * @param {number[]} nums
+ * @param {number} k
  * @returns {number}
  */
 const findPairs = (nums, k) => {
