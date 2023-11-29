@@ -92,23 +92,23 @@ const prefixesAndPalindromes = (s) => {
   if (!s.length) return ''
   if (s.length === 1) return s
 
-  const substrings = [],
+  const prefixes = [],
         palindromes = []
 
   let i = 0,
       j = 1
 
-  // populate array of all potential substrings
+  // populate array of all potential prefixes
   while (j <= s.length) {
-    substrings.push(s.slice(i, j))
+    prefixes.push(s.slice(i, j))
     j++
   }
 
   // sort by length - ascending
-  substrings.sort((a, b) => a.length - b.length)
+  prefixes.sort((a, b) => a.length - b.length)
 
   // populate array of palindromes with length greater than two
-  for (const substr of substrings) {
+  for (const substr of prefixes) {
     if (isPalindrome(substr) && substr.length >= 2) palindromes.push(substr)
   }
 
@@ -116,9 +116,9 @@ const prefixesAndPalindromes = (s) => {
   if (!palindromes.length) return s
 
   // remove longest prefix palindrome and recursively call function if necessary
-  const curr = s.replace(palindromes[palindromes.length - 1], '').trim()
-  if (curr !== '') return prefixesAndPalindromes(curr)
-  return ''
+  const newStr = s.replace(palindromes[palindromes.length - 1], '')
+  if (newStr === '') return ''
+  return prefixesAndPalindromes(newStr)
 }
 
 
@@ -448,8 +448,8 @@ const sumOfConcatenations2 = (a) => {
 
   result += lowSum * a.length
 
-  for (let j = 0; j < a.length; j++) {
-      let size = a[j].toString().length
+  for (let i = 0; i < a.length; i++) {
+      let size = a[i].toString().length
       let offset = Math.pow(10, size)
       result += lowSum * offset
   }
