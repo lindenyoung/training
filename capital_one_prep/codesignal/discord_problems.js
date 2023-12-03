@@ -65,3 +65,43 @@ const longestDiffContinuation = (nums, k) => {
 
 // console.log(longestDiffContinuation([0, 3, -1, 5, 7, 4, 1, -5], 5))
 // console.log(longestDiffContinuation([1, 3, 0, -1, 1, 2, 4, 5, 2, 4, 6], 2))
+
+/* Q4 from joshG
+// Given an input of 2 arrays (a and b) and a query array consisting of either [0, x] or [1, k, j], your task is to return the number of instances where each elements from array a and b sum up to x.
+// For example, a = [1, 3] b = [2, 5, 6] query = [ [1, 2, 5] , [0, 12] ];
+
+// For the first query [1, k, j], we access the index of b array with k and add j to the element.
+// So b = [2, 5, 6]   ->   b = [ 2, 5, 11], accessing the 2nd index of b and adding 5 to that element.
+// Current updated array, a = [1, 3] b = [2, 5, 11]
+// For the second query [0, 12], find the elements from a and b array that add up to x.
+// So the elements that add up to 12 are, a[0] + b[2] === 12
+// Output: 1 (number of two sum instances)
+*/
+
+const queryTwoSum = (a, b, queries) => {
+  // initialize vars
+  let result = 0
+
+  // iterate / logic
+  for (const query of queries) {
+    // manipulate b if query index is 1
+    if (query[0] === 1) {
+      b[query[1]] += query[2]
+    } else {
+      const target = query[1], // x
+            set = new Set(b)
+
+      for (const num of a) {
+        const match = target - num
+        if (set.has(match)) result++
+      }
+    }
+  }
+
+  return result
+}
+
+console.log(queryTwoSum([1, 3], [2, 5, 6], [[1, 2, 5], [0, 12]]))
+
+// Q2 from jamz
+// given 2 strings, return the resultant string from adding each element at the 'i'th digit, with the 0th digit being the one in the one's position. i.e. given '99' '99' return '1818'. given '11' and '9' return '110'

@@ -99,6 +99,8 @@ const longestPalindrome = (words) => {
   return count
 }
 
+console.log(longestPalindrome(["lc","cl","gg"]))
+
 /**
  * Array of doubled pairs - leetcode 954
  * Better description of problem - Could we find a pair for each number in the array, so one element of the pair is twice bigger than other?

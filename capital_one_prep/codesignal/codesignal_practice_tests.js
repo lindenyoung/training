@@ -89,8 +89,7 @@ const prefixesAndPalindromes = (s) => {
   }
 
   // edge cases
-  if (!s.length) return ''
-  if (s.length === 1) return s
+  if (s.length < 2) return s
 
   const prefixes = [],
         palindromes = []
@@ -100,16 +99,9 @@ const prefixesAndPalindromes = (s) => {
 
   // populate array of all potential prefixes
   while (j <= s.length) {
-    prefixes.push(s.slice(i, j))
+    const prefix = s.slice(i, j)
+    if (isPalindrome(prefix) && prefix.length >= 2) palindromes.push(prefix)
     j++
-  }
-
-  // sort by length - ascending
-  prefixes.sort((a, b) => a.length - b.length)
-
-  // populate array of palindromes with length greater than two
-  for (const substr of prefixes) {
-    if (isPalindrome(substr) && substr.length >= 2) palindromes.push(substr)
   }
 
   // edge case - no palindromes
@@ -117,10 +109,8 @@ const prefixesAndPalindromes = (s) => {
 
   // remove longest prefix palindrome and recursively call function if necessary
   const newStr = s.replace(palindromes[palindromes.length - 1], '')
-  if (newStr === '') return ''
-  return prefixesAndPalindromes(newStr)
+  return newStr === '' ? '' : prefixesAndPalindromes(newStr)
 }
-
 
 // Find how many contiguous subarrays of a of length m contain a pair of integers that sum to k
 // For a = [2, 4, 7, 5, 3, 5, 8, 5, 1, 7], m = 4, and k = 10, the output should be solution(a, m, k) = 5
@@ -138,7 +128,7 @@ function contigSubarraysTwoSum(a, m, k) {
     const right = left + m - 1
 
     // if curr window has two sum = k, increment result var
-    const currWindow = a.slice(left, right + 1)
+    const currWindow = a.slice(left, right + 1) // slice could be hurting time efficiency for last few test cases?
     if (twoSum(currWindow)) result++
   }
   // return result var
@@ -376,6 +366,27 @@ const twoSumDivisibleByK = (a, k) => {
   return result
 }
 
+// this should pass all tests as it's O(n) time
+const twoSumDivisible2 = (nums, k) => {
+  let result = 0
+  const map = {}
+
+  for (const num of nums) {
+    const remainder = num % k // 1, 2, 0, 1, 2
+    const match = k - remainder // 2, 1, 3, 1, 3
+    // handle zero remainder cases
+    if (match === k) {
+      result += map[0] || 0
+      map[0] = (map[0] || 0) + 1
+    } else {
+      result += map[match] || 0
+      map[remainder] = (map[remainder] || 0) + 1
+    }
+  }
+
+  return result
+}
+
 /* ------------------ 11.23.23 ------------------ */
 
 /* #1
@@ -429,6 +440,7 @@ a[0] ∘ a[1] = 10 ∘ 2 = 102,
 a[1] ∘ a[0] = 2 ∘ 10 = 210,
 a[1] ∘ a[1] = 2 ∘ 2 = 22.
 */
+
 const sumOfConcatenations = (a) => { // this brute force solution passes 14/16 test cases for 417/500 score
   let result = 0
 
@@ -465,6 +477,7 @@ https://leetcode.com/discuss/interview-question/922241/quora-oa-2020-ways-to-spl
 Input: s = "xzxzx"
 Output: 5
 */
+
 const waysToSplitString = (s) => {
   let result = 0
 
