@@ -348,8 +348,8 @@ const digitAnagrams = (nums) => {
       num = Math.floor(num / 10) // remove rightmost digit (ones)
     }
 
-    currDigits.sort((a, b) => a - b) // sort for consistency of keys (anagrams can be in any order, but sorted they are equal)
-    const digitStr = JSON.stringify(currDigits)
+    currDigits.sort((a, b) => a - b) // sort for consistency of keys (anagrams can be in any order, so sorted they are equal)
+    const digitStr = JSON.stringify(currDigits) // make a string for the freqMa\] property key
 
     if (map[digitStr]) result += map[digitStr]++ // not just incrementing bc could be multiple of same anagram
     else map[digitStr] = 1
@@ -457,6 +457,7 @@ const twoSumDivisible = (nums, k) => {
   return result
 }
 
+console.log(twoSumDivisible([1,2,3,4,5], 3))
 console.log(twoSumDivisible([1,2,3,4,5,9], 3))
 
 /* #1
@@ -563,3 +564,47 @@ const ribbons = (a, k) => {
 }
 
 console.log(ribbons([5,2,7,4,9], 5))
+
+/*
+12/3/23 Codesignal GCA Q4
+Given an array of numbers, count the number of distinct pairs (i, j) where numbers[i] can be obtained from numbers[j] by swapping no more than two digits of numbers[j]
+input: [1, 23, 156, 1650, 651, 165, 32]
+output: 3
+23 - 32
+156 - 165
+156 - 651
+*/
+
+// brute force solution, O(n^2) time
+const q4 = (numbers) => {
+  let result = 0
+
+  for (let i = 0; i < numbers.length; i++) {
+    for (let j = i + 1; j < numbers.length; j++) {
+      const first = numbers[i]
+      const second = numbers[j]
+
+      const strFirst = first.toString()
+      const strSecond = second.toString()
+      const firstSorted = strFirst.split('').sort().join('')
+      const secondSorted = strSecond.split('').sort().join('')
+
+      // if nums are same length and the same sorted, check for how many digits we'd need to swap
+      if (strFirst.length === strSecond.length && firstSorted === secondSorted) {
+        let numDiff = 0
+
+        for (let k = 0; k < strFirst.length; k++) {
+          if (strFirst[k] !== strSecond[k]) numDiff++
+        }
+
+        if (numDiff <= 2) result++ // numDiff will only ever be an even num
+      }
+    }
+  }
+
+  return result
+}
+
+console.log(q4([1, 23, 156, 1650, 651, 165, 32])) // -> 3
+console.log(q4([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])) // -> 0
+console.log(q4([12345, 12354, 13254, 31254])) // -> 3
