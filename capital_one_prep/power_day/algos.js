@@ -365,6 +365,160 @@ console.log(twoSumClosestToTarget([-1, 2, 1, -4], 4)) // -> [1, 2]
             /* OOP - CREATE ACCOUNT AND DEPOSIT */
 /* -------------------------------------------------------- */
 
+/*
+  1.
+    a. Create accounts with unique id
+    b. Deposit into accounts using id/amount
+  2. Transfer functionality
+  3. Kth highest transaction history
+  4?. What kind of testing would you implement, could you make a function to test, how would you implement depositing at scale (invoke that method within a lambda function)
+*/
+
+// also need to prep for the alternate input option -
+// input: [["CREATEACCOUNT" , "Account1"], ["CREATEACCOUNT" , "Account2"],["DEPOSIT" , "Account1", "100"], ["DEPOSIT" , "Account2", "200"], ["TRANSFER" , "Account1", "Account2", "100"] .... ]
+// output: [true, true, 100, 200 , 0]
+
+// my version
+class Account {
+  constructor(id) {
+    this.id = id
+    this.balance = 0
+    // for getKthHighestActivity - is this asking to get the k highest activity accounts, or just the kth highest activity account? like if k = 2, would output be 2 accounts or 1?
+    this.activityTotal = 0
+    this.activityCount = 0
+  }
+
+  deposit(amount) {
+    this.balance += amount
+    this.activityTotal += Math.abs(amount)
+    this.activityCount++
+    return this.balance
+  }
+}
+
+class AccountManager {
+  constructor() {
+    this.accounts = {}
+  }
+
+  createAccount(id) {
+    if (id in this.accounts) return false
+
+    const account = new Account(id)
+    this.accounts[id] = account
+    // id++ // what does this do?
+    return true
+  }
+
+  deposit(id, amount) {
+    if (!(id in this.accounts)) return -1
+    return this.accounts[id].deposit(amount)
+  }
+
+  transfer(from, to, amount) {
+    if (
+      !(from in this.accounts) ||
+      !(to in this.accounts) ||
+      from === to ||
+      this.accounts[from].balance < amount
+    ) return -1
+
+    this.accounts[from].deposit(-1 * amount)
+    this.accounts[to].deposit(amount)
+    return this.accounts[from].balance
+  }
+
+  getKthHighestActivity(k) {
+    const accountsArr = Object.values(this.accounts)
+    const sortedAccounts = accountsArr.sort((a, b) => b.activityCount - a.activityCount)
+    const result = sortedAccounts.map((account) => [account.id, account.activityCount])
+
+    return result.slice(0, k)
+  }
+
+  processCommands(commands) {
+    const result = []
+
+    for (const command of commands) {
+      const operation = command[0].toUpperCase(),
+            accountId = command[1]
+
+      switch (operation) {
+        case 'CREATEACCOUNT':
+          result.push(this.createAccount(accountId))
+          break
+        case 'DEPOSIT':
+          const depositAmount = Number(command[2])
+          result.push(this.deposit(accountId, depositAmount))
+          break
+        case 'TRANSFER':
+          const fromId = command[1],
+                toId = command[2],
+                transferAmount = Number(command[3])
+          result.push(this.transfer(fromId, toId, transferAmount))
+          break
+        case 'GETKTHHIGHEST':
+          const k = Number(command[1])
+          result.push(this.getKthHighestActivity(k))
+          break
+        default:
+          break
+      }
+    }
+
+    return result
+  }
+}
+
+const accMgr3 = new AccountManager()
+console.log(accMgr3.createAccount(5)) // true
+console.log(accMgr3.createAccount(2)) // true
+console.log(accMgr3.deposit(5,10)); // 10
+console.log(accMgr3.deposit(2,20)); // 10
+
+console.log(accMgr3)
+
+console.log(accMgr3.transfer(5,2,5)); //5
+console.log(accMgr3)
+console.log(accMgr3.transfer(5, 2, 7)); // -1
+console.log(accMgr3.transfer(5, 8, 2)); // -1
+console.log(accMgr3.transfer(5, 5, 2)); // -1
+
+accMgr3.deposit(2,10);
+accMgr3.deposit(2,10);
+console.log(accMgr3)
+
+console.log(accMgr3.getKthHighestActivity(2));
+
+const acc1 = new Account(1)
+console.log(acc1)
+console.log(acc1.deposit(10))
+console.log(acc1.deposit(5))
+
+const accMgr1 = new AccountManager()
+console.log(accMgr1)
+console.log(accMgr1.createAccount(1))
+console.log(accMgr1)
+console.log(accMgr1.deposit(1, 10))
+console.log(accMgr1.createAccount(2))
+console.log(accMgr1)
+console.log(accMgr1.transfer(1, 2, 5))
+console.log(accMgr1)
+console.log(accMgr1.getKthHighestActivity(1))
+
+const accMgr2 = new AccountManager()
+const commands = [
+  ["CREATEACCOUNT", "Account1"],
+  ["CREATEACCOUNT", "Account2"],
+  ["DEPOSIT", "Account1", "100"],
+  ["DEPOSIT", "Account2", "200"],
+  ["TRANSFER", "Account1", "Account2", "100"]
+  // ["GETKTHHIGHEST", "1"]
+]
+
+console.log(accMgr2.processCommands(commands)) // [true, true, 100, 200 , 0]
+
+
 /* -------------------------------------------------------- */
             /* 00P - BANK ACCOUNT TOKENIZATION */
 /* -------------------------------------------------------- */
@@ -448,22 +602,23 @@ console.log(twoSumClosestToZero([-1,1,2,4,5])) // [-1, 1]
 const questionMarks = (str) => {
   if (str.length < 5) return false
 
-  // initialize vars
   let leftNum = -1,
       questionMarkCount = 0,
       isValid = false
 
   for (let i = 0; i < str.length; i++) {
     const char = str[i]
-    const charNum = Number(char)
+    const rightNum = Number(char)
 
-    if (charNum >= 0) {
+    if (rightNum >= 0) {
+      // check for match
       if (leftNum >= 0 && questionMarkCount === 3) {
-        if (leftNum + charNum === 10) isValid = true
+        if (leftNum + rightNum === 10) isValid = true
         else return false
       }
 
-      leftNum = charNum
+      // reset window
+      leftNum = rightNum
       questionMarkCount = 0
     } else if (char === '?') {
       questionMarkCount++
