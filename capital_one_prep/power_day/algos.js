@@ -42,23 +42,24 @@ console.log(countPrimes(10)) // -> 4
 console.log(countPrimes(20)) // -> 8
 console.log(countPrimes(23)) // -> 8 or 9 depending on < or <=
 
+// O(n log(log(n))) time complexity
 const primes2 = (n) => {
   // edge cases
   if (n < 2) return 0
 
   // initialize vars
-  const seenNums = new Array(n + 1).fill(true)
+  const seenNums = new Array(n + 1).fill(false)
   let count = 0
 
   // iterate - start at 2 since 0 and 1 are not primes
   for (let num = 2; num <= n; num++) {
     // if we've seen currNum, skip it since not prime
-    if (seenNums[num] === false) continue
+    if (seenNums[num] === true) continue
     count++
 
     // now update all multiples of curr num since they are not primes
     for (let mult = num * num; mult <= n; mult += num) {
-      seenNums[mult] = false
+      seenNums[mult] = true
     }
   }
 
@@ -68,26 +69,6 @@ const primes2 = (n) => {
 console.log(primes2(10))
 console.log(primes2(20))
 console.log(primes2(23))
-
-const countPrimes2 = (n) => {
-  const nums = new Array(n + 1)
-  let result = 0
-
-  for (let i = 2; i <= n; i++) {
-    if (nums[i]) continue // if currNum already seen, continue to i + 1
-    result++ // currNum is prime num if we haven't seen it yet
-
-    // update multiples of currNum
-    for (let j = i * i; j <= n; j += i) {
-      nums[j] = 1
-    }
-  }
-
-  return result
-}
-
-console.log(countPrimes2(10))
-console.log(countPrimes2(20))
 
  // brute force solution
  // be able to initially talk through this solution but then pivot to coding the optimized solution
@@ -199,6 +180,7 @@ const threeQuestionMarksV2 = (string) => {
 }
 
 // my edited version of V2
+// O(n) time
 const threeQuestionMarksV3 = (str) => {
   if (str.length < 5) return false
 
@@ -209,7 +191,7 @@ const threeQuestionMarksV3 = (str) => {
 
   for (let i = 0; i < str.length; i++) {
     const char = str[i]
-    const charNum = parseInt(char, 10)
+    const charNum = parseInt(char, 10) // rightNum
     // console.log(char)
     // console.log(charNum)
     // console.log(leftNum)
@@ -232,7 +214,7 @@ const threeQuestionMarksV3 = (str) => {
     }
   }
 
-  return isValid
+  return isValid // if there were no digit pairs to check, we want to return false
 }
 
 // true test cases
@@ -464,7 +446,6 @@ console.log(twoSumClosestToZero([-1,1,2,4,5])) // [-1, 1]
 
 
 const questionMarks = (str) => {
-  // edge case
   if (str.length < 5) return false
 
   // initialize vars
@@ -472,25 +453,23 @@ const questionMarks = (str) => {
       questionMarkCount = 0,
       isValid = false
 
-  // iterate
   for (let i = 0; i < str.length; i++) {
     const char = str[i]
     const charNum = Number(char)
 
-    // if number
     if (charNum >= 0) {
       if (leftNum >= 0 && questionMarkCount === 3) {
         if (leftNum + charNum === 10) isValid = true
         else return false
       }
 
-      // reset window and question mark count
       leftNum = charNum
       questionMarkCount = 0
     } else if (char === '?') {
       questionMarkCount++
     }
   }
+
   return isValid
 }
 
