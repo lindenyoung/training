@@ -284,6 +284,7 @@ hashMap = {
 */
 
 // O(n) time but only needs to be done once per input str
+// *** can I write this so that lookup will be O(1) in charFrequencyUpdated? ***
 const preProcessHelper = (str) => {
   const map = {}
 
@@ -383,14 +384,13 @@ class Account {
   constructor(id) {
     this.id = id
     this.balance = 0
-    // for getKthHighestActivity - is this asking to get the k highest activity accounts, or just the kth highest activity account? like if k = 2, would output be 2 accounts or 1?
-    this.activityTotal = 0
+    this.transactionTotal = 0
     this.activityCount = 0
   }
 
   deposit(amount) {
     this.balance += amount
-    this.activityTotal += Math.abs(amount)
+    this.transactionTotal += Math.abs(amount)
     this.activityCount++
     return this.balance
   }
@@ -431,9 +431,24 @@ class AccountManager {
   getKthHighestActivity(k) {
     const accountsArr = Object.values(this.accounts)
     const sortedAccounts = accountsArr.sort((a, b) => b.activityCount - a.activityCount)
-    const result = sortedAccounts.map((account) => [account.id, account.activityCount])
 
+    // returns the n highest activity level accounts
+    const result = sortedAccounts.map((account) => [account.id, account.activityCount])
     return result.slice(0, k)
+
+    // returns all accounts with the nth highest activity level (transactionTotal or activityCount?)
+    // let count = 1,
+    //     nthHighestTransactionTotal = acctsArr[0]?.transactionTotal
+
+    // for (let i = 1; i < acctsArr.length && count < n; i++) {
+    //   if (acctsArr[i].transactionTotal !== nthHighestTransactionTotal) {
+    //     nthHighestTransactionTotal = acctsArr[i].transactionTotal
+    //     count++
+    //   }
+    // }
+
+    // const result = acctsArr.filter((account) => account.transactionTotal === nthHighestTransactionTotal).map((account) => [account.id, account.activityCount, account.transactionTotal])
+    // return result
   }
 
   processCommands(commands) {
@@ -638,3 +653,142 @@ console.log(questionMarks("aa6?9"))
 console.log(questionMarks("8???2???9"))
 console.log(questionMarks("10???0???10"))
 console.log(questionMarks("aa3??oiuqwer?7???2"))
+
+// oop account / deposit practice
+class Acct {
+  constructor(id) {
+    this.id = id
+    this.balance = 0
+    this.activityCount = 0
+    this.transactionTotal = 0
+  }
+
+  deposit(amount) {
+    this.balance += amount
+    this.activityCount++
+    this.transactionTotal += Math.abs(amount)
+    return this.balance
+  }
+}
+
+class AcctMgt {
+  constructor() {
+    this.accounts = {}
+  }
+
+  createAccount(id) {
+    if (id in this.accounts) return false
+    const newAcct = new Acct(id)
+    this.accounts[id] = newAcct
+    return true
+  }
+
+  deposit(id, amount) {
+    if (!(id in this.accounts)) return -1
+    return this.accounts[id].deposit(amount)
+  }
+
+  transfer(from, to, amount) {
+    if (
+      !(from in this.accounts) ||
+      !(to in this.accounts) ||
+      from === to ||
+      this.accounts[from].balance < amount
+    ) return -1
+
+    this.accounts[from].deposit(-1 * amount)
+    this.accounts[to].deposit(amount)
+    return this.accounts[from].balance
+  }
+
+  // is this looking for the first n accounts or all accounts with the nth highest activity level?
+  kthHighest(n) {
+    const acctsArr = Object.values(this.accounts)
+    acctsArr.sort((a, b) => b.transactionTotal - a.transactionTotal) // sort by transactionTotal or activityCount?
+
+    // returns the first n highest activity accounts
+    // const result = acctsArr.map((account) => [account.id, account.activityCount])
+    // return result.slice(0, n)
+
+    // returns all accounts with the nth highest activity level (transaction total)
+    let count = 1,
+        nthHighestTransactionTotal = acctsArr[0]?.transactionTotal
+
+    for (let i = 1; i < acctsArr.length && count < n; i++) {
+      if (acctsArr[i].transactionTotal !== nthHighestTransactionTotal) {
+        nthHighestTransactionTotal = acctsArr[i].transactionTotal
+        count++
+      }
+    }
+
+    const result = acctsArr.filter((account) => account.transactionTotal === nthHighestTransactionTotal).map((account) => [account.id, account.activityCount, account.transactionTotal])
+    return result
+  }
+
+  processCommands(commands) {
+    const result = []
+
+    for (const command of commands) {
+      const method = command[0].toUpperCase(),
+          accountId = command[1]
+
+      switch (method) {
+        case 'CREATEACCOUNT':
+          result.push(this.createAccount(accountId))
+          break
+        case 'DEPOSIT':
+          const depositAmount = Number(command[2])
+          result.push(this.deposit(accountId, depositAmount))
+          break
+        case 'TRANSFER':
+          const fromId = command[1],
+                toId = command[2],
+                transferAmount = Number(command[3])
+          result.push(this.transfer(fromId, toId, transferAmount))
+          break
+        case 'GETKTHHIGHEST':
+          const n = command[1]
+          result.push(this.kthHighest(n))
+          break
+        default:
+          break
+      }
+    }
+
+    return result
+  }
+}
+
+const testAcct1 = new Acct('acct1')
+console.log(testAcct1)
+testAcct1.deposit(25)
+console.log(testAcct1)
+
+const testAcctMgt1 = new AcctMgt()
+console.log(testAcctMgt1)
+testAcctMgt1.createAccount('acct1')
+console.log(testAcctMgt1)
+console.log(testAcctMgt1.deposit('acct1', 25))
+console.log(testAcctMgt1)
+testAcctMgt1.createAccount('acct2')
+console.log(testAcctMgt1.transfer('acct1', 'acct2', 10))
+console.log(testAcctMgt1)
+testAcctMgt1.deposit('acct2', 10)
+testAcctMgt1.deposit('acct2', 25)
+testAcctMgt1.createAccount('acct3')
+testAcctMgt1.deposit('acct3', 35)
+console.log(testAcctMgt1)
+console.log(testAcctMgt1.kthHighest(1)) // acct2, 3, 45
+console.log(testAcctMgt1.kthHighest(2)) // acct1, 2, 35 and acct3, 1, 35
+
+const testAcctMgt2 = new AcctMgt()
+const commands2 = [
+  ["CREATEACCOUNT", "Account1"],
+  ["CREATEACCOUNT", "Account2"],
+  ["DEPOSIT", "Account1", "100"],
+  ["DEPOSIT", "Account2", "200"],
+  ["TRANSFER", "Account1", "Account2", "100"]
+  // ["GETKTHHIGHEST", "1"]
+]
+
+console.log(testAcctMgt2.processCommands(commands2)) // [true, true, 100, 200 , 0]
