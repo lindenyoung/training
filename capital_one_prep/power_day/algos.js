@@ -535,8 +535,15 @@ console.log(accMgr2.processCommands(commands)) // [true, true, 100, 200 , 0]
 
 
 /* -------------------------------------------------------- */
-            /* 00P - BANK ACCOUNT TOKENIZATION */
+            /* OOP - BANK ACCOUNT TOKENIZATION */
 /* -------------------------------------------------------- */
+
+// WORK ON THIS 12/13
+// Given several bank accounts with balance, account_id, and is_sensitive attributes.
+// Go through all the bank accounts and if they are is_sensitive (True), tokenize them using a Tokenize service that has TokenServiceRequest and TokenServiceResponse class objects
+// If we’re dealing with sensitive bank accounts (sensitive = True), then append ‘tkn_’ + account.id (e.g “tkn_1234”) to account
+
+// you are given skeleton code for this with 2 methods missing logic for you to write
 
 /* -------------------------------------------------------- */
               /* FETCH API AND CALL FUNC ON DATA */
@@ -655,7 +662,159 @@ console.log(questionMarks("10???0???10"))
 console.log(questionMarks("aa3??oiuqwer?7???2"))
 
 // oop account / deposit practice
-class Acct {
+// class Acct {
+//   constructor(id) {
+//     this.id = id
+//     this.balance = 0
+//     this.activityCount = 0
+//     this.transactionTotal = 0
+//   }
+
+//   deposit(amount) {
+//     this.balance += amount
+//     this.activityCount++
+//     this.transactionTotal += Math.abs(amount)
+//     return this.balance
+//   }
+// }
+
+// class AcctMgt {
+//   constructor() {
+//     this.accounts = {}
+//   }
+
+//   createAccount(id) {
+//     if (id in this.accounts) return false
+//     const newAcct = new Acct(id)
+//     this.accounts[id] = newAcct
+//     return true
+//   }
+
+//   deposit(id, amount) {
+//     if (!(id in this.accounts)) return -1
+//     return this.accounts[id].deposit(amount)
+//   }
+
+//   transfer(from, to, amount) {
+//     if (
+//       !(from in this.accounts) ||
+//       !(to in this.accounts) ||
+//       from === to ||
+//       this.accounts[from].balance < amount
+//     ) return -1
+
+//     this.accounts[from].deposit(-1 * amount)
+//     this.accounts[to].deposit(amount)
+//     return this.accounts[from].balance
+//   }
+
+//   // is this looking for the first n accounts or all accounts with the nth highest activity level?
+//   kthHighest(n) {
+//     const acctsArr = Object.values(this.accounts)
+//     acctsArr.sort((a, b) => b.transactionTotal - a.transactionTotal) // sort by transactionTotal or activityCount?
+
+//     // returns the first n highest activity accounts
+//     // const result = acctsArr.map((account) => [account.id, account.activityCount])
+//     // return result.slice(0, n)
+
+//     // returns all accounts with the nth highest activity level (transaction total)
+//     let count = 1,
+//         nthHighestTransactionTotal = acctsArr[0]?.transactionTotal
+
+//     for (let i = 1; i < acctsArr.length && count < n; i++) {
+//       if (acctsArr[i].transactionTotal !== nthHighestTransactionTotal) {
+//         nthHighestTransactionTotal = acctsArr[i].transactionTotal
+//         count++
+//       }
+//     }
+
+//     const result = acctsArr.filter((account) => account.transactionTotal === nthHighestTransactionTotal).map((account) => [account.id, account.activityCount, account.transactionTotal])
+//     return result
+//   }
+
+//   processCommands(commands) {
+//     const result = []
+
+//     for (const command of commands) {
+//       const method = command[0].toUpperCase(),
+//           accountId = command[1]
+
+//       switch (method) {
+//         case 'CREATEACCOUNT':
+//           result.push(this.createAccount(accountId))
+//           break
+//         case 'DEPOSIT':
+//           const depositAmount = Number(command[2])
+//           result.push(this.deposit(accountId, depositAmount))
+//           break
+//         case 'TRANSFER':
+//           const fromId = command[1],
+//                 toId = command[2],
+//                 transferAmount = Number(command[3])
+//           result.push(this.transfer(fromId, toId, transferAmount))
+//           break
+//         case 'GETKTHHIGHEST':
+//           const n = command[1]
+//           result.push(this.kthHighest(n))
+//           break
+//         default:
+//           break
+//       }
+//     }
+
+//     return result
+//   }
+// }
+
+// const testAcct1 = new Acct('acct1')
+// console.log(testAcct1)
+// testAcct1.deposit(25)
+// console.log(testAcct1)
+
+// const testAcctMgt1 = new AcctMgt()
+// console.log(testAcctMgt1)
+// testAcctMgt1.createAccount('acct1')
+// console.log(testAcctMgt1)
+// console.log(testAcctMgt1.deposit('acct1', 25))
+// console.log(testAcctMgt1)
+// testAcctMgt1.createAccount('acct2')
+// console.log(testAcctMgt1.transfer('acct1', 'acct2', 10))
+// console.log(testAcctMgt1)
+// testAcctMgt1.deposit('acct2', 10)
+// testAcctMgt1.deposit('acct2', 25)
+// testAcctMgt1.createAccount('acct3')
+// testAcctMgt1.deposit('acct3', 35)
+// console.log(testAcctMgt1)
+// console.log(testAcctMgt1.kthHighest(1)) // acct2, 3, 45
+// console.log(testAcctMgt1.kthHighest(2)) // acct1, 2, 35 and acct3, 1, 35
+
+// const testAcctMgt2 = new AcctMgt()
+// const commands2 = [
+//   ["CREATEACCOUNT", "Account1"],
+//   ["CREATEACCOUNT", "Account2"],
+//   ["DEPOSIT", "Account1", "100"],
+//   ["DEPOSIT", "Account2", "200"],
+//   ["TRANSFER", "Account1", "Account2", "100"]
+//   // ["GETKTHHIGHEST", "1"]
+// ]
+
+// console.log(testAcctMgt2.processCommands(commands2)) // [true, true, 100, 200 , 0]
+
+// MORE OOP ACCOUNT / DEPOSIT PRACTICE
+/*
+  1.
+    a. Create accounts with unique id
+    b. Deposit into accounts using id/amount
+  2. Transfer functionality
+  3. Kth highest transaction history
+  4?. What kind of testing would you implement, could you make a function to test, how would you implement depositing at scale (invoke that method within a lambda function)
+*/
+
+// also need to prep for the alternate input option -
+// input: [["CREATEACCOUNT" , "Account1"], ["CREATEACCOUNT" , "Account2"],["DEPOSIT" , "Account1", "100"], ["DEPOSIT" , "Account2", "200"], ["TRANSFER" , "Account1", "Account2", "100"] .... ]
+// output: [true, true, 100, 200 , 0]
+
+class AccountPractice {
   constructor(id) {
     this.id = id
     this.balance = 0
@@ -671,21 +830,24 @@ class Acct {
   }
 }
 
-class AcctMgt {
+class AccountManagerPractice {
   constructor() {
     this.accounts = {}
   }
 
   createAccount(id) {
     if (id in this.accounts) return false
-    const newAcct = new Acct(id)
-    this.accounts[id] = newAcct
+
+    const newAccount = new AccountPractice(id)
+    this.accounts[id] = newAccount
     return true
   }
 
   deposit(id, amount) {
     if (!(id in this.accounts)) return -1
-    return this.accounts[id].deposit(amount)
+
+    this.accounts[id].deposit(amount)
+    return this.accounts[id].balance
   }
 
   transfer(from, to, amount) {
@@ -701,27 +863,23 @@ class AcctMgt {
     return this.accounts[from].balance
   }
 
-  // is this looking for the first n accounts or all accounts with the nth highest activity level?
-  kthHighest(n) {
-    const acctsArr = Object.values(this.accounts)
-    acctsArr.sort((a, b) => b.transactionTotal - a.transactionTotal) // sort by transactionTotal or activityCount?
+  getKth(k) {
+    const accountsArr = Object.values(this.accounts)
+    const sorted = accountsArr.sort((a, b) => b.transactionTotal - a.transactionTotal)
 
-    // returns the first n highest activity accounts
-    // const result = acctsArr.map((account) => [account.id, account.activityCount])
-    // return result.slice(0, n)
-
-    // returns all accounts with the nth highest activity level (transaction total)
     let count = 1,
-        nthHighestTransactionTotal = acctsArr[0]?.transactionTotal
+        kthHighestTransactionTotal = sorted[0].transactionTotal
 
-    for (let i = 1; i < acctsArr.length && count < n; i++) {
-      if (acctsArr[i].transactionTotal !== nthHighestTransactionTotal) {
-        nthHighestTransactionTotal = acctsArr[i].transactionTotal
+    for (let i = 1; i < sorted.length && count < k; i++) {
+      if (sorted[i].transactionTotal !== kthHighestTransactionTotal) {
+        kthHighestTransactionTotal = sorted[i].transactionTotal
         count++
       }
     }
 
-    const result = acctsArr.filter((account) => account.transactionTotal === nthHighestTransactionTotal).map((account) => [account.id, account.activityCount, account.transactionTotal])
+    const kthHighestAccounts = sorted.filter((account) => account.transactionTotal === kthHighestTransactionTotal)
+    const result = kthHighestAccounts.map((account) => [account.id, account.transactionTotal, account.activityCount])
+
     return result
   }
 
@@ -729,10 +887,10 @@ class AcctMgt {
     const result = []
 
     for (const command of commands) {
-      const method = command[0].toUpperCase(),
-          accountId = command[1]
+      const operation = command[0].toUpperCase()
+      const accountId = command[1] // not always accurate (transfer and getKth) but for accurate for the methods we need it for (createAccount and deposit)
 
-      switch (method) {
+      switch (operation) {
         case 'CREATEACCOUNT':
           result.push(this.createAccount(accountId))
           break
@@ -746,9 +904,9 @@ class AcctMgt {
                 transferAmount = Number(command[3])
           result.push(this.transfer(fromId, toId, transferAmount))
           break
-        case 'GETKTHHIGHEST':
-          const n = command[1]
-          result.push(this.kthHighest(n))
+        case 'GETKTH':
+          const k = Number(command[1])
+          result.push(this.getKth(k))
           break
         default:
           break
@@ -759,36 +917,32 @@ class AcctMgt {
   }
 }
 
-const testAcct1 = new Acct('acct1')
-console.log(testAcct1)
-testAcct1.deposit(25)
-console.log(testAcct1)
+const testManager = new AccountManagerPractice()
+console.log(testManager)
+console.log(testManager.createAccount('one'))
+console.log(testManager)
+console.log(testManager.deposit('one', 100))
+console.log(testManager)
+console.log(testManager.createAccount('two'))
+console.log(testManager.transfer('one', 'two', 25))
+console.log(testManager)
+testManager.createAccount('three')
+testManager.deposit('three', 25)
+testManager.createAccount('four')
+testManager.deposit('four', 10)
+console.log(testManager)
+console.log(testManager.getKth(2))
 
-const testAcctMgt1 = new AcctMgt()
-console.log(testAcctMgt1)
-testAcctMgt1.createAccount('acct1')
-console.log(testAcctMgt1)
-console.log(testAcctMgt1.deposit('acct1', 25))
-console.log(testAcctMgt1)
-testAcctMgt1.createAccount('acct2')
-console.log(testAcctMgt1.transfer('acct1', 'acct2', 10))
-console.log(testAcctMgt1)
-testAcctMgt1.deposit('acct2', 10)
-testAcctMgt1.deposit('acct2', 25)
-testAcctMgt1.createAccount('acct3')
-testAcctMgt1.deposit('acct3', 35)
-console.log(testAcctMgt1)
-console.log(testAcctMgt1.kthHighest(1)) // acct2, 3, 45
-console.log(testAcctMgt1.kthHighest(2)) // acct1, 2, 35 and acct3, 1, 35
 
-const testAcctMgt2 = new AcctMgt()
 const commands2 = [
-  ["CREATEACCOUNT", "Account1"],
-  ["CREATEACCOUNT", "Account2"],
-  ["DEPOSIT", "Account1", "100"],
-  ["DEPOSIT", "Account2", "200"],
-  ["TRANSFER", "Account1", "Account2", "100"]
-  // ["GETKTHHIGHEST", "1"]
+  ["CREATEACCOUNT", "One"],
+  ["CREATEACCOUNT", "Two"],
+  ["DEPOSIT", "One", "100"],
+  ["DEPOSIT", "Two", "200"],
+  ["TRANSFER", "One", "Two", "100"] //,
+  // ["CREATEACCOUNT", "Three"],
+  // ["DEPOSIT", "Three", "200"],
+  // ["GETKTH", "2"]
 ]
 
-console.log(testAcctMgt2.processCommands(commands2)) // [true, true, 100, 200 , 0]
+console.log(testManager.processCommands(commands2))
