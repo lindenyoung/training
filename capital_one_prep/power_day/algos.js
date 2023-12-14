@@ -538,12 +538,84 @@ console.log(accMgr2.processCommands(commands)) // [true, true, 100, 200 , 0]
             /* OOP - BANK ACCOUNT TOKENIZATION */
 /* -------------------------------------------------------- */
 
-// WORK ON THIS 12/13
 // Given several bank accounts with balance, account_id, and is_sensitive attributes.
 // Go through all the bank accounts and if they are is_sensitive (True), tokenize them using a Tokenize service that has TokenServiceRequest and TokenServiceResponse class objects
 // If we’re dealing with sensitive bank accounts (sensitive = True), then append ‘tkn_’ + account.id (e.g “tkn_1234”) to account
 
-// you are given skeleton code for this with 2 methods missing logic for you to write
+// ??? what should the output be for accountService? is it an array of Accounts with the id updated / tokenized? or is it an array of TokenServiceResponses with trackingId or token updated?
+// ??? are we manipulating the accounts (account id properties) directly? or should we be making a new array of accounts to return?
+
+// you are given skeleton code for this with 2 parts empty for you to write - accountService method and TokenService class (it just has a tokenService method)
+
+class AccountTokenization {
+  constructor(id, balance, sensitive) {
+    this.id = id;
+    this.balance = balance;
+    this.sensitive = sensitive;
+  }
+
+  // THIS IS BLANK
+  accountService(accounts) {
+    const copyAccounts = accounts.map((account) => new AccountTokenization(account.id, account.balance, account.sensitive))
+    const sensitiveRequests = copyAccounts.filter((account) => account.sensitive === true).map((account) => new TokenServiceRequest(account.id, account))
+    const tokenResponses = TokenService.prototype.tokenService(sensitiveRequests)
+    // return tokenResponses // return this if this method should just return the tokenService output
+
+    for (const account of copyAccounts) {
+      if (account.sensitive === true) {
+        const matchedResponse = tokenResponses.find((response) => response.trackingId === account.id)
+        if (matchedResponse) account.id = matchedResponse.token
+      }
+    }
+
+    return copyAccounts
+  }
+}
+
+
+class TokenServiceRequest {
+  constructor(trackingId, data) {
+    this.trackingId = trackingId
+    this.data = data
+  }
+}
+
+class TokenServiceResponse {
+  constructor(trackingId, token) {
+    this.trackingId = trackingId
+    this.token = token
+  }
+}
+
+// THIS IS BLANK
+class TokenService {
+  tokenService(tokenServiceRequests) {
+    const responses = tokenServiceRequests.map((request) => {
+      const tokenizedId = 'tkn_' + request.data.id
+      return new TokenServiceResponse(request.trackingId, tokenizedId)
+    })
+
+    return responses
+
+    // let tokenized = []
+    // for (let i = 0; i < tokenServiceRequests.length; i++) {
+    //   let tokenVal = 'tkn_' + tokenServiceRequests[i].data.id;
+    //   tokenized.push(new TokenServiceResponse(tokenServiceRequests[i].trackingId, tokenVal))
+    // }
+    // return tokenized
+  }
+}
+
+const accounts1 = [new AccountTokenization("1234","12",true), new AccountTokenization("2233","22", false)]
+const response1 = AccountTokenization.prototype.accountService(accounts1)
+// this should be true:
+// 'tkn_' + accounts[0].id === response[0].trackingId ???
+console.log(accounts1[0].id) // '1234'
+console.log(response1[0].id) // 'tkn_1234'
+console.log(accounts1)
+console.log(response1)
+
+// print("True: ", tkn_" + accounts[0].id == response[0].trackingId)
 
 /* -------------------------------------------------------- */
               /* FETCH API AND CALL FUNC ON DATA */
