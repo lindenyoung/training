@@ -94,8 +94,9 @@ console.log(primes2(23))
   return count
 }
 
-console.log(countPrimesBruteForce(10))
-console.log(countPrimesBruteForce(20))
+console.log(countPrimesBruteForce(10)) // -> 4
+console.log(countPrimesBruteForce(20)) // -> 8
+console.log(countPrimesBruteForce(23)) // -> 8 or 9 depending on < or <=
 
 /* -------------------------------------------------------- */
               /* SUM OF NUMS SEPARATED BY ??? */
@@ -316,6 +317,50 @@ const charMap1 = preProcessHelper('capitalone') // doing this here instead of in
 console.log(charFrequencyUpdated(charMap1, 'a', 1, 4)) // -> 1
 console.log(charFrequencyUpdated(charMap1, 'a', 0, 5)) // -> 2
 
+// ---------- //
+// Kevin's version with constant lookup time but using a js object
+const preProcessCharacterFrequency = (string) => {
+  const map = {}
+
+  for(let i = 0; i < string.length; i++){
+    const tempMap = {...(map[i - 1] || {})}
+    tempMap[string[i]] = (tempMap[string[i]] || 0) + 1
+    map[i] = tempMap
+  }
+
+  return map
+}
+
+const characterFrequency = (map, char, startIdx, endIdx) => {
+  return (map[endIdx]?.[char] || 0) - (map[startIdx - 1]?.[char] || 0) // fyi - javascript is implicity converting these nums to strings to access map properties
+}
+
+const map = preProcessCharacterFrequency('capitalone')
+console.log(characterFrequency(map, 'a', 1, 4)) // -> 1
+console.log(characterFrequency(map, 'a', 0, 5)) // -> 2
+
+// ---------- //
+// Kevin's version with constant lookup time using a Map instance
+const preProcessCharacterFrequencyUsingMap = (string) => {
+  const map = new Map() // map properties can be any data type (numbers in this case)
+
+  for(let i = 0; i < string.length; i++){
+    const currMap = new Map(map.get(i - 1) || new Map()) // basically just making a copy of prev index's map
+    currMap.set(string[i], currMap.get(string[i]) + 1 || 1) // increment charFreq of curr char by one
+    map.set(i, currMap) // set map value for curr index property
+  }
+
+  return map
+}
+
+const characterFrequencyUsingMap = (map, char, startIndex, endIndex) => {
+  return (map.get(endIndex)?.get(char) || 0) - (map.get(startIndex - 1)?.get(char) || 0) // need the -1 to not double count (would negate) the char at startIndex
+}
+
+const map2 = preProcessCharacterFrequencyUsingMap('capitalone')
+console.log(characterFrequencyUsingMap(map2, 'a', 1, 4)) // --> 1
+console.log(characterFrequencyUsingMap(map2, 'a', 0, 5)) // --> 2
+
 /* -------------------------------------------------------- */
                 /* TWO SUM CLOSEST TO TARGET */
 /* -------------------------------------------------------- */
@@ -433,8 +478,8 @@ class AccountManager {
     const sortedAccounts = accountsArr.sort((a, b) => b.activityCount - a.activityCount)
 
     // returns the n highest activity level accounts
-    const result = sortedAccounts.map((account) => [account.id, account.activityCount])
-    return result.slice(0, k)
+    const result = sortedAccounts.map((account) => [account.id, account.activityCount]).slice(0, k)
+    return result
 
     // returns all accounts with the nth highest activity level (transactionTotal or activityCount?)
     // let count = 1,
@@ -555,14 +600,14 @@ class AccountTokenization {
   }
 
   // THIS IS BLANK
-  accountService(accounts) {
+  accountService(accounts) { // O(n + m) time - the find method takes m time, but does not depend on length of accounts array so not quadratic
     const copyAccounts = accounts.map((account) => new AccountTokenization(account.id, account.balance, account.sensitive))
     const sensitiveRequests = copyAccounts.filter((account) => account.sensitive === true).map((account) => new TokenServiceRequest(account.id, account))
     const tokenResponses = TokenService.prototype.tokenService(sensitiveRequests)
     // return tokenResponses // return this if this method should just return the tokenService output
 
     for (const account of copyAccounts) {
-      if (account.sensitive === true) {
+      if (account.sensitive === true) { // can skip this by having a sensitiveAccounts var
         const matchedResponse = tokenResponses.find((response) => response.trackingId === account.id)
         if (matchedResponse) account.id = matchedResponse.token
       }
@@ -571,7 +616,6 @@ class AccountTokenization {
     return copyAccounts
   }
 }
-
 
 class TokenServiceRequest {
   constructor(trackingId, data) {
@@ -588,7 +632,7 @@ class TokenServiceResponse {
 }
 
 // THIS IS BLANK
-class TokenService {
+class TokenService { // O(n) time
   tokenService(tokenServiceRequests) {
     const responses = tokenServiceRequests.map((request) => {
       const tokenizedId = 'tkn_' + request.data.id
@@ -596,13 +640,6 @@ class TokenService {
     })
 
     return responses
-
-    // let tokenized = []
-    // for (let i = 0; i < tokenServiceRequests.length; i++) {
-    //   let tokenVal = 'tkn_' + tokenServiceRequests[i].data.id;
-    //   tokenized.push(new TokenServiceResponse(tokenServiceRequests[i].trackingId, tokenVal))
-    // }
-    // return tokenized
   }
 }
 
