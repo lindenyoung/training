@@ -79,7 +79,7 @@ console.log(primes2(23))
   for (let i = 2; i <= n; i++) {
       let isPrime = true
 
-      // Check if i is divisible by any number from 2 to the square root of i
+      // Check if curr num is divisible by any number from 2 to the square root of i
       for (let j = 2; j <= Math.floor(Math.sqrt(i)); j++) {
           if (i % j === 0) {
               isPrime = false
@@ -284,7 +284,7 @@ hashMap = {
 }
 */
 
-// O(n) time but only needs to be done once per input str
+// O(n) lookup time but only needs to be done once per input str
 // *** can I write this so that lookup will be O(1) in charFrequencyUpdated? ***
 const preProcessHelper = (str) => {
   const map = {}
@@ -323,9 +323,9 @@ const preProcessCharacterFrequency = (string) => {
   const map = {}
 
   for(let i = 0; i < string.length; i++){
-    const tempMap = {...(map[i - 1] || {})}
-    tempMap[string[i]] = (tempMap[string[i]] || 0) + 1
-    map[i] = tempMap
+    const tempMap = {...(map[i - 1] || {})} // grab previous index's freq map
+    tempMap[string[i]] = (tempMap[string[i]] || 0) + 1 // increment freq for curr char
+    map[i] = tempMap // store freq map for curr index in our result map
   }
 
   return map
@@ -997,7 +997,7 @@ class AccountManagerPractice {
 
     for (const command of commands) {
       const operation = command[0].toUpperCase()
-      const accountId = command[1] // not always accurate (transfer and getKth) but for accurate for the methods we need it for (createAccount and deposit)
+      const accountId = command[1] // not always accurate (transfer and getKth) but accurate for the methods we need it for (createAccount and deposit)
 
       switch (operation) {
         case 'CREATEACCOUNT':

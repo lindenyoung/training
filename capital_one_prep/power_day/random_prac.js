@@ -204,3 +204,107 @@ console.log(threeQuestionMarks("aa6?9"))
 console.log(threeQuestionMarks("8???2???9"))
 console.log(threeQuestionMarks("10???0???10"))
 console.log(threeQuestionMarks("aa3??oiuqwer?7???2"))
+
+const characterFrequency = (str, target, start, end) => {
+  let result = 0
+
+  for (let i = start; i <= end; i++) {
+    if (str[i] === target) result++
+  }
+
+  return result
+}
+
+const charFreqPreProcessor1 = (str) => {
+  const map = {}
+
+  for (let i = 0; i < str.length; i++) {
+    const char = str[i]
+
+    if (char in map) map[char].push(i)
+    else map[char] = [i]
+  }
+
+  console.log(map)
+  return map
+}
+
+const charFrequencyUpdated1 = (map, target, start, end) => {
+  if (!(target in map)) return 0
+
+  const targetCharIndices = map[target].filter((index) => index >= start && index <= end)
+  return targetCharIndices.length
+}
+
+const charFreqPreProcessor2 = (str) => {
+  const map = {} // new Map()
+
+  for (let i = 0; i < str.length; i++) {
+    // grab map for prev index
+    const prevMap = {...(map[i - 1] || {})}
+    // increment curr char's frequency
+    prevMap[str[i]] = (prevMap[str[i]] || 0) + 1
+    // update result map for curr index key
+    map[i] = prevMap
+
+    // version using a new Map() instance that would be in the for loop
+    // const prevMap = new Map(map.get(i - 1) || new Map())
+    // prevMap.set(str[i], (prevMap.get(str[i]) || 0) + 1)
+    // map.set(i, prevMap)
+  }
+
+  console.log(map)
+  return map
+}
+
+// want constant O(1) lookup time here
+const charFrequencyUpdated2 = (map, target, start, end) => {
+  return (map[end]?.[target] || 0) - (map[start]?.[start - 1] || 0)
+  // return (map.get(end)?.get(target) || 0) - (map.get(start - 1)?.get(target) || 0) // Map instance version
+}
+
+const map1 = charFreqPreProcessor1('capitalone')
+const map2 = charFreqPreProcessor2('capitalone')
+console.log(characterFrequency('capitalone', 'a', 1, 4)) // 1
+console.log(charFrequencyUpdated1(map1, 'a', 1, 4)) // -> 1
+console.log(charFrequencyUpdated1(map1, 'a', 0, 5)) // 2
+console.log(charFrequencyUpdated2(map2, 'a', 1, 4)) // 1
+console.log(charFrequencyUpdated2(map2, 'a', 0, 5)) // 2
+
+const twoSumClosestToTarget = (nums, target) => {
+  if (nums.length < 2) return 'error: need at least two nums in input array'
+
+  nums.sort((a, b) => a - b) // need to sort for two pointers approach
+
+  let result = [],
+      left = 0,
+      right = nums.length - 1,
+      minDiff = Infinity
+
+  while (left < right) {
+    const sum = nums[left] + nums[right]
+
+    // edge case of sum = target
+    if (sum === target) {
+      result = [nums[left], nums[right]]
+      minDiff = 0
+      break // exit
+    }
+
+    const currDiff = Math.abs(target - sum)
+
+    if (currDiff < minDiff) {
+      result = [nums[left], nums[right]]
+      minDiff = currDiff
+    }
+
+    // update one pointer
+    if (sum < target) left++
+    else if (sum > target) right--
+  }
+
+  return result
+}
+
+console.log(twoSumClosestToTarget([5, 1, 2, 3, 4], 10)) // -> [4, 5]
+console.log(twoSumClosestToTarget([-1, 2, 1, -4], 4)) // -> [1, 2]
