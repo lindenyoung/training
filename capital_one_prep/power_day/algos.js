@@ -193,9 +193,6 @@ const threeQuestionMarksV3 = (str) => {
   for (let i = 0; i < str.length; i++) {
     const char = str[i]
     const charNum = parseInt(char, 10) // rightNum
-    // console.log(char)
-    // console.log(charNum)
-    // console.log(leftNum)
 
     // if currChar is a num
     if (charNum >= 0) {

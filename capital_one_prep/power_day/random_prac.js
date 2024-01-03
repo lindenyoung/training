@@ -308,3 +308,132 @@ const twoSumClosestToTarget = (nums, target) => {
 
 console.log(twoSumClosestToTarget([5, 1, 2, 3, 4], 10)) // -> [4, 5]
 console.log(twoSumClosestToTarget([-1, 2, 1, -4], 4)) // -> [1, 2]
+
+/* 1/3/24 practice */
+
+// count primes
+// n: number
+// output: number
+// 10 -> 4, 20 -> 8, 23 -> 9
+const countPrimes2 = (n) => { // O(n log(log(n)))
+  // edge cases
+  if (n < 2) return 0 // 0 and 1 are not primes
+
+  // declare vars
+  let count = 0
+  const seenNums = new Array(n + 1).fill(false) // index represents num from 2 to n
+
+  // iterate
+  // for each num, if we've already seen it then just skip it
+  // otherwise, increment count and update all multiples of num to "seen"
+  for (let i = 2; i <= n; i++) { // O(n)
+    if (seenNums[i] === true) continue
+    count++
+
+    for (let mult = i * i; mult <= n; mult += i) { // i = 3, mult = 9, 9 += 3 = 12 += 3 = 15 etc
+      seenNums[mult] = true
+    }
+  }
+
+
+  return count
+}
+
+// 3 ???
+// str: string
+// output: boolean
+const questionsss = (str) => {
+  // edge cases
+  if (str.length < 5) return false
+
+  // initialize vars
+  let leftDigit = -1,
+      questionMarks = 0,
+      isValid = false
+
+
+  // iterate
+  for (let i = 0; i < str.length; i++) {
+    const char = str[i]
+    const rightDigit = Number(char) // will get NaN for non-digits
+
+    // if curr char is a valid digit
+    if (rightDigit >= 0) {
+      // check for digit pair condition
+      if (leftDigit >= 0 && questionMarks === 3) {
+        // check sum of digits
+        if (leftDigit + rightDigit === 10) isValid = true
+        else return false
+      }
+
+      // reset window (update left pointer and questionMarks count)
+      leftDigit = rightDigit
+      questionMarks = 0
+    // otherwise, if curr char is a question mark (we don't care about letters)
+    } else if (char === '?') {
+      questionMarks++
+    }
+  }
+
+  return isValid
+}
+
+// true test cases
+console.log(questionsss("arrb6???4xxb15???eee5"))
+console.log(questionsss("acc?7??sss?3rr1??????5"))
+console.log(questionsss("5??aaaaaaaaaaaaaaaaaaa?5?5"))
+console.log(questionsss("a9???1???9???177?9"))
+// false test cases
+console.log(questionsss("aa6?9"))
+console.log(questionsss("8???2???9"))
+console.log(questionsss("10???0???10"))
+console.log(questionsss("aa3??oiuqwer?7???2"))
+
+// count letters
+// str: string, target: string, start: number, end: number
+// output: number
+const letterCount = (map, target, start, end) => { // O(1)
+  return (map.get(end)?.get(target) || 0) - (map.get(start - 1)?.get(target) || 0)
+
+  // O(n) solution where n is the length of the map[target] value
+  // if (!map[target]) return 0
+
+  // // filter target property for valid indices based on start and end params
+  // const targetIndices = map[target].filter((index) => index >= start && index <= end)
+  // return targetIndices.length
+}
+
+// str: string
+// output: { 'a': [1, 5] } string: number[]
+const letterProcessor = (str) => { // O(n)
+  const map = new Map()
+
+  for (let i = 0; i < str.length; i++) {
+    // grab prev index's map
+    const prevMap = new Map(map.get(i - 1) || new Map())
+    // update curr char's value
+    prevMap.set(str[i], (prevMap.get(str[i]) || 0) + 1)
+    // update result map to include the map for curr index
+    map.set(i, prevMap)
+  }
+
+  return map
+
+  // const map = {}
+
+  // for (let i = 0; i < str.length; i++) {
+  //   const char = str[i]
+
+  //   if (map[char]) map[char].push(i)
+  //   else map[char] = [i]
+  // }
+
+  // return map
+}
+
+console.log(letterProcessor('capitalone'))
+const testMap = letterProcessor('capitalone')
+console.log(letterCount(testMap, 'a', 0, 4)) // 1
+console.log(letterCount(testMap, 'a', 1, 5)) // 2
+
+// two sum closest
