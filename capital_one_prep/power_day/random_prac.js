@@ -437,3 +437,110 @@ console.log(letterCount(testMap, 'a', 0, 4)) // 1
 console.log(letterCount(testMap, 'a', 1, 5)) // 2
 
 // two sum closest
+const twoSumRoundTwo = (nums, target) => {
+  // edge cases
+  if (nums.length < 2) return 'error: need at least 2 elements in nums array'
+
+  nums.sort((a, b) => a - b)
+
+  let result = [],
+      minDiff = Infinity,
+      left = 0,
+      right = nums.length - 1
+
+  // two pointer approach: O(n log(n)) time complexity
+  // single while loop until two pointers have crossed
+    // grab sum
+    // grab diff
+    // compare diff to minDiff
+    // update result / minDiff as needed
+    // update one of the pointers (compare sum to target)
+  while (left < right) {
+    const sum = nums[left] + nums[right]
+
+    // edge case of sum equaling target
+    if (sum === target) {
+      result = [nums[left], nums[right]]
+      minDiff = 0
+      break
+    }
+
+    const currDiff = Math.abs(target - sum)
+
+    if (currDiff < minDiff) {
+      result = [nums[left], nums[right]]
+      minDiff = currDiff
+    }
+
+    if (sum < target) left++
+    else if (sum > target) right--
+  }
+
+  return result
+}
+
+console.log(twoSumRoundTwo([5, 1, 2, 3, 4], 9)) // -> [4, 5]
+console.log(twoSumRoundTwo([-1, 2, 1, -4], 4)) // -> [1, 2]
+console.log(twoSumRoundTwo([5, 1, 2, 3, 4], 9)) // -> [4, 5]
+console.log(twoSumRoundTwo([10], 9))
+
+class AccountTokenization2 {
+  constructor(id, balance, sensitive) {
+    this.id = id;
+    this.balance = balance;
+    this.sensitive = sensitive;
+  }
+
+  // THIS IS BLANK
+  accountService(accounts) { // O(n + m) time - the find method takes m time, but does not depend on length of accounts array so not quadratic
+    // make copy of accounts
+    const updatedAccounts = accounts.map((account) => new AccountTokenization2(account.id, account.balance, account.sensitive))
+    // grab all sensitive accounts
+    const sensitiveAccounts = updatedAccounts.filter((account) => account.sensitive === true)
+    // create requests array
+    const tokenRequests = sensitiveAccounts.map((account) => new TokenServiceRequest2(account.id, account))
+    // get responses array using requests array
+    const tokenResponses = TokenService2.prototype.tokenService(tokenRequests)
+    // update copy array using responses array for sensitive accounts
+    for (const account of sensitiveAccounts) {
+      const matchingResponse = tokenResponses.find((response) => response.trackingId === account.id)
+      if (matchingResponse) account.id = matchingResponse.token
+    }
+    // return updated accounts array
+    return updatedAccounts
+  }
+}
+
+class TokenServiceRequest2 {
+  constructor(trackingId, data) {
+    this.trackingId = trackingId
+    this.data = data
+  }
+}
+
+class TokenServiceResponse2 {
+  constructor(trackingId, token) {
+    this.trackingId = trackingId
+    this.token = token
+  }
+}
+
+// THIS IS BLANK
+class TokenService2 {
+  tokenService(tokenServiceRequests) { // O(n) time complexity
+    // map over requests to create response for each with token
+    const tokenResponses = tokenServiceRequests.map((request) => {
+      const token = 'tkn_' + request.data.id
+      return new TokenServiceResponse2(request.trackingId, token)
+    })
+
+    return tokenResponses
+  }
+}
+
+const accounts2 = [new AccountTokenization2("1234",12,true), new AccountTokenization2("2233",22, false)]
+const response2 = AccountTokenization2.prototype.accountService(accounts2)
+// this should be true:
+// 'tkn_' + accounts[0].id === response[0].id
+console.log(accounts2[0].id) // '1234'
+console.log(response2[0].id) // 'tkn_1234'
