@@ -188,3 +188,206 @@ const response2 = AccountTokenization.prototype.accountService(accounts2)
 console.log(accounts1[0].id) // '1234'
 console.log(response1[0].id) // 'tkn_1234'
 console.log(accounts2[0].id, '-', response2[0].id, '-', 'tkn_' + accounts2[0].id === response2[0].id)
+
+/*
+1. Count primes (Sieve of Eratosthenes)
+2. Sum of numbers separated by 3 question marks (multiple solutions in Discord channel)
+3. Count letters (see Kevin’s post for code solution)
+4. Two sum closest target
+*/
+
+// n: number
+// output: number
+// 10 -> 3, 5, 7, 9 = 4
+// 20 -> 8
+// 23 -> 9
+
+// brute force approach: O(n^2) time complexity
+// declare count var
+// for loop from 2 to n (inclusive)
+  // declare var to keep track of if currNum is a prime (boolean)
+  // for each num, need to check to see if it's divisible by any num from 2 to currNum (sqrt of currNum is small optimization)
+    // if divisible by any num, break from inner for loop bc currNum is not prime
+  // increment count if boolean is true
+
+// optimized approach: O(n log(log(n)))
+// single for loop, using an array of booleans to track each num we've seen, updating all multiples of currNum as we go along
+// for loop from 2 to n (inclusive)
+  // if we've already seen currNum, skip (bc it's not a prime)
+  // increment primes count (haven't seen num so it must be a prime - not divisible by any num less than itself)
+  // update all multiples of currNum in our placeholder array since we've "seen" them
+
+  const countPrimes = (n) => {
+  // edge cases
+  if (n < 2) return 0
+
+  // initialize vars
+  let count = 0
+  const seenNums = new Array(n + 1).fill(false)
+
+  // iterate
+  for (let i = 2; i <= n ; i++) {
+    if (seenNums[i] === true) continue
+    count++
+
+    for (let mult = i * i; mult <= n; mult += i) {
+      seenNums[mult] = true
+    }
+  }
+
+  return count
+}
+
+console.log(countPrimes(10))
+console.log(countPrimes(20))
+console.log(countPrimes(23))
+
+// str: string
+// output: boolean
+
+// brute force approach: O(n^2)
+// for loop iterating over input str
+  // for each element, check if it's a digit
+  // if so, then start second for loop at i + 1
+    // until second element is a digit, we need to count question marks and skip letters
+    // when we reach another digit, check if we have 3 question marks and then the sum of digits to determine if valid pair
+
+// optimized approach: O(n)
+// use a sliding window between digits, reset after finding a digit and checking for valid conditions
+
+const questionMarks = (str) => {
+  // edge cases?
+  if (str.length < 5) return false
+
+  // initialize vars
+  let isValid = false,
+      leftDigit = -1, // left pointer of window
+      questionMarkCount = 0
+
+  // iterate
+  for (let i = 0; i < str.length; i++) {
+    const char = str[i]
+    const charNum = Number(str[i]) // will either be a number or NaN type
+
+    // stop expanding window when we reach a digit
+    if (charNum >= 0) {
+      // check question mark count and that we have a valid left digit to compare with
+      if (leftDigit >= 0 && questionMarkCount === 3) {
+        if (leftDigit + charNum === 10) isValid = true
+        else return false
+      }
+
+      // reset window
+      leftDigit = charNum
+      questionMarkCount = 0
+    // increment question mark count
+    } else if (char === '?') {
+      questionMarkCount++
+    }
+  }
+
+  // return
+  return isValid
+}
+
+// true
+console.log(questionMarks("arrb6???4xxb15???eee5"))
+console.log(questionMarks("acc?7??sss?3rr1??????5"))
+console.log(questionMarks("5??aaaaaaaaaaaaaaaaaaa?5?5"))
+console.log(questionMarks("a9???1???9???177?9"))
+// false
+console.log(questionMarks("aa6?9"))
+console.log(questionMarks("8???2???9"))
+console.log(questionMarks("10???0???10"))
+console.log(questionMarks("aa3??oiuqwer?7???2"))
+
+// nums: number[]
+// output: [number, number]
+
+// brute force approach: O(n^2)
+// nested for loop solution
+// for each number in input array, start a second for loop to then check all other nums in array for sum / diff
+
+// optimized approach: O(n log(n))
+// sort + two pointers solution
+
+const twoSumClosestToTarget = (nums, target) => {
+  // edge cases?
+  if (nums.length < 2) return 'error: need at least two nums in input array!'
+
+  nums.sort((a, b) => a - b)
+
+  // initialize vars
+  let result = [], // update result as we go
+      minDiff = Infinity, // track minimum difference seen so far
+      left = 0, // left pointer
+      right = nums.length - 1 // right pointer
+
+  // iterate until pointers have crossed
+  while (left < right) {
+    // grab sum
+    const sum = nums[left] + nums[right]
+
+    // edge case where sum is equal to our target
+    if (sum === target) {
+      result = [nums[left], nums[right]]
+      minDiff = 0
+      break
+    }
+
+    // grab curr diff and compare with min diff, updating result / min diff as needed
+    const currDiff = Math.abs(target - sum)
+
+    if (currDiff < minDiff) {
+      result = [nums[left], nums[right]]
+      minDiff = currDiff
+    }
+
+    // move one pointer based on comparing curr sum with target
+    if (sum < target) left++
+    else if (sum > target) right--
+  }
+
+  // return
+  return result
+}
+
+console.log(twoSumClosestToTarget([5, 1, 2, 3, 4], 10)) // [4, 5]
+console.log(twoSumClosestToTarget([-1, 2, 1, -4], 4)) // [1, 2]
+console.log(twoSumClosestToTarget([1, 5, 2, 3, 7], 12)) // [5, 7]
+
+// O(n)
+const preProcessCharacterFrequencyUsingMap = (str) => {
+  // edge cases?
+  if (!str) return 'error: invalid or empty input'
+
+  // initialize our result map
+  const resultMap = new Map()
+
+  // iterate over input str (creating frequency maps at each index)
+  for (let i = 0; i < str.length; i++) {
+    // for each index, grab a copy of the previous index's map
+    const tempMap = new Map(resultMap.get(i - 1) || new Map())
+    // update the curr char's frequency
+    tempMap.set(str[i], (tempMap.get(str[i]) || 0) + 1)
+    // add map for curr index to our result map
+    resultMap.set(i, tempMap)
+  }
+
+  // return result map
+  return resultMap
+}
+
+// must be O(1) lookup
+const characterFrequencyUsingMap = (map, target, start, end) => {
+  // given a map of the frequency count at each index of given string
+  // access the end index map, then the target char to get target frequency at end of our window
+  // access the index prior to start index, then the target char to get target frequency before our window (or 0)
+  const result = (map.get(end)?.get(target) || 0) - (map.get(start - 1)?.get(target) || 0)
+  return result
+}
+
+const c1Map = preProcessCharacterFrequencyUsingMap('capitalone')
+console.log(c1Map)
+console.log(characterFrequencyUsingMap(c1Map, 'a', 1, 4)) // --> 1
+console.log(characterFrequencyUsingMap(c1Map, 'a', 0, 5)) // --> 2
