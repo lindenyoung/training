@@ -1,11 +1,10 @@
 /* BANK ACCOUNT OOP PROBLEM */
 
-// build account and deposit functionality
-// build transfer functionality
-// build getKthHighest functionality
-// build method to process commands / tests
+// create account and deposit
+// transfer
+// getKthHighest
+// method to process commands / tests
 
-// class for a bank account
 class Account {
   constructor(id) {
     this.id = id
@@ -34,8 +33,7 @@ class AccountManager {
 
   deposit(to, amount) {
     if (!(to in this.accounts)) return -1
-    this.accounts[to].deposit(amount)
-    return this.accounts[to].balance
+    return this.accounts[to].deposit(amount)
   }
 
   transfer(from, to, amount) {
@@ -51,6 +49,7 @@ class AccountManager {
     return this.accounts[from].balance
   }
 
+  // O(n log(n)) bc of sort
   getKthHighestActivity(k) {
     const sortedAccounts = Object.values(this.accounts).sort((a, b) => b.activity - a.activity)
 
@@ -119,7 +118,7 @@ manager1.deposit('three', 100)
 manager1.createAccount('four')
 manager1.deposit('four', 60)
 console.log(manager1)
-console.log(manager1.getKthHighestActivity(2))
+console.log(manager1.getKthHighestActivity(2)) // [['one', 60], ['four', 60]]
 
 const manager2 = new AccountManager()
 const testCommands = [["CREATEACCOUNT" , "Account1"], ["CREATEACCOUNT" , "Account2"],["DEPOSIT" , "Account1", "100"], ["DEPOSIT" , "Account2", "200"], ["TRANSFER" , "Account1", "Account2", 50], ["GETKTHHIGHESTACTIVITY", 2]]
@@ -128,12 +127,13 @@ console.log(manager2)
 
 class AccountTokenization {
   constructor(id, balance, sensitive) {
-    this.id = id;
-    this.balance = balance;
-    this.sensitive = sensitive;
+    this.id = id
+    this.balance = balance
+    this.sensitive = sensitive
   }
 
   // THIS IS BLANK
+  // O(n + m) time - the find method takes m time, but does not depend on length of accounts array so not quadratic
   accountService(accounts) {
     // make copy of accounts
     const updatedAccounts = accounts.map((account) => new AccountTokenization(account.id, account.balance, account.sensitive))
