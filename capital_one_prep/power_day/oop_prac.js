@@ -391,3 +391,50 @@ const c1Map = preProcessCharacterFrequencyUsingMap('capitalone')
 console.log(c1Map)
 console.log(characterFrequencyUsingMap(c1Map, 'a', 1, 4)) // --> 1
 console.log(characterFrequencyUsingMap(c1Map, 'a', 0, 5)) // --> 2
+
+/*
+---------------------------------------------------------------------------
+          THE BRAND NEW ALGO I GOT ASKED IN MY JANUARY POWER DAY
+---------------------------------------------------------------------------
+*/
+
+class FileSystem {
+  constructor() {
+    this.files = {}
+  }
+
+  addFile(fileName) {
+    if (fileName in this.files) return false
+    this.files[fileName] = true
+    return true
+  }
+
+  deleteFile(fileName) {
+    if (!(fileName in this.files)) return false
+    delete this.files[fileName]
+    return true
+  }
+
+  copyFile(fileName, toDirectory) {
+    // what were the edge / false cases here?
+    if (toDirectory[toDirectory.length - 1] !== '/') return false
+
+    const directory = toDirectory.slice(1) // remove first slash '/'
+    const newFilePath = directory + fileName
+
+    if (newFilePath in this.files) return false
+    this.files[newFilePath] = true
+    return true
+  }
+}
+
+const testFileSystem = new FileSystem()
+console.log(testFileSystem.addFile('file_one'))
+console.log(testFileSystem.addFile('file_one'))
+console.log(testFileSystem.deleteFile('file_two'))
+// console.log(testFileSystem.deleteFile('file_one'))
+console.log(testFileSystem.addFile('file_two'))
+console.log(testFileSystem.addFile('dir_one/file_three'))
+console.log(testFileSystem)
+console.log(testFileSystem.copyFile('file_one', '/dir_one/'))
+console.log(testFileSystem)
