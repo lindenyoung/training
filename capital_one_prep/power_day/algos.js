@@ -365,7 +365,7 @@ console.log(characterFrequencyUsingMap(map2, 'a', 0, 5)) // --> 2
 // two sum closest to target
 // output: [num1, num2] - return the two numbers that sum to be closest to the target (not indices)
 const twoSumClosestToTarget = (nums, target) => {
-  if (nums.length < 2) return 'Error: input array must contain at least two numbers'
+  if (!nums || nums.length < 2) return 'Error: input array must contain at least two numbers'
 
   nums.sort((a, b) => a - b)
 
@@ -403,6 +403,10 @@ const twoSumClosestToTarget = (nums, target) => {
 
 console.log(twoSumClosestToTarget([5, 1, 2, 3, 4], 10)) // -> [4, 5]
 console.log(twoSumClosestToTarget([-1, 2, 1, -4], 4)) // -> [1, 2]
+console.log(twoSumClosestToTarget([1, 2, 3, 4, 5], 7)) // -> [3, 4]
+console.log(twoSumClosestToTarget([10, 20, 30, 40, 50], 55)) // -> [20, 30]
+console.log(twoSumClosestToTarget([-5, -3, 0, 3, 5], 0)) // -> [-3, 3]
+console.log(twoSumClosestToTarget([1, 1, 1, 1], 4)) // -> [1, 1]
 
 /* -------------------------------------------------------- */
             /* OOP - CREATE ACCOUNT AND DEPOSIT */

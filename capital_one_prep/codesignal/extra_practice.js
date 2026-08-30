@@ -608,3 +608,24 @@ const q4 = (numbers) => {
 console.log(q4([1, 23, 156, 1650, 651, 165, 32])) // -> 3
 console.log(q4([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])) // -> 0
 console.log(q4([12345, 12354, 13254, 31254])) // -> 3
+
+function extractPathAfterDomain(url) {
+  // Split the URL by '/'
+  const parts = url.split('/');
+
+  // Get the domain part (should be the third element after splitting by '/')
+  const domain = parts[2]; // e.g., "www.example.com" or "subdomain.example.co.uk"
+
+  // Find where the domain ends in the original URL
+  const domainIndex = url.indexOf(domain) + domain.length;
+
+  // Get everything after the domain
+  const path = url.substring(domainIndex);
+
+  // If path is empty, return '/'
+  return path || '/';
+}
+
+console.log(extractPathAfterDomain('https://www.example.com/path/to/resource'))
+console.log(extractPathAfterDomain('https://www.example.com/'))
+console.log(extractPathAfterDomain('https://www.example.com'))

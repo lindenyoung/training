@@ -51,12 +51,25 @@ class AccountManager {
 
   // O(n log(n)) bc of sort
   getKthHighestActivity(k) {
-    const sortedAccounts = Object.values(this.accounts).sort((a, b) => b.activity - a.activity)
+    // Option 1: get n highest activity accounts
+    const sortedAccounts = Object.values(this.accounts).sort((a, b) => {
+      if (a.activity !== b.activity) return b.activity - a.activity
+      else return (a.id).localeCompare(b.id)
+    })
+    // ** Need to update the sort here to a custom function that first sorts by activity if not the same, but in activities are equal, then sorts by accountId alphabetically **
+    // ["accountA(1500)", "accountB(750)", "accountC(750)"] -> accountB should come before accountC bc they have the same account activity, assuming k = 3 here
 
-    // get n highest activity accounts
     // return sortedAccounts.slice(0, k).map((account) => [account.id, account.activity])
+    // ** The mapped value might need to be one string, like this: ["accountA(1500)", "accountC(750)", "accountB(500)"]
 
-    // get all accounts with nth highest activity
+    // Option 2: get ALL accounts with nth highest activity
+    const sortedAccounts = Object.values(this.accounts).sort((a, b) => {
+      if (a.activity !== b.activity) {
+        return b.activity - a.activity;
+      }
+      return a.id.localeCompare(b.id);
+    });
+
     let count = 1,
         nthHighestActivity = sortedAccounts[0].activity
 
@@ -69,6 +82,8 @@ class AccountManager {
 
     return sortedAccounts.filter((account) => account.activity === nthHighestActivity).map((account) => [account.id, account.activity])
   }
+
+  // ** PMG CodeSignal had 2 more levels - scheduling a transfer and checking on status of said transfer, and merging two accounts into one
 
   processCommands(commands) {
     const result = []
@@ -118,7 +133,8 @@ manager1.deposit('three', 100)
 manager1.createAccount('four')
 manager1.deposit('four', 60)
 console.log(manager1)
-console.log(manager1.getKthHighestActivity(2)) // [['one', 60], ['four', 60]]
+console.log(manager1.getKthHighestActivity(3)) // Option 1: ['three(100)', 'four(60)', 'one(60)']
+console.log(manager1.getKthHighestActivity(2)) // Option 2: [['one', 60], ['four', 60]]
 
 const manager2 = new AccountManager()
 const testCommands = [["CREATEACCOUNT" , "Account1"], ["CREATEACCOUNT" , "Account2"],["DEPOSIT" , "Account1", "100"], ["DEPOSIT" , "Account2", "200"], ["TRANSFER" , "Account1", "Account2", 50], ["GETKTHHIGHESTACTIVITY", 2]]
