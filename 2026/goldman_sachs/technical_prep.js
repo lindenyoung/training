@@ -301,7 +301,7 @@ function countPalindromePaths(parent, s) {
 // 790. Domino and Tromino Tiling
 // brute force: The natural brute force for any tiling-counting problem is backtracking: find the leftmost uncovered cell, try placing every piece orientation that could legally cover it (vertical domino, horizontal domino, or one of the four tromino rotations), recurse on the remaining uncovered cells, and backtrack
 // ** single-state DP won't capture this because of the tromino overhang — I need a second state for a partially-covered column
-
+// O(n) time (single pass) and space (dp array)
 function numTilings(n) {
   const MOD = 1_000_000_007;
   const dp = new Array(n + 1).fill(0);
