@@ -9,13 +9,13 @@ function maxProfit(inventory, orders) {
   const MOD = 1_000_000_007n;
 
   // count of balls with value >= v, across all piles
-  function countAtLeast(v) {
+  const countAtLeast = (v) => {
     let total = 0n;
     for (const a of inventory) {
         if (a >= v) total += BigInt(a - v + 1);
     }
     return total;
-  }
+  };
 
   // find the largest v such that countAtLeast(v) >= orders
   let lo = 1,
@@ -47,12 +47,12 @@ function maxProfit(inventory, orders) {
 
   // then fill remainder of orders at price V
   total = (total + ordersLeft * BigInt(V)) % MOD;
-
   return Number(total);
 };
 
 // 42. Trapping Rain Water (12 tags in last 3 months)
-// two pointers O(n) time and O(1) space. Brute force is to find left and right max at each index, O(n^2) time. Only the min of left and right max matters
+// two pointers O(n) time and O(1) space
+// Brute force is to find left and right max at each index, O(n^2) time. Only the min of left and right max matters tho
 function trap(height) {
   let left = 0,
       right = height.length - 1,
@@ -209,4 +209,110 @@ function longestPalindromeSubseq(s) {
   }
 
   return dp[0][n - 1];
+};
+
+// 3. Longest Substring Without Repeating Characters
+// sliding window pattern
+// Both l and r traverse the string once, so total work is O(n) time, O(min(n, m)) ~= O(1)
+function lengthOfLongestSubstring(s) {
+  const windowSet = new Set();
+  let l = 0, res = 0;
+
+  for (let r = 0; r < s.length; r++) {
+    while (windowSet.has(s[r])) {
+      windowSet.delete(s[l]);
+      l++;
+    }
+    windowSet.add(s[r]);
+    res = Math.max(res, r - l + 1);
+  }
+  return res;
+};
+
+// 64. Minimum Path Sum
+// brute force is recursion, dp is optimal
+// space optimization: since dp[r][c] only ever depends on the row directly above and the current row so far, we can collapse the 2D table down to a single 1D array of length n, updating it in place as you scan row by row to improve space from O(m*n) to O(n)
+// O(n * m) time and O(n) space
+function minPathSum(grid) {
+  const m = grid.length; // rows
+  const n = grid[0].length; // cols
+  const dp = new Array(n).fill(0);
+
+  for (let r = 0; r < m; r++) {
+      for (let c = 0; c < n; c++) {
+          if (r === 0 && c === 0) {
+              dp[c] = grid[r][c];
+          } else if (r === 0) {
+              dp[c] = dp[c - 1] + grid[r][c];
+          } else if (c === 0) {
+              dp[c] = dp[c] + grid[r][c]; // dp[c] currently holds the value from the row above
+          } else {
+              dp[c] = grid[r][c] + Math.min(dp[c], dp[c - 1]);
+          }
+      }
+  }
+
+  return dp[n - 1];
+};
+
+// 2791. Count Paths That Can Form a Palindrome in a Tree
+// brute force: For every pair (u, v), find the path between them (walk up from both to their LCA, or just do a BFS/DFS between them), collect the multiset of edge characters along that path, and check if that multiset's character counts allow rearrangement into a palindrome — which happens if and only if at most one character has an odd count
+function countPalindromePaths(parent, s) {
+  const n = parent.length;
+  const children = Array.from({ length: n }, () => []);
+  for (let i = 1; i < n; i++) {
+      children[parent[i]].push(i);
+  }
+
+  const mask = new Array(n).fill(0);
+
+  // iterative DFS to compute root-to-node parity masks
+  const stack = [0];
+  while (stack.length > 0) {
+      const node = stack.pop();
+      for (const child of children[node]) {
+          const bit = 1 << (s.charCodeAt(child) - 97); // 'a' = 97
+          mask[child] = mask[node] ^ bit;
+          stack.push(child);
+      }
+  }
+
+  let count = 0;
+  const freq = new Map();
+
+  for (let node = 0; node < n; node++) {
+      const m = mask[node];
+
+      // popcount 0: exact mask match
+      count += freq.get(m) || 0;
+
+      // popcount 1: exactly one bit different
+      for (let i = 0; i < 26; i++) {
+          const target = m ^ (1 << i);
+          count += freq.get(target) || 0;
+      }
+
+      freq.set(m, (freq.get(m) || 0) + 1);
+  }
+
+  return count;
+};
+
+// 790. Domino and Tromino Tiling
+// brute force: The natural brute force for any tiling-counting problem is backtracking: find the leftmost uncovered cell, try placing every piece orientation that could legally cover it (vertical domino, horizontal domino, or one of the four tromino rotations), recurse on the remaining uncovered cells, and backtrack
+// ** single-state DP won't capture this because of the tromino overhang — I need a second state for a partially-covered column
+
+function numTilings(n) {
+  const MOD = 1_000_000_007;
+  const dp = new Array(n + 1).fill(0);
+
+  dp[0] = 1;
+  if (n >= 1) dp[1] = 1;
+  if (n >= 2) dp[2] = 2;
+
+  for (let i = 3; i <= n; i++) {
+      dp[i] = (2 * dp[i - 1] + dp[i - 3]) % MOD;
+  }
+
+  return dp[n];
 };
