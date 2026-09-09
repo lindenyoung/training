@@ -1,3 +1,6 @@
+/* --- my actual problem: 588. Design In-Memory File System --- */
+// Goldman Sachs has zero tags for this question on LC
+
 /* --- past 30 days = 5 problems, in order of frequency --- */
 
 // 1648. Sell Diminishing-Valued Colored Balls (15 tags in last 3 months!)
@@ -145,8 +148,8 @@ function orangesRotting(grid) {
 };
 
 // 2948. Make Lexicographically Smallest Array by Swapping Elements
+// O(n log(n)) time and O(n) space
 function lexicographicallySmallestArray(nums, limit) {
-  // O(n log(n)) time and O(n) space
   const n = nums.length;
 
   // sort by value, include original indexes
@@ -316,3 +319,83 @@ function numTilings(n) {
 
   return dp[n];
 };
+
+
+// ACTUAL CHALLENGE: LC 588 - design in-memory file system
+class FSNode {
+    constructor(isFile = false) {
+        this.isFile = isFile;
+        this.content = '';
+        this.children = new Map(); // name -> FSNode
+    }
+}
+
+class FileSystem {
+    constructor() {
+        this.root = new FSNode(false);
+    }
+
+    // walks the path from root, creating intermediate directories if createMissing is true.
+    // returns the node at that path, or null if it doesn't exist and createMissing is false.
+    _traverse(path, createMissing = false) {
+        const parts = path.split('/').filter(Boolean); // drop empty strings from leading/trailing slashes
+        let node = this.root;
+
+        for (const part of parts) {
+            if (!node.children.has(part)) {
+                if (!createMissing) return null;
+                node.children.set(part, new FSNode(false));
+            }
+            node = node.children.get(part);
+        }
+        return node;
+    }
+
+    ls(path) {
+        const node = this._traverse(path);
+        if (!node) return [];
+
+        if (node.isFile) {
+            const parts = path.split('/').filter(Boolean);
+            return [parts[parts.length - 1]];
+        }
+
+        return Array.from(node.children.keys()).sort();
+    }
+
+    mkdir(path) {
+        this._traverse(path, true);
+    }
+
+    addContentToFile(filePath, content) {
+        const parts = filePath.split('/').filter(Boolean);
+        const fileName = parts.pop();
+
+        let node = this.root;
+        for (const part of parts) {
+            if (!node.children.has(part)) {
+                node.children.set(part, new FSNode(false));
+            }
+            node = node.children.get(part);
+        }
+
+        if (!node.children.has(fileName)) {
+            node.children.set(fileName, new FSNode(true));
+        }
+        node.children.get(fileName).content += content;
+    }
+
+    read(filePath) {
+        const node = this._traverse(filePath);
+        if (!node || !node.isFile) return null; // or throw, depending on how strict you want error handling
+        return node.content;
+    }
+}
+
+const fs = new FileSystem();
+fs.mkdir("/a/b/c");
+fs.addContentToFile("/a/b/c/file.txt", "hello");
+fs.addContentToFile("/a/b/c/file.txt", " world");
+fs.ls("/a/b/c");              // ["file.txt"]
+fs.read("/a/b/c/file.txt");   // "hello world"
+fs.ls("/a/b/c/file.txt");     // ["file.txt"] (ls on a file returns just its own name)
